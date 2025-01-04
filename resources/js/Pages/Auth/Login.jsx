@@ -13,7 +13,11 @@ const Login = () => {
   })
   const handleSubmitEvent = async (e) => {
     e.preventDefault()
-    console.log(data);
+    post('login',{
+        onSuccess : (res) => {
+            console.log(res);   
+        }
+    })
     
   };
   const inputField = {
