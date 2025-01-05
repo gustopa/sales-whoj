@@ -1,11 +1,13 @@
+import React from 'react'
 import { useState } from "react";
 import logo from '../../../assets/logo.jpg'
 import { TextField,Button, colors,InputAdornment,CircularProgress } from "@mui/material";
 import {IconButton} from "@mui/material";
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Head,useForm } from "@inertiajs/react";
+import Swal from 'sweetalert2'
 
-const Login = () => {
+const Login = ({message}) => {
   const [isLoading,setIsLoading] = useState(false)
   const {data,setData,post} = useForm({
     userid : '',
@@ -13,10 +15,20 @@ const Login = () => {
   })
   const handleSubmitEvent = async (e) => {
     e.preventDefault()
+    setIsLoading(true)
     post('login',{
-        onSuccess : (res) => {
-            console.log(res);   
+      onSuccess : (res) => {
+        setIsLoading(false)
+        console.log(res);
+        
+        if(res.component === 'Auth/Login'){
+          Swal.fire({
+            title : 'Invalid user!',
+            icon : 'error'
+          })
         }
+        
+      }
     })
     
   };
@@ -35,33 +47,33 @@ const Login = () => {
 
   const sxInputField = {
     '& .MuiInputBase-input': {
-      color: '#b89474', // Text color
+      color: '#b89474', 
     },
     '& .MuiOutlinedInput-root': {
       '& fieldset': {
-        borderColor: '#b89474', // Border color
+        borderColor: '#b89474', 
       },
       '&:hover fieldset': {
-        borderColor: '#b89474', // Border color on hover
+        borderColor: '#b89474', 
       },
       '&.Mui-focused fieldset': {
-        borderColor: '#b89474', // Border color when focused
+        borderColor: '#b89474', 
       },
       '& .MuiInputBase-input': {
-        color: '#b89474', // Text color
+        color: '#b89474', 
       },
       '& .MuiInputBase-input::placeholder': {
-        color: '#b89474', // Placeholder color
+        color: '#b89474', 
       },
       '& .MuiOutlinedInput-root': {
         '& fieldset': {
-          borderColor: '#b89474', // Border color
+          borderColor: '#b89474', 
         },
         '&:hover fieldset': {
-          borderColor: '#b89474', // Border color on hover
+          borderColor: '#b89474', 
         },
         '&.Mui-focused fieldset': {
-          borderColor: '#b89474', // Border color when focused
+          borderColor: '#b89474', 
         },
       },
     },
@@ -85,6 +97,7 @@ const Login = () => {
         <Head>
             <title>Login</title>
         </Head>
+
         <section className="size-full overflow-y-hidden flex justify-center place-items-center border-red-800">
             <div className="h-screen"/>
             <div className="min-w-[200px] max-w-[500px] p-3 m-auto">
@@ -122,7 +135,7 @@ const Login = () => {
                         borderColor: '#b89474',      
                     },
         }} variant="outlined" style={{borderColor : '#b89474',color : '#b89474'}}>
-            { isLoading ? <CircularProgress className="size-2" color="#b89474"/> : 'Login'  }
+            { isLoading ? <CircularProgress style={{width:'25px',height:'25px'}} color="#b89474"/> : 'Login'  }
         </Button>
                 </div>
                 </form> 

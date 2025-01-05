@@ -19,17 +19,16 @@ class AuthController extends Controller
         }
 
         $google2fa = app('pragmarx.google2fa');
-
-        if($user->google_secret_code){
-            if($google2fa->verifyKey($user->google_secret_code,$request['password'])){
-                $request->session()->put($this->session_data($user));
-                return redirect()->route('dashboard');
+        if($user){
+            if($user->google_secret_code){
+                if($google2fa->verifyKey($user->google_secret_code,$request['password'])){
+                    $request->session()->put($this->session_data($user));
+                    return redirect()->route('dashboard');
+                }
             }
         }
 
-        return response()->json([
-            "messagge" => "Invalid user",
-        ]);
+        return false;
     }
 
     protected function session_data($user){

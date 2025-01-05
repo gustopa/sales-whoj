@@ -6,7 +6,7 @@ use App\Http\Middleware\IsAuthenticated;
 use App\Http\Middleware\NotLogin;
 
 Route::get('/', function () {
-    return inertia('Home',['page' => 'Home']);
+    return inertia('Home',['page' => 'Home', 'name' => session('name')]);
 })->middleware(IsAuthenticated::class)->name('dashboard');
 
 Route::get('/login',function(){
