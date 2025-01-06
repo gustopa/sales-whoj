@@ -14,3 +14,4 @@ Route::get('/login',function(){
 })->middleware(NotLogin::class)->name('login');
 
 Route::post('/login',[AuthController::class,'login']);
+Route::get('/logout',[AuthController::class,'logout']);

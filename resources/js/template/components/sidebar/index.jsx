@@ -1,16 +1,11 @@
 /* eslint-disable */
 
 import { HiX } from "react-icons/hi";
-import Links from "./components/Links";
 import logo from '../../../../assets/logo.jpg'
-import SidebarCard from "$/components/sidebar/componentsrtl/SidebarCard";
-import routes from "$/routes.jsx";
-import { Button, Menu, MenuItem } from '@mui/material';
 import { useState } from "react";
 import { Link } from "@inertiajs/react";
 import { List, ListItem, ListItemText, Collapse, ListItemIcon } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import { AccountCircle } from "@mui/icons-material";
 import ShortcutIcon from '@mui/icons-material/Shortcut';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
@@ -22,16 +17,13 @@ import { Stok,Produksi,HR,Laporan,Master,Administrator } from "./routes";
 const Dropdown = ({primary, isOpen, onToggle,subMenu,icon}) => {
   const [open, setOpen] = useState(null);
   
-  // const handleToggle = () => {
-  //   setOpen(!open);
-  // };
   const handleOpen = (name)=>{
     setOpen((prev) => (prev === name ? null : name))
   }
 
 
   return (
-    <List key={primary} className="m-0" style={{color:'#b89474'}}>
+    <List key={primary} className="m-0" style={{color:'#b89474',padding:'0'}}>
       {/* Menu Utama */}
       <ListItem button={true} onClick={onToggle}>
         <ListItemIcon>
@@ -90,10 +82,10 @@ const Dropdown = ({primary, isOpen, onToggle,subMenu,icon}) => {
 
 const Sidebar = ({ open, onClose }) => {
   
-  const [openDropdown, setOpenDropdown] = useState(null); // Menyimpan ID dropdown yang terbuka
+  const [openDropdown, setOpenDropdown] = useState(null); 
 
   const handleToggle = (id) => {
-    setOpenDropdown((prev) => (prev === id ? null : id)); // Tutup dropdown jika sudah terbuka
+    setOpenDropdown((prev) => (prev === id ? null : id)); 
   };
   return (
     <div
@@ -168,7 +160,6 @@ const Sidebar = ({ open, onClose }) => {
       </div>
       
 
-      {/* Nav item end */}
     </div>
   );
 };

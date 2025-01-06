@@ -37,7 +37,7 @@ export default function Admin(props) {
                 // secondary={getActiveNavbar(routes)}
                 {...rest}
               />
-              <div className="pt-5s mx-auto mb-auto h-full min-h-[90dvh] p-2 md:pr-2">
+              <div className="pt-5s mx-auto mb-auto h-full min-h-[92dvh] p-2 md:pr-2">
                   <h1 className="text-5xl dark:text-white">Home pages</h1>
               </div>
 
