@@ -11,7 +11,7 @@ function BahanEmas(props) {
     const filteredItems = listData.filter(
 		item => item.name && item.name.toLowerCase().includes(filterText.toLowerCase()),
 	);
-    console.log(filteredItems);
+    console.log(listData);
     
     const columns = [
         {
@@ -21,7 +21,7 @@ function BahanEmas(props) {
         },
         {
             name : "Berat",
-            selector : row => row.last_weight,
+            selector : row => row.last_weight != null ? row.last_weight : "00.00",
             sortable :true
         }
     ]
@@ -63,7 +63,7 @@ function BahanEmas(props) {
             </div>
         </div>
         {/* <TextField onChange={handleInput} className='mt-4' /> */}
-        <Card extra="mt-3" style={{width:"80%"}}>
+        <Card extra="mt-3 md:w-[80%] w-[100%]" >
             <DataTable columns={columns} data={filteredItems} customStyles={customStyles} />
         </Card>
 
