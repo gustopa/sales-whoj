@@ -52,7 +52,7 @@ const Navbar = (props) => {
           <input
             type="text"
             placeholder="Search..."
-            className="block h-full w-full rounded-full bg-lightPrimary text-sm font-medium text-navy-700 outline-none placeholder:!text-[#b89474] dark:bg-navy-900 dark:text-white dark:placeholder:!text-[#b89474] sm:w-fit"
+            className="block h-full w-full rounded-full bg-lightPrimary text-sm font-medium outline-none placeholder:!text-[#b89474] dark:bg-navy-900 text-[#b89474] dark:placeholder:!text-[#b89474] sm:w-fit"
           />
         </div>
         <span
