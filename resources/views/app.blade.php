@@ -8,7 +8,7 @@
     @vite('resources/js/app.jsx')
     @inertiaHead
   </head>
-  <body class="dark">
+  <body class="">
     @inertia
   </body>
 </html>
