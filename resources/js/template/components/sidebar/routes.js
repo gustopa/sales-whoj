@@ -1,7 +1,7 @@
 const Stok = [
     {
       name : "Bahan Emas",
-      link : "",
+      link : "bahan-emas",
       IsSubMenu : false
     },
     {

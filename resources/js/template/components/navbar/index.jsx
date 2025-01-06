@@ -2,15 +2,12 @@ import React from "react";
 import Dropdown from "$/components/dropdown";
 import { FiAlignJustify } from "react-icons/fi";
 import { Link } from "@inertiajs/react";
-import navbarimage from "$/assets/img/layout/Navbar.png";
 import { BsArrowBarUp } from "react-icons/bs";
 import { FiSearch } from "react-icons/fi";
 import { RiMoonFill, RiSunFill } from "react-icons/ri";
 import {
   IoMdNotificationsOutline,
-  IoMdInformationCircleOutline,
 } from "react-icons/io";
-import avatar from "$/assets/img/avatars/avatar4.png";
 import icon from '../../../../assets/favicon.ico'
 const Navbar = (props) => {
   const { onOpenSidenav, brandText } = props;
@@ -22,7 +19,7 @@ const Navbar = (props) => {
         <div className="h-6 w-[224px] pt-1">
           <a
             className="text-sm font-normal hover:underline text-[#b89474] dark:hover:text-white"
-            href=" "
+            href="/"
           >
             Pages
             <span className="mx-1 text-sm text-navy-700 hover:text-navy-700 dark:text-white">

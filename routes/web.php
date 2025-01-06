@@ -2,13 +2,17 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\EmasController;
 use App\Http\Middleware\IsAuthenticated;
 use App\Http\Middleware\NotLogin;
 
-Route::get('/', function () {
-    return inertia('Home',['page' => 'Home', 'name' => session('name')]);
-})->middleware(IsAuthenticated::class)->name('dashboard');
 
+Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
+    Route::get('/',function(){
+        return inertia('Home',['page' => 'Home', 'name' => session('name'), 'session' => session()->all()]);
+    })->name('dashboard');
+    Route::get('/bahan-emas',[EmasController::class,'bahanEmas']);
+});
 Route::get('/login',function(){
     return inertia('Auth/Login');
 })->middleware(NotLogin::class)->name('login');

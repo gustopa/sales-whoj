@@ -1,50 +1,48 @@
-import React from "react";
-import Navbar from "$/components/navbar";
-import Sidebar from "$/components/sidebar";
-import {Head} from '@inertiajs/react'
-
-export default function Admin(props) {
-  const { ...rest } = props;
-  const [open, setOpen] = React.useState(true);
-
-  React.useEffect(() => {
-    window.addEventListener("resize", () =>
-      window.innerWidth < 1200 ? setOpen(false) : setOpen(true)
-    );
-  }, []);
-
-  document.documentElement.dir = "ltr";
+import React from 'react'
+import Layout from './Layouts/Layout'
+import Card from '$/components/card'
+import { Grid2 as Grid,Box  } from '@mui/material'
+import { usePage } from '@inertiajs/react'
+import logo from '.././../assets/logo2.jpg'
+import MiniCalendar from '$/components/calendar/MiniCalendar'
+function Home() {
+  const {name,email,session} = usePage().props
+  
+  const options = { 
+    weekday: 'long',
+    day: 'numeric', 
+    month: 'short', 
+    year: 'numeric'
+  };
+  const now = new Date();
+  const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(now);
   return (
-    <>
-      <Head>
-        <title>Dashboard</title>
-      </Head>
-      <div className="flex h-full w-full">
-        <Sidebar open={open} onClose={() => setOpen(false)} />
-        {/* Navbar & Main Content */}
-        <div className="h-full w-full bg-lightPrimary dark:!bg-navy-900">
-          {/* Main Content */}
-          <main
-            className={`mx-[12px] h-full flex-none transition-all md:pr-2 xl:ml-[313px]`}
-          >
-            {/* Routes */}
-            <div className="h-full px-3">
-              <Navbar
-                name={props.name}
-                onOpenSidenav={() => setOpen(true)}
-                logoText={"Horizon UI Tailwind React"}
-                brandText={"Home"}
-                // secondary={getActiveNavbar(routes)}
-                {...rest}
-              />
-              <div className="pt-5s mx-auto mb-auto h-full min-h-[92dvh] p-2 md:pr-2">
-                  <h1 className="text-5xl dark:text-white">Home pages</h1>
-              </div>
+    <Layout title="Dashboard" page="Home">
+      <Grid container spacing={2}>
+        <Grid xs={12} md={4}>
+          <Card extra="p-5">
+            <Grid container spacing={2}>
+              <Grid sm={12} justifyContent="center" sx={{display:'flex'}}>
+                <img width={128} src={logo} style={{borderRadius: "10px"}} />
+              </Grid>
+              <Grid>
+                <div>
+                  <h1 className='md:text-2xl text-[18px] dark:text-white text-black'>Selamat Datang, {name}</h1>
+                  <p className='md:text-1xl text-[15px]'>{formattedDate}</p>
+                  <p className='md:text-1xl text-[15px]'>User ID : {session.user_id}</p>
+                  <p className='md:text-1xl text-[15px]'>Email : {email}</p>
+                </div>
+              </Grid>
+            </Grid>
+          </Card>
+        </Grid>
+        <Grid>
+          <MiniCalendar/>
+        </Grid>
+      </Grid>
 
-            </div>
-          </main>
-        </div>
-      </div>
-    </>
-  );
+    </Layout>
+  )
 }
+
+export default Home
