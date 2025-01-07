@@ -7,25 +7,30 @@ import { Link } from "@inertiajs/react";
 import { List, ListItem, ListItemText, Collapse, ListItemIcon } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import ShortcutIcon from '@mui/icons-material/Shortcut';
-import InventoryIcon from '@mui/icons-material/Inventory';
-import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
-import PeopleIcon from '@mui/icons-material/People';
-import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
 import MemoryIcon from '@mui/icons-material/Memory';
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-import { Stok,Produksi,HR,Laporan,Master,Administrator } from "./routes";
+import {Pelanggan,Transaksi,Inventory,Produksi,Laporan,Master,Konfigurasi} from "./routes";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import FactoryIcon from '@mui/icons-material/Factory';
+import AssessmentIcon from '@mui/icons-material/Assessment';
+import SettingsIcon from '@mui/icons-material/Settings';
+import HomeIcon from '@mui/icons-material/Home';
+
 const Dropdown = ({primary, isOpen, onToggle,subMenu,icon}) => {
-  const [open, setOpen] = useState(null);
+  const [open, setOpen] = useState(null)
   
   const handleOpen = (name)=>{
     setOpen((prev) => (prev === name ? null : name))
   }
 
+  
+
 
   return (
-    <List key={primary} className="m-0" style={{color:'#b89474',padding:'0'}}>
+    <List className="m-0" style={{color:'#b89474',padding:'0'}}>
       {/* Menu Utama */}
-      <ListItem button={true} onClick={onToggle}>
+      <ListItem onClick={onToggle}>
         <ListItemIcon>
           {icon}
         </ListItemIcon>
@@ -38,7 +43,7 @@ const Dropdown = ({primary, isOpen, onToggle,subMenu,icon}) => {
         <List key={primary} component="div" disablePadding>
           {subMenu?.map((menu,index) =>
             <>
-            <ListItem key={index} sx={{ pl: 4}} button={menu.IsSubMenu ? true : false} onClick={() => menu.IsSubMenu ? handleOpen(menu.name) : ''}>
+            <ListItem key={`${primary}-${index}`} sx={{ pl: 4}} onClick={() => menu.IsSubMenu ? handleOpen(menu.name) : ''}>
                 <ListItemIcon>
                   <ShortcutIcon style={{color: '#b89474',transform: 'rotate(180deg) scaleX(-1)'}}/>
                 </ListItemIcon>
@@ -54,10 +59,10 @@ const Dropdown = ({primary, isOpen, onToggle,subMenu,icon}) => {
               }
             </ListItem>
             {menu.IsSubMenu ? 
-              <Collapse in={open === menu.name} timeout="auto" unmountOnExit>
+              <Collapse key={`${primary}-${index}`} in={open === menu.name} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
                   {menu.childMenu?.map((child,k)=>
-                    <ListItem key={k} sx={{pl:8}}>
+                    <ListItem key={`${primary}-${k}`} sx={{pl:8}}>
                       <ListItemIcon>
                         <ShortcutIcon style={{color: '#b89474',transform: 'rotate(180deg) scaleX(-1)'}}/>
                       </ListItemIcon>
@@ -69,7 +74,7 @@ const Dropdown = ({primary, isOpen, onToggle,subMenu,icon}) => {
                 </List>
               </Collapse>
             : 
-                <></>
+                <div key={`${primary}-${index}`}></div>
             }
             </>
           )}
@@ -108,53 +113,78 @@ const Sidebar = ({ open, onClose }) => {
       <div className="mt-[58px] mb-1 h-px bg-[#b89474]" />
       {/* Nav item */}
       <div className="" style={{overflowY:'auto',height : '100vh'}}>
+        <List className="m-0" style={{color:'#b89474',padding:'0'}}>
+          <ListItem>
+            <ListItemIcon>
+              <HomeIcon style={{color:'#b89474'}}/>
+            </ListItemIcon>
+            <Link href="/">
+              <ListItemText primary="Beranda"/>
+            </Link>
+          </ListItem>
+        </List>
         <Dropdown 
-          id="Stok"
-          primary="Stok"
-          isOpen={openDropdown === 'Stok'}
-          onToggle={() => handleToggle('Stok')}
-          subMenu={Stok}
-          icon={<InventoryIcon style={{color:'#b89474'}} />}
+          id="Pelanggan"
+          primary="Pelanggan"
+          key="Pelanggan"
+          isOpen={openDropdown === 'Pelanggan'}
+          onToggle={() => handleToggle('Pelanggan')}
+          subMenu={Pelanggan}
+          icon={<AccountCircleIcon style={{color:'#b89474'}} />}
+        />
+        <Dropdown 
+          id="Transaksi"
+          primary="Transaksi"
+          key="Transaksi"
+          isOpen={openDropdown === 'Transaksi'}
+          onToggle={() => handleToggle('Transaksi')}
+          subMenu={Transaksi}
+          icon={<ReceiptIcon style={{color:'#b89474'}} />}
+        />
+        <Dropdown 
+          id="Inventory"
+          primary="Inventory"
+          key="Inventory"
+          isOpen={openDropdown === 'Inventory'}
+          onToggle={() => handleToggle('Inventory')}
+          subMenu={Inventory}
+          icon={<InventoryIcon style={{color:'#b89474'}}  />}
         />
         <Dropdown 
           id="Produksi"
           primary="Produksi"
+          key="Produksi"
           isOpen={openDropdown === 'Produksi'}
           onToggle={() => handleToggle('Produksi')}
           subMenu={Produksi}
-          icon={<PrecisionManufacturingIcon style={{color:'#b89474'}} />}
-        />
-        <Dropdown 
-          id="HR"
-          primary="HR"
-          isOpen={openDropdown === 'HR'}
-          onToggle={() => handleToggle('HR')}
-          subMenu={HR}
-          icon={<PeopleIcon style={{color:'#b89474'}}  />}
-        />
-        <Dropdown 
-          id="Laporan"
-          primary="Laporan"
-          isOpen={openDropdown === 'Laporan'}
-          onToggle={() => handleToggle('Laporan')}
-          subMenu={Laporan}
-          icon={<DocumentScannerIcon style={{color:'#b89474'}}  />}
+          icon={<FactoryIcon style={{color:'#b89474'}}  />}
         />
         <Dropdown 
           id="Master"
           primary="Master"
+          key="Master"
           isOpen={openDropdown === 'Master'}
           onToggle={() => handleToggle('Master')}
           subMenu={Master}
           icon={<MemoryIcon style={{color:'#b89474'}}  />}
         />
         <Dropdown 
-          id="Administrator"
-          primary="Administrator"
-          isOpen={openDropdown === 'Administrator'}
-          onToggle={() => handleToggle('Administrator')}
-          subMenu={Administrator}
-          icon={<AdminPanelSettingsIcon style={{color:'#b89474'}}  />}
+          id="Laporan"
+          primary="Laporan"
+          key="Laporan"
+          isOpen={openDropdown === 'Laporan'}
+          onToggle={() => handleToggle('Laporan')}
+          subMenu={Laporan}
+          icon={<AssessmentIcon style={{color:'#b89474'}}  />}
+        />
+        <Dropdown 
+          id="Konfigurasi"
+          primary="Konfigurasi"
+          key="Konfigurasi"
+          isOpen={openDropdown === 'Konfigurasi'}
+          onToggle={() => handleToggle('Konfigurasi')}
+          subMenu={Konfigurasi}
+          icon={<SettingsIcon style={{color:'#b89474'}}  />}
         />
         
       </div>

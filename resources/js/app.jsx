@@ -3,7 +3,11 @@ import '../css/app.css'
 import { createInertiaApp } from '@inertiajs/react'
 import { createRoot } from 'react-dom/client'
 
-
+if(!localStorage.getItem('theme')){
+  localStorage.setItem('theme','light')
+}else{
+  document.body.classList.add(localStorage.getItem('theme'))
+}
 
 createInertiaApp({
   resolve: name => {

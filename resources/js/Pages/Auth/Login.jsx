@@ -19,8 +19,6 @@ const Login = ({message}) => {
     post('login',{
       onSuccess : (res) => {
         setIsLoading(false)
-        console.log(res);
-        
         if(res.component === 'Auth/Login'){
           Swal.fire({
             title : 'Invalid user!',

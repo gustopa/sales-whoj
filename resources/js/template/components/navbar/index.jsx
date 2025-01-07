@@ -1,7 +1,7 @@
 import React from "react";
 import Dropdown from "$/components/dropdown";
 import { FiAlignJustify } from "react-icons/fi";
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import { BsArrowBarUp } from "react-icons/bs";
 import { FiSearch } from "react-icons/fi";
 import { RiMoonFill, RiSunFill } from "react-icons/ri";
@@ -9,10 +9,15 @@ import {
   IoMdNotificationsOutline,
 } from "react-icons/io";
 import icon from '../../../../assets/favicon.ico'
+import { useSnapshot } from "valtio";
+import state from "../../../store/store";
 const Navbar = (props) => {
+  const session = usePage().props.session
   const { onOpenSidenav, brandText } = props;
-  const [darkmode, setDarkmode] = React.useState(false);
-
+  const [darkmode, setDarkmode] = React.useState(localStorage.getItem('theme') == 'dark');
+ 
+  
+  
   return (
     <nav className="sticky top-4 z-40 flex flex-row flex-wrap items-center justify-between rounded-xl bg-white/10 p-2 backdrop-blur-xl dark:bg-[#0b14374d]">
       <div className="ml-[6px]">
@@ -103,9 +108,13 @@ const Navbar = (props) => {
           onClick={() => {
             if (darkmode) {
               document.body.classList.remove("dark");
+              localStorage.setItem('theme','light')
+              state.theme = 'light'
               setDarkmode(false);
             } else {
+              localStorage.setItem('theme','dark')
               document.body.classList.add("dark");
+              state.theme = 'dark'
               setDarkmode(true);
             }
           }}
@@ -130,7 +139,7 @@ const Navbar = (props) => {
               <div className="p-4">
                 <div className="flex items-center gap-2">
                   <p className="text-sm font-bold text-navy-700 dark:text-white">
-                    👋 Hallo, {props.name}
+                    👋 Hallo, {session.name}
                   </p>{" "}
                 </div>
               </div>

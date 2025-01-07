@@ -8,10 +8,15 @@ use App\Http\Middleware\NotLogin;
 
 
 Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
+    
     Route::get('/',function(){
         return inertia('Home',['page' => 'Home', 'name' => session('name'), 'session' => session()->all()]);
     })->name('dashboard');
-    Route::get('/bahan-emas',[EmasController::class,'bahanEmas']);
+
+    Route::prefix('bahan-emas')->group(function(){
+        Route::get('/',[EmasController::class,'bahanEmas']);
+        Route::post('/tambah',[EmasController::class,'tambahEmas']);
+    });
 });
 Route::get('/login',function(){
     return inertia('Auth/Login');

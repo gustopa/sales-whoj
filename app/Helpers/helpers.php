@@ -22,3 +22,19 @@ if (! function_exists('enkripsi')) {
     }
 }
 
+if(! function_exists('addAuditLog')){
+    function addAuditLog($table,$user_action,$data_submitted,$remark){
+        return false;
+    }
+}
+
+if(! function_exists('setDataAuditLog')){
+    function setDataAuditLog($str){
+        $ret = 0;
+        if(!empty($str)) {
+            $ret = str_replace(',"', ', "', json_encode($str));
+        }
+        return $ret;
+    }
+}
+

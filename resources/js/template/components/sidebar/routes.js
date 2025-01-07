@@ -1,444 +1,330 @@
-const Stok = [
+const Pelanggan = [
     {
-      name : "Bahan Emas",
-      link : "bahan-emas",
-      IsSubMenu : false
-    },
-    {
-      name : "Transaksi Bahan Emas",
+      name : "Pelanggan",
       link : "",
       IsSubMenu : false
     },
     {
-      name : "Batu",
+      name : "Kunjungan Pelanggan",
       link : "",
       IsSubMenu : false
     },
     {
-      name : "Transaksi Batu",
+      name : "Pengiriman",
       link : "",
       IsSubMenu : false
     },
-    {
-      name : "Rangka",
-      link : "",
-      IsSubMenu : false
-    },
-    {
-      name : "Diamond",
-      link : "",
-      IsSubMenu : false
-    },
-    {
-      name : "Chain",
-      link : "",
-      IsSubMenu : false
-    }
   ]
-const Produksi = [
+const Transaksi = [
+    {
+      name : "Transaksi",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Pembayaran",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Pesanan",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Pesanan Sales",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Reparasi",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Kembalikan/Tukar",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Tanda Terima",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Setup Rate",
+      link : "",
+      IsSubMenu : false
+    },
+  ]
+
+
+  const Inventory = [
+    {
+      name : "Summary Inventory",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Barang",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Detail Inventory",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Kirim Barang",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Matriks Harga",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Terima Barang",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Pergerakan Barang",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Foto",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Stock Opname",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Miscellaneous",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Stok Harian",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Kalkulasi Harga",
+      link : "",
+      IsSubMenu : false
+    },
+  ]
+  const Produksi = [
+    {
+      name : "Open Periode Stok",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Tipe Emas",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Tipe Berlian",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Tipe Frame",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Input Stok Emas",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Input Stok Berlian",
+      link : "",
+      IsSubMenu : false
+    },
     {
       name : "Produksi",
       link : "",
       IsSubMenu : false
     },
     {
-      name : "Bongkaran",
+      name : "Daftar Transaksi Emas",
       link : "",
       IsSubMenu : false
     },
     {
-      name : "Permintaan Kerja JWCAD",
-      link : "",
-      IsSubMenu : false
-    },
-    {
-      name : "Resin",
-      link : "",
-      IsSubMenu : false
-    },
-    {
-      name : "Coran",
-      link : "",
-      IsSubMenu : false
-    },
-    {
-      name : "Finishing/Handmade",
-      link : "",
-      IsSubMenu : false
-    },
-    {
-      name : "Grafir",
-      link : "",
-      IsSubMenu : false
-    },
-    {
-      name : "Poles Rangka",
-      link : "",
-      IsSubMenu : false
-    },
-    {
-      name : "Poles Batu",
-      link : "",
-      IsSubMenu : false
-    },
-    {
-      name : "Poles Chrome",
-      link : "",
-      IsSubMenu : false
-    },
-    {
-      name : "Reparasi Finishing Handmade",
-      link : "",
-      IsSubMenu : false
-    },
-    {
-      name : "Reparasi Pasang Batu",
-      link : "",
-      IsSubMenu : false
-    },
-    {
-      name : "Reparasi Poles Chrome",
+      name : "Daftar Transaksi Berlian",
       link : "",
       IsSubMenu : false
     },
   ]
-
-
-  const HR = [
-    {
-        name : "Kepegawaian",
-        IsSubMenu : true,
-        childMenu : [
-            {
-                name : "Data Pegawai",
-                link : ""
-            },
-            {
-                name : "Department",
-                link : ""
-            },
-            {
-                name : "Divisi",
-                link : ""
-            },
-            {
-                name : "Jabatan",
-                link : ""
-            },
-        ]
-    },
-    {
-        name : "Reimbursment",
-        IsSubMenu : true,
-        childMenu : [
-            {
-                name : "Pengajuan Reimbursment",
-                link : ""
-            },
-            {
-                name : "Approval Reimbursment",
-                link : ""
-            },
-        ]
-    },
-    {
-        name : "Jadwal Harian Supir",
-        IsSubMenu : true,
-        childMenu : [
-            {
-                name : "Pengajuan Jadwal Supir",
-                link : ""
-            },
-            {
-                name : "Approval Jadwal Supir",
-                link : ""
-            },
-        ]
-    },
-    {
-        name : "Absensi",
-        IsSubMenu : true,
-        childMenu : [
-            {
-                name : "Absensi Karyawan",
-                link : ""
-            },
-        ]
-    },
-    {
-        name : "Cuti",
-        IsSubMenu : true,
-        childMenu : [
-            {
-                name : "Pengajuan Cuti",
-                link : ""
-            },
-            {
-                name : "Approval Cuti",
-                link : ""
-            },
-        ]
-    },
-    {
-        name : "Keterlambatan",
-        IsSubMenu : true,
-        childMenu : [
-            {
-                name : "Pengajuan Keterlambatan",
-                link : ""
-            },
-            {
-                name : "Approval Keterlambatan",
-                link : ""
-            },
-        ]
-    },
-    {
-        name : "Lembur",
-        IsSubMenu : true,
-        childMenu : [
-            {
-                name : "Pengajuan Lembur",
-                link : ""
-            },
-            {
-                name : "Approval Lembur",
-                link : ""
-            },
-        ]
-    },
-    {
-        name : "Stationery",
-        IsSubMenu : true,
-        childMenu : [
-            {
-                name : "Stok Stationery",
-                link : ""
-            },
-            {
-                name : "Pengajuan Stationery",
-                link : ""
-            },
-            {
-                name : "Approval Stationery",
-                link : ""
-            },
-        ]
-    },
-    {
-        name : "Pembelian",
-        IsSubMenu : true,
-        childMenu : [
-            {
-                name : "Pengajuan Pembelian",
-                link : ""
-            },
-            {
-                name : "Approval Pembelian",
-                link : ""
-            },
-        ]
-    },
-
-  ]
-
-  const Laporan = [
-    {
-        name : "HR",
-        IsSubMenu : true,
-        childMenu : [
-            {
-                name : "Laporan Cuti",
-                link : ""
-            },
-            {
-                name : "Laporan Reimbursement",
-                link : ""
-            },
-            {
-                name : "Laporan Stationery",
-                link : ""
-            },
-        ]
-    },
-    {
-        name : "Produksi",
-        IsSubMenu : true,
-        childMenu : [
-            {
-                name : "Laporan Pemakaian Bahan Emas",
-                link : ""
-            },
-            {
-                name : "Laporan Pemakaian Batu",
-                link : ""
-            },
-            {
-                name : "Laporan Pemakaian Diamond",
-                link : ""
-            },
-            {
-                name : "Laporan Pemakaian Chain",
-                link : ""
-            },
-            {
-                name : "Laporan Pemakaian Susut",
-                link : ""
-            },
-            {
-                name : "Laporan Susut Pasang Batu",
-                link : ""
-            },
-            {
-                name : "Laporan OPB",
-                link : ""
-            },
-        ]
-    },
-    {
-        name : "Stok",
-        IsSubMenu : true,
-        childMenu : [
-            {
-                name : "Laporan Stok Bahan Emas",
-                link : ""
-            },
-            {
-                name : "Laporan Stok Batu",
-                link : ""
-            },
-            {
-                name : "Laporan Stok Diamond",
-                link : ""
-            },
-            {
-                name : "Laporan Rangka",
-                link : ""
-            },
-        ]
-    },
-    {
-        name : "Tanda Terima Proses",
-        link : "",
-        IsSubMenu : false
-    }
-  ]
-
   const Master = [
     {
-        name : "Produksi",
-        IsSubMenu : true,
-        childMenu : [
-            {
-                name : "Items",
-                link : ""
-            },
-            {
-                name : "Supplier",
-                link : ""
-            },
-            {
-                name : "Pengrajin",
-                link : ""
-            },
-            {
-                name : "Bentuk Batu",
-                link : ""
-            },
-        ]
+      name : "item",
+      link : "",
+      IsSubMenu : false
     },
     {
-        name : "HR",
-        IsSubMenu : true,
-        childMenu : [
-            {
-                name : "Stationery",
-                link : ""
-            },
-            {
-                name : "Tipe Stationery",
-                link : ""
-            },
-            {
-                name : "Tipe Biaya",
-                link : ""
-            },
-            {
-                name : "Tipe Cuti",
-                link : ""
-            },
-            {
-                name : "Mobil",
-                link : ""
-            },
-            {
-                name : "Libur Nasional",
-                link : ""
-            },
-        ]
+      name : "Jenis",
+      link : "",
+      IsSubMenu : false
     },
     {
-        name : "General",
-        IsSubMenu : true,
-        childMenu : [
-            {
-                name : "Periode",
-                link : ""
-            },
-            {
-                name : "Tipe Transaksi",
-                link : ""
-            }
-        ]
-    }
-  ]
-
-  const Administrator = [
-    {
-        name : "Users",
-        link : "",
-        IsSubMenu : false
+      name : "Model",
+      link : "",
+      IsSubMenu : false
     },
     {
-        name : "User Access",
-        link : "",
-        IsSubMenu : false
+      name : "Store",
+      link : "",
+      IsSubMenu : false
     },
     {
-        name : "Status",
-        link : "",
-        IsSubMenu : false
+      name : "Tiper Transaksi",
+      link : "",
+      IsSubMenu : false
     },
     {
-        name : "Menu",
-        link : "",
-        IsSubMenu : false
+      name : "Tipe Pembayaran",
+      link : "",
+      IsSubMenu : false
     },
     {
-        name : "Icon",
-        link : "",
-        IsSubMenu : false
+      name : "EDC",
+      link : "",
+      IsSubMenu : false
     },
     {
-        name : "Web Info",
-        link : "",
-        IsSubMenu : false
+      name : "Lokasi ",
+      link : "",
+      IsSubMenu : false
     },
     {
-        name : "Audit Log",
-        link : "",
-        IsSubMenu : false
+      name : "Harga Labour",
+      link : "",
+      IsSubMenu : false
     },
     {
-        name : "Generate Master",
-        link : "",
-        IsSubMenu : false
+      name : "Letak Barang",
+      link : "",
+      IsSubMenu : false
     },
     {
-        name : "Generate Header Detail",
-        link : "",
-        IsSubMenu : false
+      name : "Grouping Pesanan",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Sales",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Pengrajin",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Kota",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Nama Produk",
+      link : "",
+      IsSubMenu : false
     },
   ]
+  const Laporan = [
+    {
+      name : "Penjualan",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Stock Opname",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Input Inventory",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Pesanan",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Nota Penjualan",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Outstanding Pesanan",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Rekap Pembayaran",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Report Pengrajin ",
+      link : "",
+      IsSubMenu : false
+    },
+  ]
+  const Konfigurasi = [
+    {
+      name : "Entitas",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Web Info",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Akun Login",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Folder Menu",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Menu",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Peran Akun",
+      link : "",
+      IsSubMenu : false
+    },
+    {
+      name : "Akses Akun",
+      link : "",
+      IsSubMenu : false
+    },
+  ]
 
-export {Stok,Produksi,HR,Laporan,Master,Administrator}
+ 
+
+export {Pelanggan,Transaksi,Produksi,Inventory,Laporan,Master,Konfigurasi}
