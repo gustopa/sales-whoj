@@ -20,6 +20,7 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
 
     Route::post('/request_order/getAll',[RequestOrderController::class,'getAll']);
     Route::post('/request_order/view/{id}',[RequestOrderController::class,'view']);
+    Route::post('/request_order/getDPList/{id}',[RequestOrderController::class,'getDPList']);
 });
 Route::get('/login',function(){
     return inertia('Auth/Login');

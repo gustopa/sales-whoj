@@ -46,4 +46,11 @@ class RequestOrderController extends Controller
             "data" => $request_order_diamond_list
         ]);
     }
+
+    public function getDPList($id){
+        $ListDP = DB::table('vw_request_order_dplist')->where('row_id',$id)->where('is_deleted',0)->get();
+        return response()->json([
+            "data" => $ListDP
+        ]);
+    }
 }

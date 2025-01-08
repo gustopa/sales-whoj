@@ -7,6 +7,7 @@ function ModalComponent({params}) {
     
     const [open, setOpen] = useState(false);
     const [data,setData] = useState([])
+    const [dataDp,setDataDp] = useState([])
     const handleModal = ()=>{
         setOpen(true)
     }
@@ -19,20 +20,31 @@ function ModalComponent({params}) {
             const response = await axios.post(`/request_order/view/${row_id}`)
             const dataJson = await response.data;
             setData(dataJson.data)
-            
-            
         }catch(err){
             console.log(err);   
         }
     }
-    console.log(data);
+
+    const getDataDp = async () => {
+        try {
+            const response = await axios.post(`/request_order/getDPList/${row_id}`)
+            const dataJson = await response.data;
+            setDataDp(dataJson)
+        }catch(err){
+            console.log(err);
+        }
+    }
+
+    console.log(dataDp);
+    
     
     useEffect(()=>{
         getDataDetailRequestOrder()
+        getDataDp()
     },[])
     
   return (
-    <div>
+    <div className=''>
       <Button onClick={handleModal}>
         {params.value}
       </Button>
@@ -152,36 +164,66 @@ function ModalComponent({params}) {
             </Grid>
             <Grid size={{md : 4, xs: 6}}>
                 <label className='text-[#999]' style={{fontSize:'10px'}}>FOTO</label><br />
-                <span>{dataOrder.photo_file}</span>
+                <a target='__blank' href={`https://system-mahakarya.com/assets/uploaded/${dataOrder.photo_file}`}>View File</a>
             </Grid>
 
             <Grid size={{md:12,xs:12}}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Butir</TableCell>
-                            <TableCell>Karat</TableCell>
-                            <TableCell>Tipe</TableCell>
-                            <TableCell>SERT No</TableCell>
-                            <TableCell>Diameter</TableCell>
-                            <TableCell>Warna</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {data.map((item,index) => 
-                            <TableRow key={index}>
-                                <TableCell>{ item.grain }</TableCell>
-                                <TableCell>{ item.grade }</TableCell>
-                                <TableCell>{ item.diamond_type }</TableCell>
-                                <TableCell>{ item.no_sert }</TableCell>
-                                <TableCell>{ item.diameter }</TableCell>
-                                <TableCell>{ item.color }</TableCell>
+                <hr />
+                <h2 className='my-3 ml-3 font-bold'>DETAIL</h2>
+                <div style={{width:"100%",overflowX : 'auto'}}>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell><b>Butir</b></TableCell>
+                                <TableCell><b>Karat</b></TableCell>
+                                <TableCell><b>Tipe</b></TableCell>
+                                <TableCell><b>SERT No</b></TableCell>
+                                <TableCell><b>Diameter</b></TableCell>
+                                <TableCell><b>Warna</b></TableCell>
                             </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
+                        </TableHead>
+                        <TableBody>
+                            {data.map((item,index) => 
+                                <TableRow key={index}>
+                                    <TableCell>{ item.grain }</TableCell>
+                                    <TableCell>{ item.grade }</TableCell>
+                                    <TableCell>{ item.diamond_type }</TableCell>
+                                    <TableCell>{ item.no_sert == "" ? "-" : item.no_sert }</TableCell>
+                                    <TableCell>{ item.diameter == "" ? "-" : item.diameter }</TableCell>
+                                    <TableCell>{ item.color == "" ? "-" : item.color }</TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+                </div>
             </Grid>
+
+            <Grid size={{md:12,xs:12}}>
+                <h2 className='my-3 ml-3 font-bold'>PEMBAYARAN</h2>
+                {/* <div style={{width:"100%",overflowX : 'auto'}}>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell><b>Tanggal</b></TableCell>
+                                <TableCell><b>Uang Muka</b></TableCell>
+                                <TableCell><b>DP Ke</b></TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {dataDp.map((i,index) => 
+                                <TableRow key={index}>
+                                    <TableCell>{ i.created_date }</TableCell>
+                                    <TableCell>{ i.down_payment }</TableCell>
+                                    <TableCell>{ i.dp_ke }</TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+                </div> */}
+            </Grid>
+
           </Grid>
+
           <Button onClick={handleClose} variant="contained" color="secondary">
             Close
           </Button>
