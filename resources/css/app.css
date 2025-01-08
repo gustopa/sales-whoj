@@ -6,7 +6,8 @@
     width: 100%;
     overflow-x: auto;  
 }
-
-.ag-paging-row-summary-panel {
-    display: none;
-  }
+@media (max-width: 768px) {
+    .ag-paging-row-summary-panel {
+        display: none;
+    }
+}

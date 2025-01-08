@@ -29,7 +29,9 @@ const DataTable = () => {
     { field: "estimated_date", headerName: "Perkiraan Delivery" },
     { field: "item_id_txt", headerName: "Tipe Item" },
     { field: "name", headerName: "Nama Item", autoHeight : true, wrapText : true},
-    { field: "estimated_price", headerName: "Harga Perkiraan" },
+    { field: "estimated_price", headerName: "Harga Perkiraan",
+      cellRenderer : (params) => `Rp.${new Intl.NumberFormat('id-ID').format(params.value)}`
+    },
     { field: "status", headerName: "Status", 
         cellRenderer :  (params) => {
             return (
@@ -69,7 +71,7 @@ const DataTable = () => {
 
   
   return (
-    <div className={`${snap.theme == 'dark' ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'}`} style={{ height: 500 }}>
+    <div className={`${snap.theme == 'dark' ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'}`} style={{ height: 500,border:'none' }}>
       <AgGridReact
         rowData={rowData}
         columnDefs={columnDefs}
