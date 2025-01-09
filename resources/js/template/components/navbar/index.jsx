@@ -26,10 +26,17 @@ const Navbar = (props) => {
     ...Master,
     ...Konfigurasi
   ]
-  const [links,setLinks] = useState(AllLinks)
+  const [links,setLinks] = useState([])
   function handleChange(e){
     const filteredLinks = AllLinks.filter(link => link.name.toLowerCase().includes(e.target.value.toLowerCase()))
     setLinks(filteredLinks)
+    setAutocompleteSearchHidden(false)
+  }
+  const handleBlur = (e) => {
+    if (links.length == 0 || e.target.value == "") {
+      setAutocompleteSearchHidden(true);
+    }
+    
   }
   return (
     <nav className="sticky top-4 z-40 flex flex-row flex-wrap items-center justify-between rounded-xl bg-white/10 p-2 backdrop-blur-xl dark:bg-[#0b14374d]">
@@ -69,16 +76,18 @@ const Navbar = (props) => {
           </p>
           <input
             type="text"
-            onFocus={() => setAutocompleteSearchHidden(false)}
-            onBlur={() => setAutocompleteSearchHidden(true)}
+            // onChange={() => setAutocompleteSearchHidden(false)}
+            onBlur={handleBlur}
             onChange={handleChange}
             placeholder="Search menu..."
             className="block h-full w-full rounded-full bg-lightPrimary text-sm font-medium outline-none placeholder:!text-[#b89474] dark:bg-navy-900 text-[#b89474] dark:placeholder:!text-[#b89474] sm:w-fit"
           />
-          <div className={`${autocompleteSearchHidden ? 'hidden' : ''} bg-white`} style={{position:'absolute',top:'90%',height:'200px',overflowY:'auto',borderRadius:'15px',padding:'12px',width:'100%'}}>
+          <div className={`${autocompleteSearchHidden ? 'hidden' : ''} bg-white`} style={{position:'absolute',top:'90%',maxHeight:'200px',overflowY:'auto',borderRadius:'15px',padding:'12px',width:'100%'}}>
             <ul>
               {links.map((link,index)=>
-                <li key={index} className="my-1"><Link href={link.link}>{link.name}</Link> </li>
+                <li key={index} className="my-1">
+                  <Link href={link.link}>{link.name}</Link> 
+                </li>
               )}
             </ul>
           </div>
