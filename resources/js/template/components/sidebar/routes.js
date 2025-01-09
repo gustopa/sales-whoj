@@ -20,7 +20,7 @@ const Pelanggan = [
   ]
 const Transaksi = [
     {
-      name : "Transaksi",
+      name : "Dashboard Penjualan",
       link : "/dashboard_sales",
       IsSubMenu : false,
       group : 'Transaksi'

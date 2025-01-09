@@ -16,17 +16,17 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import SettingsIcon from '@mui/icons-material/Settings';
 import HomeIcon from '@mui/icons-material/Home';
 
-const Dropdown = ({primary, isOpen, onToggle,subMenu,icon}) => {
+const Dropdown = ({primary, isOpen, onToggle,subMenu,icon,color}) => {
   
   return (
     <List className="m-0" style={{color:'#b89474',padding:'0'}}>
       {/* Menu Utama */}
       <ListItem onClick={onToggle}>
-        <ListItemIcon>
+        <ListItemIcon >
           {icon}
         </ListItemIcon>
-        <ListItemText primary={primary} />
-        {isOpen ? <ExpandLess /> : <ExpandMore />}
+        <ListItemText style={{color:color}} primary={primary} />
+        {isOpen ? <ExpandLess style={{color:color}} /> : <ExpandMore style={{color:color}} />}
       </ListItem>
 
       {/* Submenu */}
@@ -35,10 +35,10 @@ const Dropdown = ({primary, isOpen, onToggle,subMenu,icon}) => {
           {subMenu.map((menu,index) => 
             <ListItem key={index} sx={{ pl: 4}}>
                 <ListItemIcon>
-                  <ShortcutIcon style={{color: '#b89474',transform: 'rotate(180deg) scaleX(-1)'}}/>
+                  <ShortcutIcon style={{color: location.pathname == menu.link ? "#b89474" : "#a3aed0",transform: 'rotate(180deg) scaleX(-1)'}}/>
                 </ListItemIcon>
                 <Link href={menu.link} underline="none" className="-ml-6">
-                  <ListItemText primary={menu.name} />
+                  <ListItemText style={{color: location.pathname == menu.link ? "#b89474" : "#a3aed0"}} primary={menu.name} />
                 </Link>
             </ListItem>
           )}
@@ -74,11 +74,8 @@ const Sidebar = ({ open, onClose }) => {
     return location.pathname == route;
     
   }
-
   
   
-  
-   
   return (
     <div
       className={`sm:none duration-175 linear fixed !z-50 flex min-h-full flex-col bg-white pb-10 shadow-2xl shadow-white/5 transition-all dark:!bg-navy-800 dark:text-white md:!z-50 lg:!z-50 xl:!z-0 ${
@@ -110,60 +107,66 @@ const Sidebar = ({ open, onClose }) => {
             </Link>
           </ListItem>
         </List>
-        <Dropdown 
+        <Dropdown
+          color={ActiveGroupLink == "Pelanggan" ? "#b89474" : "#a3aed0"}
           id="Pelanggan"
           primary="Pelanggan"
           key="Pelanggan"
           isOpen={openDropdown === 'Pelanggan'}
           onToggle={() => handleToggle('Pelanggan')}
           subMenu={Pelanggan}
-          icon={<AccountCircleIcon style={{color:'#b89474'}} />}
+          icon={<AccountCircleIcon style={{color: ActiveGroupLink == "Pelanggan" ? "#b89474" : "#a3aed0"}} />}
         />
         <Dropdown 
+          color={ActiveGroupLink == "Transaksi" ? "#b89474" : "#a3aed0"}
           id="Transaksi"
           primary="Transaksi"
           key="Transaksi"
           isOpen={openDropdown === 'Transaksi'}
           onToggle={() => handleToggle('Transaksi')}
           subMenu={Transaksi}
-          icon={<ReceiptIcon style={{color:'#b89474'}} />}
+          icon={<ReceiptIcon style={{color: ActiveGroupLink == "Transaksi" ? "#b89474" : "#a3aed0"}} />}
         />
         <Dropdown 
+          color={ActiveGroupLink == "Inventory" ? "#b89474" : "#a3aed0"}
           id="Inventory"
           primary="Inventory"
           key="Inventory"
           isOpen={openDropdown === 'Inventory'}
           onToggle={() => handleToggle('Inventory')}
           subMenu={Inventory}
-          icon={<InventoryIcon style={{color:'#b89474'}}  />}
+          icon={<InventoryIcon style={{color: ActiveGroupLink == "Inventory" ? "#b89474" : "#a3aed0"}}  />}
         />
         
         <Dropdown 
+          color={ActiveGroupLink == "Master" ? "#b89474" : "#a3aed0"}
           id="Master"
           primary="Master"
           key="Master"
           isOpen={openDropdown === 'Master'}
           onToggle={() => handleToggle('Master')}
           subMenu={Master}
-          icon={<MemoryIcon style={{color:'#b89474'}}  />}
+          icon={<MemoryIcon style={{color: ActiveGroupLink == "Master" ? "#b89474" : "#a3aed0"}}  />}
         />
         <Dropdown 
+          color={ActiveGroupLink == "Laporan" ? "#b89474" : "#a3aed0"}
           id="Laporan"
           primary="Laporan"
           key="Laporan"
           isOpen={openDropdown === 'Laporan'}
           onToggle={() => handleToggle('Laporan')}
           subMenu={Laporan}
-          icon={<AssessmentIcon style={{color:'#b89474'}}  />}
+          icon={<AssessmentIcon style={{color: ActiveGroupLink == "Laporan" ? "#b89474" : "#a3aed0"}}  />}
         />
         <Dropdown 
+          color={ActiveGroupLink == "Konfigurasi" ? "#b89474" : "#a3aed0"}
           id="Konfigurasi"
           primary="Konfigurasi"
           key="Konfigurasi"
           isOpen={openDropdown === 'Konfigurasi'}
           onToggle={() => handleToggle('Konfigurasi')}
           subMenu={Konfigurasi}
-          icon={<SettingsIcon style={{color:'#b89474'}}  />}
+          icon={<SettingsIcon style={{color: ActiveGroupLink == "Konfigurasi" ? "#b89474" : "#a3aed0"}}  />}
         />
         
       </div>

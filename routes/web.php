@@ -6,6 +6,7 @@ use App\Http\Controllers\RequestOrderController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmasController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\TransaksiController;
 use App\Http\Middleware\IsAuthenticated;
 use App\Http\Middleware\NotLogin;
 
@@ -20,6 +21,7 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         Route::post('/tambah',[EmasController::class,'tambahEmas']);
     });
 
+    Route::get('/dashboard_sales',[TransaksiController::class,'dashboard']);
 
     Route::post('/request_order/getAll',[RequestOrderController::class,'getAll']);
     Route::post('/request_order/view/{id}',[RequestOrderController::class,'view']);

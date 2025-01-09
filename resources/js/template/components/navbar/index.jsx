@@ -118,9 +118,6 @@ const Navbar = (props) => {
                   <p className="mb-1 text-left text-base font-bold text-gray-900 dark:text-white">
                     Coming soon!
                   </p>
-                  {/* <p className="font-base text-left text-xs text-gray-900 dark:text-white">
-                    A new update for your downloaded item is available!
-                  </p> */}
                 </div>
               </button>
             </div>
