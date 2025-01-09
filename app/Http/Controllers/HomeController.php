@@ -9,4 +9,7 @@ class HomeController extends Controller
     public function index(){
         return inertia('Home',['page' => 'Home', 'name' => session('name'), 'session' => session()->all()]);
     }
+    public function profile(Request $request){
+        dd($request->session()->all());
+    }
 }

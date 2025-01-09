@@ -8,25 +8,16 @@ import { List, ListItem, ListItemText, Collapse, ListItemIcon } from '@mui/mater
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import ShortcutIcon from '@mui/icons-material/Shortcut';
 import MemoryIcon from '@mui/icons-material/Memory';
-import {Pelanggan,Transaksi,Inventory,Produksi,Laporan,Master,Konfigurasi} from "./routes";
+import {Pelanggan,Transaksi,Inventory,Laporan,Master,Konfigurasi} from "./routes";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import InventoryIcon from '@mui/icons-material/Inventory';
-import FactoryIcon from '@mui/icons-material/Factory';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import SettingsIcon from '@mui/icons-material/Settings';
 import HomeIcon from '@mui/icons-material/Home';
 
 const Dropdown = ({primary, isOpen, onToggle,subMenu,icon}) => {
-  const [open, setOpen] = useState(null)
   
-  const handleOpen = (name)=>{
-    setOpen((prev) => (prev === name ? null : name))
-  }
-
-  
-
-
   return (
     <List className="m-0" style={{color:'#b89474',padding:'0'}}>
       {/* Menu Utama */}
@@ -40,43 +31,16 @@ const Dropdown = ({primary, isOpen, onToggle,subMenu,icon}) => {
 
       {/* Submenu */}
       <Collapse in={isOpen} timeout="auto" unmountOnExit>
-        <List key={primary} component="div" disablePadding>
-          {subMenu?.map((menu,index) =>
-            <>
-            <ListItem key={`${primary}-${index}`} sx={{ pl: 4}} onClick={() => menu.IsSubMenu ? handleOpen(menu.name) : ''}>
+        <List component="div" disablePadding>
+          {subMenu.map((menu,index) => 
+            <ListItem key={index} sx={{ pl: 4}}>
                 <ListItemIcon>
                   <ShortcutIcon style={{color: '#b89474',transform: 'rotate(180deg) scaleX(-1)'}}/>
                 </ListItemIcon>
-              {!menu.IsSubMenu ? 
                 <Link href={menu.link} underline="none" className="-ml-6">
                   <ListItemText primary={menu.name} />
                 </Link>
-              : 
-                <>
-                  <ListItemText primary={menu.name} />
-                  {open === menu.name ? <ExpandLess /> : <ExpandMore />}
-                </>
-              }
             </ListItem>
-            {menu.IsSubMenu ? 
-              <Collapse key={`${primary}-${index}`} in={open === menu.name} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  {menu.childMenu?.map((child,k)=>
-                    <ListItem key={`${primary}-${k}`} sx={{pl:8}}>
-                      <ListItemIcon>
-                        <ShortcutIcon style={{color: '#b89474',transform: 'rotate(180deg) scaleX(-1)'}}/>
-                      </ListItemIcon>
-                      <Link href={child.link} underline="none" className="-ml-6">
-                        <ListItemText primary={child.name} />
-                      </Link>
-                    </ListItem>
-                  )}
-                </List>
-              </Collapse>
-            : 
-                <div key={`${primary}-${index}`}></div>
-            }
-            </>
           )}
         </List>
       </Collapse>
@@ -87,11 +51,34 @@ const Dropdown = ({primary, isOpen, onToggle,subMenu,icon}) => {
 
 const Sidebar = ({ open, onClose }) => {
   
-  const [openDropdown, setOpenDropdown] = useState(null); 
+  const AllLinks = [
+    ...Pelanggan,
+    ...Transaksi,
+    ...Inventory,
+    ...Laporan,
+    ...Master,
+    ...Konfigurasi
+  ]
+  const path = location.pathname
+  let ActiveGroupLink = null
+  if(path != "/"){
+    ActiveGroupLink = AllLinks.filter(link => link.link == path)[0].group
+  }
+  const [openDropdown, setOpenDropdown] = useState(ActiveGroupLink); 
 
   const handleToggle = (id) => {
     setOpenDropdown((prev) => (prev === id ? null : id)); 
   };
+
+  function activeRoute(route){
+    return location.pathname == route;
+    
+  }
+
+  
+  
+  
+   
   return (
     <div
       className={`sm:none duration-175 linear fixed !z-50 flex min-h-full flex-col bg-white pb-10 shadow-2xl shadow-white/5 transition-all dark:!bg-navy-800 dark:text-white md:!z-50 lg:!z-50 xl:!z-0 ${
@@ -113,10 +100,10 @@ const Sidebar = ({ open, onClose }) => {
       <div className="mt-[58px] mb-1 h-px bg-[#b89474]" />
       {/* Nav item */}
       <div className="" style={{overflowY:'auto',height : '100vh'}}>
-        <List className="m-0" style={{color:'#b89474',padding:'0'}}>
+        <List className={`m-0 ${activeRoute('/') ? 'text-[#b89474]' : 'text-gray-600'}`} style={{padding:'0'}}>
           <ListItem>
             <ListItemIcon>
-              <HomeIcon style={{color:'#b89474'}}/>
+              <HomeIcon className={`m-0 ${activeRoute('/') ? 'text-[#b89474]' : 'text-gray-600'}`} />
             </ListItemIcon>
             <Link href="/">
               <ListItemText primary="Beranda"/>
@@ -150,15 +137,7 @@ const Sidebar = ({ open, onClose }) => {
           subMenu={Inventory}
           icon={<InventoryIcon style={{color:'#b89474'}}  />}
         />
-        <Dropdown 
-          id="Produksi"
-          primary="Produksi"
-          key="Produksi"
-          isOpen={openDropdown === 'Produksi'}
-          onToggle={() => handleToggle('Produksi')}
-          subMenu={Produksi}
-          icon={<FactoryIcon style={{color:'#b89474'}}  />}
-        />
+        
         <Dropdown 
           id="Master"
           primary="Master"

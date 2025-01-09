@@ -43,7 +43,13 @@ function Home() {
         <Grid sx={{width:'100%',minHeight:'66vh'}}>
           <Card extra="p-4">
             <h2 className='text-bold ml-2 mb-2 text-2xl'>PESANAN - CUSTOM</h2>
-            <DataTable/>
+            <DataTable tipe_order="CUSTOM"/>
+          </Card>
+        </Grid>
+        <Grid sx={{width:'100%',minHeight:'66vh',marginTop:'20px'}}>
+          <Card extra="p-4">
+            <h2 className='text-bold ml-2 mb-2 text-2xl'>PESANAN - REPARASI</h2>
+            <DataTable tipe_order="REPARASI"/>
           </Card>
         </Grid>
       </Grid>

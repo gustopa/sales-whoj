@@ -1,60 +1,71 @@
 const Pelanggan = [
     {
       name : "Pelanggan",
-      link : "",
-      IsSubMenu : false
+      link : "/customer",
+      IsSubMenu : false,
+      group : 'Pelanggan'
     },
     {
       name : "Kunjungan Pelanggan",
-      link : "",
-      IsSubMenu : false
+      link : "/customer-visit",
+      IsSubMenu : false,
+      group : 'Pelanggan'
     },
     {
       name : "Pengiriman",
-      link : "",
-      IsSubMenu : false
+      link : "/shipping",
+      IsSubMenu : false,
+      group : 'Pelanggan'
     },
   ]
 const Transaksi = [
     {
       name : "Transaksi",
-      link : "",
-      IsSubMenu : false
+      link : "/dashboard_sales",
+      IsSubMenu : false,
+      group : 'Transaksi'
     },
     {
       name : "Pembayaran",
-      link : "",
-      IsSubMenu : false
+      link : "/payment",
+      IsSubMenu : false,
+      group : 'Transaksi'
     },
     {
       name : "Pesanan",
-      link : "",
-      IsSubMenu : false
+      link : "/request_order",
+      IsSubMenu : false,
+      group : 'Transaksi'
     },
     {
       name : "Pesanan Sales",
-      link : "",
-      IsSubMenu : false
+      link : "/request_order_bysales",
+      IsSubMenu : false,
+      group : 'Transaksi'
     },
     {
       name : "Reparasi",
-      link : "",
-      IsSubMenu : false
+      link : "/reparation",
+      IsSubMenu : false,
+      group : 'Transaksi'
     },
     {
       name : "Kembalikan/Tukar",
-      link : "",
-      IsSubMenu : false
+      link : "/refund",
+      IsSubMenu : false,
+      group : 'Transaksi'
     },
     {
       name : "Tanda Terima",
-      link : "",
-      IsSubMenu : false
+      link : "/tanda_terima",
+      IsSubMenu : false,
+      group : 'Transaksi'
     },
     {
       name : "Setup Rate",
-      link : "",
-      IsSubMenu : false
+      link : "/exrate",
+      IsSubMenu : false,
+      group : 'Transaksi'
     },
   ]
 
@@ -62,266 +73,317 @@ const Transaksi = [
   const Inventory = [
     {
       name : "Summary Inventory",
-      link : "",
-      IsSubMenu : false
+      link : "/inventory_summary",
+      IsSubMenu : false,
+      group : 'Inventory'
     },
     {
       name : "Barang",
-      link : "",
-      IsSubMenu : false
+      link : "/inventory_list",
+      IsSubMenu : false,
+      group : 'Inventory'
     },
     {
       name : "Detail Inventory",
-      link : "",
-      IsSubMenu : false
+      link : "/inventory",
+      IsSubMenu : false,
+      group : 'Inventory'
     },
     {
       name : "Kirim Barang",
-      link : "",
-      IsSubMenu : false
-    },
-    {
-      name : "Matriks Harga",
-      link : "",
-      IsSubMenu : false
+      link : "/inventory_out",
+      IsSubMenu : false,
+      group : 'Inventory'
     },
     {
       name : "Terima Barang",
-      link : "",
-      IsSubMenu : false
+      link : "/inventory_out_received",
+      IsSubMenu : false,
+      group : 'Inventory'
+    },
+    {
+      name : "Matriks Harga",
+      link : "/diamond_pricing",
+      IsSubMenu : false,
+      group : 'Inventory'
     },
     {
       name : "Pergerakan Barang",
-      link : "",
-      IsSubMenu : false
+      link : "/inventory_movement",
+      IsSubMenu : false,
+      group : 'Inventory'
     },
     {
       name : "Foto",
-      link : "",
-      IsSubMenu : false
+      link : "/photo_inventory",
+      IsSubMenu : false,
+      group : 'Inventory'
     },
     {
       name : "Stock Opname",
-      link : "",
-      IsSubMenu : false
+      link : "/stock_opname",
+      IsSubMenu : false,
+      group : 'Inventory'
     },
     {
       name : "Miscellaneous",
-      link : "",
-      IsSubMenu : false
+      link : "/miscellaneous",
+      IsSubMenu : false,
+      group : 'Inventory'
     },
     {
       name : "Stok Harian",
-      link : "",
-      IsSubMenu : false
+      link : "/daily_stock",
+      IsSubMenu : false,
+      group : 'Inventory'
     },
     {
       name : "Kalkulasi Harga",
-      link : "",
-      IsSubMenu : false
+      link : "/inventory_price_calculation",
+      IsSubMenu : false,
+      group : 'Inventory'
     },
   ]
   const Produksi = [
     {
       name : "Open Periode Stok",
       link : "",
-      IsSubMenu : false
+      IsSubMenu : false,
+      group : 'Produksi'
     },
     {
       name : "Tipe Emas",
       link : "",
-      IsSubMenu : false
+      IsSubMenu : false,
+      group : 'Produksi'
     },
     {
       name : "Tipe Berlian",
       link : "",
-      IsSubMenu : false
+      IsSubMenu : false,
+      group : 'Produksi'
     },
     {
       name : "Tipe Frame",
       link : "",
-      IsSubMenu : false
+      IsSubMenu : false,
+      group : 'Produksi'
     },
     {
       name : "Input Stok Emas",
       link : "",
-      IsSubMenu : false
+      IsSubMenu : false,
+      group : 'Produksi'
     },
     {
       name : "Input Stok Berlian",
       link : "",
-      IsSubMenu : false
+      IsSubMenu : false,
+      group : 'Produksi'
     },
     {
       name : "Produksi",
       link : "",
-      IsSubMenu : false
+      IsSubMenu : false,
+      group : 'Produksi'
     },
     {
       name : "Daftar Transaksi Emas",
       link : "",
-      IsSubMenu : false
+      IsSubMenu : false,
+      group : 'Produksi'
     },
     {
       name : "Daftar Transaksi Berlian",
       link : "",
-      IsSubMenu : false
+      IsSubMenu : false,
+      group : 'Produksi'
     },
   ]
   const Master = [
     {
       name : "item",
-      link : "",
-      IsSubMenu : false
+      link : "/item",
+      IsSubMenu : false,
+      group : 'Master'
     },
     {
       name : "Jenis",
-      link : "",
-      IsSubMenu : false
+      link : "/item_type",
+      IsSubMenu : false,
+      group : 'Master'
     },
     {
       name : "Model",
-      link : "",
-      IsSubMenu : false
+      link : "/model",
+      IsSubMenu : false,
+      group : 'Master'
     },
     {
       name : "Store",
-      link : "",
-      IsSubMenu : false
+      link : "/store",
+      IsSubMenu : false,
+      group : 'Master'
     },
     {
-      name : "Tiper Transaksi",
-      link : "",
-      IsSubMenu : false
+      name : "Tipe Transaksi",
+      link : "/trans_type",
+      IsSubMenu : false,
+      group : 'Master'
     },
     {
       name : "Tipe Pembayaran",
-      link : "",
-      IsSubMenu : false
+      link : "/payment_type",
+      IsSubMenu : false,
+      group : 'Master'
     },
     {
       name : "EDC",
-      link : "",
-      IsSubMenu : false
+      link : "/edc",
+      IsSubMenu : false,
+      group : 'Master'
     },
     {
       name : "Lokasi ",
-      link : "",
-      IsSubMenu : false
+      link : "/location",
+      IsSubMenu : false,
+      group : 'Master'
     },
     {
       name : "Harga Labour",
-      link : "",
-      IsSubMenu : false
+      link : "/labour_price",
+      IsSubMenu : false,
+      group : 'Master'
     },
     {
       name : "Letak Barang",
-      link : "",
-      IsSubMenu : false
+      link : "/position",
+      IsSubMenu : false,
+      group : 'Master'
     },
     {
       name : "Grouping Pesanan",
-      link : "",
-      IsSubMenu : false
+      link : "/grouping_order",
+      IsSubMenu : false,
+      group : 'Master'
     },
     {
       name : "Sales",
-      link : "",
-      IsSubMenu : false
+      link : "/sales",
+      IsSubMenu : false,
+      group : 'Master'
     },
     {
       name : "Pengrajin",
-      link : "",
-      IsSubMenu : false
+      link : "/craftsman",
+      IsSubMenu : false,
+      group : 'Master'
     },
     {
       name : "Kota",
-      link : "",
-      IsSubMenu : false
+      link : "city",
+      IsSubMenu : false,
+      group : 'Master'
     },
     {
       name : "Nama Produk",
-      link : "",
-      IsSubMenu : false
+      link : "/productname",
+      IsSubMenu : false,
+      group : 'Master'
     },
   ]
   const Laporan = [
     {
       name : "Penjualan",
-      link : "",
-      IsSubMenu : false
+      link : "/report_sellout",
+      IsSubMenu : false,
+      group : 'Master'
     },
     {
       name : "Stock Opname",
-      link : "",
-      IsSubMenu : false
+      link : "/report_stock",
+      IsSubMenu : false,
+      group : 'Master'
     },
     {
       name : "Input Inventory",
-      link : "",
-      IsSubMenu : false
+      link : "/report_inventory",
+      IsSubMenu : false,
+      group : 'Master'
     },
     {
       name : "Pesanan",
-      link : "",
-      IsSubMenu : false
+      link : "/report_request_order",
+      IsSubMenu : false,
+      group : 'Master'
     },
     {
       name : "Nota Penjualan",
-      link : "",
-      IsSubMenu : false
+      link : "/report_nota_penjualan",
+      IsSubMenu : false,
+      group : 'Master'
     },
     {
       name : "Outstanding Pesanan",
-      link : "",
-      IsSubMenu : false
+      link : "/request_order_summary",
+      IsSubMenu : false,
+      group : 'Master'
     },
     {
       name : "Rekap Pembayaran",
-      link : "",
-      IsSubMenu : false
+      link : "/payment_summary",
+      IsSubMenu : false,
+      group : 'Master'
     },
     {
       name : "Report Pengrajin ",
-      link : "",
-      IsSubMenu : false
+      link : "/report_craftsman",
+      IsSubMenu : false,
+      group : 'Master'
     },
   ]
   const Konfigurasi = [
     {
       name : "Entitas",
-      link : "",
-      IsSubMenu : false
+      link : "/company",
+      IsSubMenu : false,
+      group : 'Konfigurasi'
     },
     {
       name : "Web Info",
-      link : "",
-      IsSubMenu : false
+      link : "/web_info",
+      IsSubMenu : false,
+      group : 'Konfigurasi'
     },
     {
       name : "Akun Login",
-      link : "",
-      IsSubMenu : false
+      link : "/users",
+      IsSubMenu : false,
+      group : 'Konfigurasi'
     },
     {
       name : "Folder Menu",
-      link : "",
-      IsSubMenu : false
+      link : "/folder_menu",
+      IsSubMenu : false,
+      group : 'Konfigurasi'
     },
     {
       name : "Menu",
-      link : "",
-      IsSubMenu : false
+      link : "/menu",
+      IsSubMenu : false,
+      group : 'Konfigurasi'
     },
     {
       name : "Peran Akun",
-      link : "",
-      IsSubMenu : false
+      link : "/role",
+      IsSubMenu : false,
+      group : 'Konfigurasi'
     },
     {
       name : "Akses Akun",
-      link : "",
-      IsSubMenu : false
+      link : "/access",
+      IsSubMenu : false,
+      group : 'Konfigurasi'
     },
   ]
 

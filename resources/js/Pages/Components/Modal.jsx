@@ -1,30 +1,37 @@
 import { Button, Modal,Box,Grid2 as Grid, Table, TableBody, TableCell,TableContainer,TableHead,TableRow } from '@mui/material'
 import React, {useEffect, useState} from 'react'
+import FileOpenIcon from '@mui/icons-material/FileOpen';
 import CloseIcon from '@mui/icons-material/Close';
+import { useSnapshot } from 'valtio';
+import state from '../../store/store';
 function ModalComponent({params}) {
     const row_id = params.data.row_id;
     const dataOrder = params.data
-    
+    const snap = useSnapshot(state)
     const [open, setOpen] = useState(false);
     const [data,setData] = useState([])
     const [dataDp,setDataDp] = useState([])
+    const [isLoaded,setIsLoaded] = useState(false)
     const handleModal = ()=>{
         setOpen(true)
+        if(!isLoaded){
+            getDataDetailRequestOrder()
+            getDataDp()
+            setIsLoaded(true)
+        }
     }
     const handleClose = () => {
         setOpen(false)
     }
-
-    console.log(params.data);
-    
 
     const getDataDetailRequestOrder = async () =>{
         try{
             const response = await axios.post(`/request_order/view/${row_id}`)
             const dataJson = await response.data;
             setData(dataJson.data)
+            
         }catch(err){
-            alert(err)  
+            console.log(err)  
         }
     }
 
@@ -33,21 +40,16 @@ function ModalComponent({params}) {
             const response = await axios.post(`/request_order/getDPList/${row_id}`)
             const dataJson = await response.data;
             setDataDp(dataJson)
+            console.log('ok');
+            
         }catch(err){
-            alert(err);
+            console.log(err);
         }
     }
-
-    
-    
-    useEffect(()=>{
-        getDataDetailRequestOrder()
-        getDataDp()
-    },[])
     
   return (
     <div className=''>
-      <Button onClick={handleModal}>
+      <Button onClick={handleModal} style={{color:'#b89474'}}>
         {params.value}
       </Button>
       <Modal
@@ -57,8 +59,8 @@ function ModalComponent({params}) {
         aria-describedby="modal-description"
       >
         <div>
-            <Button onClick={handleClose} variant="outlined" sx={{position:'absolute',right:'5%',borderColor:'#b89474'}}>
-                <CloseIcon style={{color:'#b89474'}}/>
+            <Button onClick={handleClose} variant="contained" sx={{position:'absolute',right:'3%',background:'#b89474',top:'30px',zIndex:'999'}}>
+                <CloseIcon style={{color:'white'}}/>
             </Button>
             <Box
             sx={{
@@ -73,13 +75,15 @@ function ModalComponent({params}) {
                 overflowY : 'auto',
                 boxShadow: 24,
                 p: 4,
-                zIndex:9
+                zIndex:9,
+                background : snap.theme == 'dark' ? '#111c44' : '',
+                color : snap.theme == 'dark' ? 'white' : ''
             }}
             >
                 
             <Grid container spacing={2}>
                 <Grid size={{md : 4, xs: 6}}>
-                    <label className='text-[#999]' style={{fontSize:'10px'}}>DOC NO.</label><br />
+                    <label className='text-[#999]' style={{fontSize:'10px'}}>DOC NO</label><br />
                     <span>{dataOrder.doc_no}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
@@ -88,7 +92,7 @@ function ModalComponent({params}) {
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>SALES</label><br />
-                    <span>{dataOrder.sales_id_txt}</span>
+                    <span>{dataOrder.sales_id_txt == null ? "-" : dataOrder.sales_id_txt}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>PELANGGAN</label><br />
@@ -128,7 +132,7 @@ function ModalComponent({params}) {
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>UKURAN</label><br />
-                    <span>{dataOrder.size}</span>
+                    <span>{dataOrder.size == "" ? "-" : dataOrder.size}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>WARNA EMAS</label><br />
@@ -144,7 +148,7 @@ function ModalComponent({params}) {
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>CUSTOMERS MATERIAL</label><br />
-                    <span>{dataOrder.customer_materil}</span>
+                    <span>{dataOrder.customer_materil == null ? "-" : dataOrder.customer_materil}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>ESTIMATED PRICE</label><br />
@@ -156,11 +160,11 @@ function ModalComponent({params}) {
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>PELUNASAN</label><br />
-                    <span>{dataOrder.settlement}</span>
+                    <span>Rp.{new Intl.NumberFormat('id-ID').format(dataOrder.settlement)}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>CUSTOM BOX</label><br />
-                    <span>{dataOrder.custom_box}</span>
+                    <span>{dataOrder.custom_box == "" ? "-" : dataOrder.custom_box}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>ONLINE/OFFLINE</label><br />
@@ -172,33 +176,38 @@ function ModalComponent({params}) {
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>FOTO</label><br />
-                    <a target='__blank' href={`https://system-mahakarya.com/assets/uploaded/${dataOrder.photo_file}`}>View File</a>
+                    <a target='__blank' style={{textDecoration:'underline'}} href={`https://system-mahakarya.com/assets/uploaded/${dataOrder.photo_file}`}>
+                        <FileOpenIcon/> 
+                        <span className='ml-1'>
+                            View File
+                        </span>
+                    </a>
                 </Grid>
 
                 <Grid size={{md:12,xs:12}}>
                     <hr />
-                    <h2 className='my-3 ml-3 font-bold'>DETAIL</h2>
+                    <h2 className='my-3 ml-2 font-bold'>DETAIL</h2>
                     <div style={{width:"100%",overflowX : 'auto'}}>
-                        <Table style={{border:'1px solid #999'}}>
+                        <Table>
                             <TableHead>
-                                <TableRow>
-                                    <TableCell><b>Butir</b></TableCell>
-                                    <TableCell><b>Karat</b></TableCell>
-                                    <TableCell><b>Tipe</b></TableCell>
-                                    <TableCell><b>SERT No</b></TableCell>
-                                    <TableCell><b>Diameter</b></TableCell>
-                                    <TableCell><b>Warna</b></TableCell>
+                                <TableRow style={{background:'#b89474'}}>
+                                    <TableCell><b className='text-white'>Butir</b></TableCell>
+                                    <TableCell><b className='text-white'>Karat</b></TableCell>
+                                    <TableCell><b className='text-white'>Tipe</b></TableCell>
+                                    <TableCell><b className='text-white'>SERT No</b></TableCell>
+                                    <TableCell><b className='text-white'>Diameter</b></TableCell>
+                                    <TableCell><b className='text-white'>Warna</b></TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {data.map((item,index) => 
-                                    <TableRow key={index}>
-                                        <TableCell>{ item.grain }</TableCell>
-                                        <TableCell>{ item.grade }</TableCell>
-                                        <TableCell>{ item.diamond_type }</TableCell>
-                                        <TableCell>{ item.no_sert == "" ? "-" : item.no_sert }</TableCell>
-                                        <TableCell>{ item.diameter == "" ? "-" : item.diameter }</TableCell>
-                                        <TableCell>{ item.color == "" ? "-" : item.color }</TableCell>
+                                    <TableRow key={index} >
+                                        <TableCell><span className='dark:text-white'>{ item.grain }</span></TableCell>
+                                        <TableCell><span className='dark:text-white'>{ item.grade }</span></TableCell>
+                                        <TableCell><span className='dark:text-white'>{ item.diamond_type }</span></TableCell>
+                                        <TableCell><span className='dark:text-white'>{ item.no_sert == "" ? "-" : item.no_sert }</span></TableCell>
+                                        <TableCell><span className='dark:text-white'>{ item.diameter == "" ? "-" : item.diameter }</span></TableCell>
+                                        <TableCell><span className='dark:text-white'>{ item.color == "" ? "-" : item.color }</span></TableCell>
                                     </TableRow>
                                 )}
                             </TableBody>
@@ -207,22 +216,22 @@ function ModalComponent({params}) {
                 </Grid>
 
                 <Grid size={{md:12,xs:12}}>
-                    <h2 className='my-3 ml-3 font-bold'>PEMBAYARAN</h2>
+                    <h2 className='my-3 ml-2 font-bold'>PEMBAYARAN</h2>
                     <div style={{width:"100%",overflowX : 'auto'}}>
                         <Table style={{border:'1px solid #999'}}>
                             <TableHead>
-                                <TableRow>
-                                    <TableCell><b>Tanggal</b></TableCell>
-                                    <TableCell><b>Uang Muka</b></TableCell>
-                                    <TableCell><b>DP Ke</b></TableCell>
+                                <TableRow style={{background:'#b89474'}}>
+                                    <TableCell><b className='text-white'>Tanggal</b></TableCell>
+                                    <TableCell><b className='text-white'>Uang Muka</b></TableCell>
+                                    <TableCell><b className='text-white'>DP Ke</b></TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {dataDp.data?.map((i,index) => 
                                     <TableRow key={index}>
-                                        <TableCell>{ i.created_date }</TableCell>
-                                        <TableCell>{ i.down_payment }</TableCell>
-                                        <TableCell>{ i.dp_ke }</TableCell>
+                                        <TableCell><span className='dark:text-white'>{ i.created_date }</span></TableCell>
+                                        <TableCell><span className='dark:text-white'>Rp. { new Intl.NumberFormat('id-ID').format(i.down_payment) }</span></TableCell>
+                                        <TableCell><span className='dark:text-white'>{ i.dp_ke }</span></TableCell>
                                     </TableRow>
                                 )}
                             </TableBody>
@@ -231,7 +240,7 @@ function ModalComponent({params}) {
                 </Grid>
 
                 <Grid size={12}>
-                    <h2 className='my-3 ml-3 font-bold'>RIWAYAT DATA</h2>
+                    <h2 className='my-3 ml-2 font-bold'>RIWAYAT DATA</h2>
                     <Grid container>
                         <Grid size={{md:3,xs:6}}>
                             <label className='text-[#999]' style={{fontSize:'10px'}}>CREATED DATE</label><br />

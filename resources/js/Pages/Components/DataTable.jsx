@@ -12,8 +12,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 
 const gridDiv = document.querySelector("#myGrid");
 
-
-const DataTable = () => {
+const DataTable = ({tipe_order}) => {
   const [rowData, setRowData] = useState([
   ]);
   const snap = useSnapshot(state)
@@ -36,7 +35,7 @@ const DataTable = () => {
         cellRenderer :  (params) => {
             return (
                 <div className="dark:text-white">
-                    <Chip className="dark:text-white" label={params.value} variant="filled" />
+                    <Chip className={`dark:text-white ${params.value == "ON GOING" ? 'bg-navy-700' : ''}`} label={params.value} variant="filled" />
                 </div>
             )
         }
@@ -56,7 +55,7 @@ const DataTable = () => {
 
   const getDataRequestOrder = async () =>{
     try{
-        const response = await axios.post('/request_order/getAll')
+        const response = await axios.post('/request_order/getAll',{tipe : tipe_order})
         const data = await response.data;
         setRowData(data.data)
         
