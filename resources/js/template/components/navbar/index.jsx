@@ -32,6 +32,7 @@ const Navbar = (props) => {
     setLinks(filteredLinks)
     setAutocompleteSearchHidden(false)
   }
+  
   const handleBlur = (e) => {
     if (links.length == 0 || e.target.value == "") {
       setAutocompleteSearchHidden(true);
