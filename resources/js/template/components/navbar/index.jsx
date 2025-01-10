@@ -10,7 +10,6 @@ import {
 } from "react-icons/io";
 import icon from '../../../../assets/favicon.ico'
 import state from "../../../store/store";
-import {Pelanggan,Transaksi,Inventory,Laporan,Master,Konfigurasi} from "../sidebar/routes";
 
 const Navbar = (props) => {
   const session = usePage().props.session
@@ -18,17 +17,15 @@ const Navbar = (props) => {
   const [darkmode, setDarkmode] = React.useState(localStorage.getItem('theme') == 'dark');
   const [autocompleteSearchHidden,setAutocompleteSearchHidden] = useState(true)
   
-  const AllLinks = [
-    ...Pelanggan,
-    ...Transaksi,
-    ...Inventory,
-    ...Laporan,
-    ...Master,
-    ...Konfigurasi
-  ]
+  const menu = usePage().props.menu
+  const allMenu = menu.map(m => ({ 
+    name : m.menu_name_bahasa,
+    link : m.controller_menu,
+  }))
+
   const [links,setLinks] = useState([])
   function handleChange(e){
-    const filteredLinks = AllLinks.filter(link => link.name.toLowerCase().includes(e.target.value.toLowerCase()))
+    const filteredLinks = allMenu.filter(link => link.name.toLowerCase().includes(e.target.value.toLowerCase()))
     setLinks(filteredLinks)
     setAutocompleteSearchHidden(false)
   }
@@ -39,6 +36,7 @@ const Navbar = (props) => {
     }
     
   }
+  
   return (
     <nav className="sticky top-4 z-40 flex flex-row flex-wrap items-center justify-between rounded-xl bg-white/10 p-2 backdrop-blur-xl dark:bg-[#0b14374d]">
       <div className="ml-[6px]">

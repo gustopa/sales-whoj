@@ -85,10 +85,6 @@ const Sidebar = ({ open, onClose }) => {
     return acc;
   }, {});
 
-  console.log(folderMenuObject);
-  
-  // const listMenu = Object.keys(folderMenuObject).map((key) => [key, folderMenuObject[key]]);
-
   
   
   
@@ -115,13 +111,13 @@ const Sidebar = ({ open, onClose }) => {
       <div className="mt-[58px] mb-1 h-px bg-[#b89474]" />
       {/* Nav item */}
       <div className="" style={{overflowY:'auto',height : '100vh'}}>
-        <List className={`m-0 ${activeRoute('/') ? 'text-[#b89474]' : 'text-gray-600'}`} style={{padding:'0'}}>
+        <List className={`m-0 ${activeRoute('/') ? 'text-[#b89474]' : 'text-gray-600'} dropdownParent`} style={{padding:'0'}}>
           <ListItem>
             <ListItemIcon>
-              <HomeIcon className={`m-0 ${activeRoute('/') ? 'text-[#b89474]' : 'text-gray-600'}`} />
+              <HomeIcon className={`m-0 ${activeRoute('/') ? 'text-[#b89474]' : 'text-gray-600'} dropdownIcon`} />
             </ListItemIcon>
             <Link href="/">
-              <ListItemText primary="Beranda"/>
+              <ListItemText className="dropdownText" primary="Beranda"/>
             </Link>
           </ListItem>
         </List>
