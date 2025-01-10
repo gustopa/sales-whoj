@@ -1,7 +1,10 @@
 import React from 'react'
 import Layout from '../Layouts/Layout'
 
-function Customer() {
+function Customer({permission}) {
+
+  console.log(permission);
+  
   return (
     <Layout title="Customer" page="Pelanggan">
 

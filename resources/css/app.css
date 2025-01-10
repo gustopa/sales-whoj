@@ -11,3 +11,17 @@
         display: none;
     }
 }
+
+.listItem:hover .listText{
+    color: #b89474 !important;
+}
+.listItem:hover .listIcon{
+    color: #b89474 !important;
+}
+
+.dropdownParent:hover .dropdownIcon{
+    color: #b89474 !important;
+}
+.dropdownParent:hover .dropdownText{
+    color: #b89474 !important;
+}
