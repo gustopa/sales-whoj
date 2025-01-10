@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 
 class TransaksiController extends Controller
 {
+    public function __constract(){
+        
+    }
     public function dashboard(Request $request){
         $access = checkPermission('dashboard_sales');
         if($access == null || $access == ''){
