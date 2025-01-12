@@ -98,10 +98,25 @@ class CustomerController extends Controller
                 "is_submitted" => 0,
                 "customer_no" => $costumerID
             ];
+            updateLastId('customer_id');
             return CustomerModel::create($data);
         });
 
         return inertia('Customer/Create',['session' => session()->all(),'newCustomer' => $newCustomer]);
 
+    }
+
+    public function delete($id){
+        $permission = checkPermission('customer');
+        if($permission == null || $permission == "Read only"){
+            return abort(403);
+        }
+        $query = CustomerModel::where('row_id',$id)->update([
+            "modified_date" => date("Y-m-d H:i:s"),
+            "modified_by" => session('username'),
+            "is_deleted" => 1,
+            "is_submitted" => 0
+        ]);
+        return response()->json($query);
     }
 }

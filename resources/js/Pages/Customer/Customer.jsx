@@ -10,9 +10,39 @@ import { MdDeleteForever } from "react-icons/md";
 import md5 from 'md5'
 import { formatDate } from '../../helper';
 import ModalViewCustomer from './ModalViewCustomer';
+import Swal from 'sweetalert2';
 function Customer({permission}) {
   const menu_access = usePage().props.permission.menu_access;
-  
+  const handleDelete = (row_id,data) => {
+    
+    Swal.fire({
+      title: "Are you sure?",
+      text : `Delete customer  ${data.name != null || data.name == "" ? data.name : ""}`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes"
+    }).then( async (result) => {
+      if (result.isConfirmed) {
+        try{
+          const responnse = await axios.delete(`/customer/delete/${row_id}`)
+          Swal.fire({
+            title: "Deleted!",
+            icon: "success"
+          });
+          getData()
+        }catch(err){
+          Swal.fire({
+            title: "Something wrong!",
+            text: "Try again later.",
+            icon: "error"
+          });
+        }
+      }
+    });
+    
+  }
   const [column, setColumn] = useState([
     { field : 'row_id', headerName : "", filter: false,resizable: false, sortable: false,
       hide : menu_access != "Full control",
@@ -31,7 +61,7 @@ function Customer({permission}) {
             </Button>
           </Link>
           <span className='ml-3'>
-            <Button variant='outlined' style={{borderColor : '#fa625e'}}>
+            <Button onClick={() => handleDelete(params.value,params.data)} variant='outlined' style={{borderColor : '#fa625e'}}>
               <MdDeleteForever style={{color: '#fa625e'}}/>
             </Button>
           </span>
@@ -75,10 +105,6 @@ function Customer({permission}) {
     const data = await response.data
     setRowData(data)
   }
-  
-
-  
-
   
   useEffect(()=>{
     getData()

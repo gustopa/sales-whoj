@@ -30,6 +30,7 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
     Route::prefix('/customer')->group(function(){
         Route::get('/',[CustomerController::class,'index']);
         Route::get('/create',[CustomerController::class,'create']);
+        Route::delete('/delete/{id}',[CustomerController::class,'delete']);
         Route::post('/getAllCustomer',[CustomerController::class,'getAll']);
         Route::post('/getDataSize',[CustomerController::class,'getSizeList']);
         Route::post('/getDataPayment',[CustomerController::class,'getPaymentList']);

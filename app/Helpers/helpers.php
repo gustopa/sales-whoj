@@ -44,4 +44,16 @@ if(! function_exists('incrementID')){
     }
 }
 
+if(! function_exists('updateLastId')){
+    function updateLastId($field){
+        DB::transaction(function() use ($field){
+            $currentId = DB::table("last_id")->first()->$field;
+            DB::table("last_id")->update([
+                $field => $currentId + 1
+            ]);
+            return true;
+        });
+    }
+}
+
 
