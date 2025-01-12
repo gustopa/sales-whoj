@@ -70,12 +70,13 @@ const DataTable = ({tipe_order}) => {
 
   
   return (
-    <div className={`${snap.theme == 'dark' ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'}`} style={{ height: 500,border:'none' }}>
+    <div className={`${snap.theme == 'dark' ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'}`} style={{border:'none' }}>
       <AgGridReact
         rowData={rowData}
         columnDefs={columnDefs}
         defaultColDef={defaultColDef}
         pagination={true}
+        domLayout="autoHeight"
         paginationPageSize={10}
         paginationPageSizeSelector={[10, 25, 50]}
         localeText={localeText}

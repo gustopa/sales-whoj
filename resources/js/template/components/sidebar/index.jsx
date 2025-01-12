@@ -2,15 +2,18 @@
 
 import { HiX } from "react-icons/hi";
 import logo from '../../../../assets/logo.jpg'
-import { useState } from "react";
+import logo2 from '../../../../assets/favicon.ico'
+import { useState,useEffect } from "react";
 import { Link, usePage } from "@inertiajs/react";
-import { List, ListItem, ListItemText, Collapse, ListItemIcon } from '@mui/material';
+import { List, ListItem, ListItemText, Collapse, ListItemIcon, Button } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import ShortcutIcon from '@mui/icons-material/Shortcut';
 import MemoryIcon from '@mui/icons-material/Memory';
 import {Pelanggan,Transaksi,Inventory,Laporan,Master,Konfigurasi} from "./routes";
 import HomeIcon from '@mui/icons-material/Home';
 import '@fortawesome/fontawesome-svg-core/styles.css'
+import { FaExpandAlt } from "react-icons/fa";
+import { FiMinimize2 } from "react-icons/fi";
 
 
 const Dropdown = ({primary, isOpen, onToggle,subMenu,icon,color}) => {
@@ -45,7 +48,7 @@ const Dropdown = ({primary, isOpen, onToggle,subMenu,icon,color}) => {
 };
 
 
-const Sidebar = ({ open, onClose }) => {
+const Sidebar = ({ open, onClose, miniSidebar, setMiniSidebar }) => {
   
   const AllLinks = [
     ...Pelanggan,
@@ -64,6 +67,7 @@ const Sidebar = ({ open, onClose }) => {
 
   const handleToggle = (id) => {
     setOpenDropdown((prev) => (prev === id ? null : id)); 
+    setMiniSidebar(false)
   };
 
   function activeRoute(route){
@@ -85,16 +89,17 @@ const Sidebar = ({ open, onClose }) => {
     return acc;
   }, {});
 
-  
-  
+  const [buttonExpand,setButtonExpand] = useState(true)
+  useEffect(() => {
+    window.addEventListener("resize", () => window.innerWidth < 1200 ? setButtonExpand(false) : setButtonExpand(true));
+  }, []);
   
   
   
   return (
     <div
-      className={`sm:none duration-175 linear fixed !z-50 flex min-h-full flex-col bg-white pb-10 shadow-2xl shadow-white/5 transition-all dark:!bg-navy-800 dark:text-white md:!z-50 lg:!z-50 xl:!z-0 ${
-        open ? "translate-x-0" : "-translate-x-96"
-      }`}
+      className={`sm:none duration-175 linear fixed !z-50 flex min-h-full flex-col bg-white pb-10 shadow-2xl shadow-white/5 transition-all dark:!bg-navy-800 dark:text-white md:!z-50 lg:!z-50 xl:!z-0 
+        ${open ? "translate-x-0" : "-translate-x-96"}`} style={{width : miniSidebar ? "3.5%" : ""}}
     >
       <span
         className="absolute top-4 right-4 block cursor-pointer xl:hidden"
@@ -103,24 +108,40 @@ const Sidebar = ({ open, onClose }) => {
         <HiX />
       </span>
 
-      <div className={`mx-[56px] mt-[35px] flex items-center`}>
+      <div>
+          <List className={`${buttonExpand ? '' : 'hidden'}`} style={{cursor:'pointer'}} onClick={() => {setMiniSidebar(!miniSidebar); setOpenDropdown(null)}}>
+              <ListItem className="flex justify-end">
+                <ListItemIcon>
+                  {miniSidebar ? <FaExpandAlt className="ml-1" style={{color : "#b89474"}}/> : <FiMinimize2 className="ml-1" style={{color : "#b89474"}}/>}
+                </ListItemIcon>
+              </ListItem>
+          </List>
+        </div>
+
+      <div className={`mx-[56px] mt-[5px] flex items-center ${miniSidebar ? 'hidden' : ''}`}>
         <div className="mt-1 ml-1 h-2.5 font-poppins text-[26px] font-bold uppercase text-navy-700 dark:text-white">
           <img src={logo} alt="logo" width="200" />
         </div>
       </div>
-      <div className="mt-[58px] mb-1 h-px bg-[#b89474]" />
+      
+      <div className={`${miniSidebar ? '' : 'hidden'} mx-auto flex items-center`}>
+        <img src={logo2} width="25" alt="" />
+      </div>
+
+      <div className={`${miniSidebar ? 'mt-[20px]' :'mt-[58px]'} mb-1 h-px bg-[#b89474]`} />
       {/* Nav item */}
+
       <div className="" style={{overflowY:'auto',height : '100vh'}}>
-        <List className={`m-0 ${activeRoute('/') ? 'text-[#b89474]' : 'text-gray-600'} dropdownParent`} style={{padding:'0'}}>
-          <ListItem>
-            <ListItemIcon>
-              <HomeIcon className={`m-0 ${activeRoute('/') ? 'text-[#b89474]' : 'text-gray-600'} dropdownIcon`} />
-            </ListItemIcon>
-            <Link href="/">
-              <ListItemText className="dropdownText" primary="Beranda"/>
-            </Link>
-          </ListItem>
-        </List>
+          <Link href="/">
+            <List className={`m-0 ${activeRoute('/') ? 'text-[#b89474]' : 'text-gray-600'} dropdownParent`} style={{padding:'0'}}>
+              <ListItem>
+                <ListItemIcon>
+                  <HomeIcon className={`m-0 ${activeRoute('/') ? 'text-[#b89474]' : 'text-gray-600'} dropdownIcon`} />
+                </ListItemIcon>
+                  <ListItemText className="dropdownText" primary="Beranda"/>
+              </ListItem>
+            </List>
+          </Link>
 
         
         {Object.keys(folderMenuObject).map((menu,index)=>
@@ -139,7 +160,6 @@ const Sidebar = ({ open, onClose }) => {
         
       </div>
       
-
     </div>
   );
 };

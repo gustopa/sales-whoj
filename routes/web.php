@@ -27,7 +27,17 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
     Route::post('/request_order/view/{id}',[RequestOrderController::class,'view']);
     Route::post('/request_order/getDPList/{id}',[RequestOrderController::class,'getDPList']);
 
-    Route::get('/customer',[CustomerController::class,'index']);
+    Route::prefix('/customer')->group(function(){
+        Route::get('/',[CustomerController::class,'index']);
+        Route::get('/create',[CustomerController::class,'create']);
+        Route::post('/getAllCustomer',[CustomerController::class,'getAll']);
+        Route::post('/getDataSize',[CustomerController::class,'getSizeList']);
+        Route::post('/getDataPayment',[CustomerController::class,'getPaymentList']);
+        Route::post('/getDataOrder',[CustomerController::class,'getOrderList']);
+        Route::post('/getDataRefund',[CustomerController::class,'getRefundList']);
+        Route::post('/getDataDocument',[CustomerController::class,'getDocumentList']);
+        Route::post('/getDataVisit',[CustomerController::class,'getVisitList']);
+    });
 });
 Route::get('/login',function(){
     return inertia('Auth/Login');

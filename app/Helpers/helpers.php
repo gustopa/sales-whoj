@@ -22,41 +22,25 @@ if (! function_exists('enkripsi')) {
     }
 }
 
-if(! function_exists('checkPermission')){
-    function checkPermission($page){
-        $row_id = session('user_id');
-        $data = DB::table('vw_sysaccessmenuuserlist')->where('row_id',3)->get();
-        if($row_id == 1 || $row_id == 2){
-            $access_page = "Full control";
-        }else{
-            $access_page = DB::table('vw_sysaccessmenuuserlist')->where([
-                ['row_id','=',$row_id],
-                ['controller_menu','=',$page]
-            ])->first();
-        }
-        return $access_page;
-    }
-}
 
-if(! function_exists('checkAccess')){
-    function checkAccess($page){
-        $access = checkPermission($page);
-        if($access == null || $access == ''){
-            return redirect()->route('dashboard');
-        }
-    }
-}
-
-if(! function_exists('listMenu')){
-    function listMenu(){
-        $row_id = session('user_id');
-        if($row_id == 1 || $row_id == 2){
-            $menus = DB::table('vw_sysaccessmenuadminlist')->orderBy('folder_seq','ASC')->orderby('menu_seq','ASC')->get();
-        }else{
-            $menus = DB::table('vw_sysaccessmenuuserlist')->where('row_id',$row_id)->orderBy('folder_seq','ASC')->orderby('menu_seq','ASC')->get();
-        }
-
-        return $menus;
+if(! function_exists('incrementID')){
+    function incrementID($currentCode) {
+        // Pisahkan prefix dan angka
+        $parts = explode('-', $currentCode); // Misalnya "C-0004845"
+        $prefix = $parts[0];                // "C"
+        $number = intval($parts[1]);        // 4845 (konversi jadi integer)
+    
+        // Increment angka
+        $newNumber = $number + 1;
+    
+        // Hitung panjang format angka saat ini
+        $currentLength = strlen($parts[1]);
+    
+        // Pastikan angka tetap dalam format padding nol
+        $newNumberFormatted = str_pad($newNumber, $currentLength, '0', STR_PAD_LEFT);
+    
+        // Gabungkan kembali prefix dengan angka baru
+        return $prefix . '-' . $newNumberFormatted;
     }
 }
 
