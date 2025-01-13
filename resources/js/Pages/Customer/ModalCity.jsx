@@ -19,7 +19,7 @@ function ModalCity({city}) {
     const [columnDefs, setColumnDefs] = useState([
         {field : "row_id", headerName : "", filter : false},
         {field : "province_name" , headerName : "Province"},
-        {field : "city_name", headerName : "City"}
+        {field : "city_name", headerName : "City", colspan: 3}
     ])
   return (
     <>

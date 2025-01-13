@@ -7,13 +7,7 @@ import { useSnapshot } from "valtio";
 import state from "../../../store/store";
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-const DataTable = ({data,columns,height}) => {
-    const defaultColDef = useMemo(() => {
-    return {
-        filter: "agTextColumnFilter",
-        floatingFilter: true,
-    };
-    }, []);
+const DataTable = ({data,columns}) => {
     const localeText = {
         page : "",
         pageSizeSelectorLabel : ""
@@ -24,7 +18,6 @@ const DataTable = ({data,columns,height}) => {
       <AgGridReact
         rowData={data}
         columnDefs={columns}
-        defaultColDef={defaultColDef}
         pagination={true}
         paginationPageSize={10}
         domLayout="autoHeight"
