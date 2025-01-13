@@ -25,3 +25,9 @@
 .dropdownParent:hover .dropdownText{
     color: #b89474 !important;
 }
+.Mui-focused{
+    color: #b89474 !important;
+}
+.MuiSelect-select{
+    border-color: #b89474 !important;
+}

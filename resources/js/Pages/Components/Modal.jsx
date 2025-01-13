@@ -103,7 +103,7 @@ function ModalComponent({params}) {
                     <span>{dataOrder.created_date}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
-                    <label className='text-[#999]' style={{fontSize:'10px'}}>TANGGAL</label><br />
+                    <label className='text-[#999]' style={{fontSize:'10px'}}>PERKIRAAN DELIVERY</label><br />
                     <span>{dataOrder.estimated_date}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>

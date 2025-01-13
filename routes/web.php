@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RequestOrderController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\EmasController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Middleware\IsAuthenticated;
@@ -16,20 +15,18 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
 
     Route::get('/profile',[HomeController::class,'profile']);
 
-    Route::prefix('bahan-emas')->group(function(){
-        Route::get('/',[EmasController::class,'bahanEmas']);
-        Route::post('/tambah',[EmasController::class,'tambahEmas']);
-    });
-
     Route::get('/dashboard_sales',[TransaksiController::class,'dashboard']);
 
-    Route::post('/request_order/getAll',[RequestOrderController::class,'getAll']);
-    Route::post('/request_order/view/{id}',[RequestOrderController::class,'view']);
-    Route::post('/request_order/getDPList/{id}',[RequestOrderController::class,'getDPList']);
+    Route::prefix('/request_order')->group(function(){
+        Route::post('/getAll',[RequestOrderController::class,'getAll']);
+        Route::post('/view/{id}',[RequestOrderController::class,'view']);
+        Route::post('/getDPList/{id}',[RequestOrderController::class,'getDPList']);
+    });
 
     Route::prefix('/customer')->group(function(){
         Route::get('/',[CustomerController::class,'index']);
         Route::get('/create',[CustomerController::class,'create']);
+        Route::get('/form/{id}',[CustomerController::class,'form'])->name('form_customer');
         Route::delete('/delete/{id}',[CustomerController::class,'delete']);
         Route::post('/getAllCustomer',[CustomerController::class,'getAll']);
         Route::post('/getDataSize',[CustomerController::class,'getSizeList']);
@@ -40,11 +37,16 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         Route::post('/getDataVisit',[CustomerController::class,'getVisitList']);
     });
 });
+
+
+Route::post('/encrypt',function(){
+    $encrypt_id = encrypt_id(request('id'));
+    return response()->json(["encrypted" => $encrypt_id]);
+});
+
 Route::get('/login',function(){
     return inertia('Auth/Login');
 })->middleware(NotLogin::class)->name('login');
 
 Route::post('/login',[AuthController::class,'login']);
 Route::get('/logout',[AuthController::class,'logout']);
-
-Route::get('/test',[AuthController::class,'login']);

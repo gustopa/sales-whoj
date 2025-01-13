@@ -56,4 +56,30 @@ if(! function_exists('updateLastId')){
     }
 }
 
+if(! function_exists('decrypt_id')){
+    function decrypt_id($encryptedData) {
+        $key = env("SECURITY_KEY");
+        $data = base64_decode($encryptedData);
+        $output = '';
+        for ($i = 0; $i < strlen($data); $i++) {
+            $output .= chr(ord($data[$i]) ^ ord($key[$i % strlen($key)]));
+        }
+        return $output;
+	}
+}
+
+if(!function_exists('encrypt_id')){
+    function encrypt_id($data) {
+		$output = '';
+        $data = strval($data);
+        $key = env("SECURITY_KEY");
+        for ($i = 0; $i < strlen($data); $i++) {
+            $output .= chr(ord($data[$i]) ^ ord($key[$i % strlen($key)]));
+        }
+        return base64_encode($output);
+	}
+}
+
+
+
 

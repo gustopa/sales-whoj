@@ -102,7 +102,7 @@ class CustomerController extends Controller
             return CustomerModel::create($data);
         });
 
-        return inertia('Customer/Create',['session' => session()->all(),'newCustomer' => $newCustomer]);
+        return redirect("/customer/form/".encrypt_id($newCustomer->id));
 
     }
 
@@ -117,6 +117,16 @@ class CustomerController extends Controller
             "is_deleted" => 1,
             "is_submitted" => 0
         ]);
+
         return response()->json($query);
+    }
+
+    public function form($id){
+        $permission = checkPermission('customer');
+        $menu = listMenu();
+        checkAccess('customer');
+        $cityList = DB::table('vw_citylist')->get();
+        $customer = CustomerModel::select('customer.*','city.city_name')->leftJoin('city','customer.city_id','=','city.row_id')->where('customer.row_id',intval(decrypt_id($id)))->first();
+        return inertia('Customer/Form',['session' => session()->all(),'customer' => $customer,'menu' => $menu, 'city' => $cityList]);
     }
 }

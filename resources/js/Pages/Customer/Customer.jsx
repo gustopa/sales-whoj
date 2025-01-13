@@ -11,10 +11,10 @@ import md5 from 'md5'
 import { formatDate } from '../../helper';
 import ModalViewCustomer from './ModalViewCustomer';
 import Swal from 'sweetalert2';
+import { encrypt } from '../../helper';
 function Customer({permission}) {
   const menu_access = usePage().props.permission.menu_access;
   const handleDelete = (row_id,data) => {
-    
     Swal.fire({
       title: "Are you sure?",
       text : `Delete customer  ${data.name != null || data.name == "" ? data.name : ""}`,
@@ -43,6 +43,7 @@ function Customer({permission}) {
     });
     
   }
+
   const [column, setColumn] = useState([
     { field : 'row_id', headerName : "", filter: false,resizable: false, sortable: false,
       hide : menu_access != "Full control",
@@ -53,20 +54,23 @@ function Customer({permission}) {
           </Button>
         </Link>
       ),
-      cellRenderer : params => (
-        <>
-          <Link href={`/customer/edit/${md5(params.value)}`}>
-            <Button variant='outlined' style={{borderColor: '#0084ff'}}>
-              <FaUserEdit style={{color : '#0084ff'}}/>
-            </Button>
-          </Link>
-          <span className='ml-3'>
-            <Button onClick={() => handleDelete(params.value,params.data)} variant='outlined' style={{borderColor : '#fa625e'}}>
-              <MdDeleteForever style={{color: '#fa625e'}}/>
-            </Button>
-          </span>
-        </>
-      )
+      cellRenderer : params => {
+        
+        return (
+          <>
+            <Link href={`/customer/form/${encrypt(params.value)}`}>
+              <Button variant='outlined' style={{borderColor: '#0084ff'}}>
+                <FaUserEdit style={{color : '#0084ff'}}/>
+              </Button>
+            </Link>
+            <span className='ml-3'>
+              <Button onClick={() => handleDelete(params.value,params.data)} variant='outlined' style={{borderColor : '#fa625e'}}>
+                <MdDeleteForever style={{color: '#fa625e'}}/>
+              </Button>
+            </span>
+          </>
+        )
+      }
     },
     { field: "customer_no", headerName: "Pelanggan No", 
         cellRenderer : params => {
@@ -111,7 +115,7 @@ function Customer({permission}) {
   },[])
   
   return (
-    <Layout title="Customer" page="Pelanggan">
+    <Layout title="Pelanggan" page="Pelanggan">
       <DataTable height="100%" columns={column} data={rowData} />
     </Layout>
   )

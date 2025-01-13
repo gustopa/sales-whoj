@@ -36,7 +36,7 @@ const Dropdown = ({primary, isOpen, onToggle,subMenu,icon,color}) => {
                 <ListItemIcon>
                   <ShortcutIcon className="listIcon" style={{color: location.pathname == '/'+menu.link ? "#b89474" : "#a3aed0",transform: 'rotate(180deg) scaleX(-1)'}}/>
                 </ListItemIcon>
-                <Link href={menu.link} underline="none" className="-ml-6 ">
+                <Link href={`/${menu.link}`} underline="none" className="-ml-6 ">
                   <ListItemText className="listText" style={{color: location.pathname == '/'+menu.link ? "#b89474" : "#a3aed0"}} primary={menu.name} />
                 </Link>
             </ListItem>
@@ -50,19 +50,16 @@ const Dropdown = ({primary, isOpen, onToggle,subMenu,icon,color}) => {
 
 const Sidebar = ({ open, onClose, miniSidebar, setMiniSidebar }) => {
   
-  const AllLinks = [
-    ...Pelanggan,
-    ...Transaksi,
-    ...Inventory,
-    ...Laporan,
-    ...Master,
-    ...Konfigurasi
-  ]
+  const menu = usePage().props.menu;
+  
+  const AllLinks = menu.map((m) => [m.controller_menu,m.folder_name_bahasa])
   const path = location.pathname
+  
   let ActiveGroupLink = null
   if(path != "/"){
-    ActiveGroupLink = AllLinks.filter(link => link.link == path)[0].group
+    ActiveGroupLink = AllLinks.filter(link => link[0] == path.split('/')[1] ? link[1] : null)[0][1]
   }
+  
   const [openDropdown, setOpenDropdown] = useState(ActiveGroupLink); 
 
   const handleToggle = (id) => {
@@ -75,8 +72,9 @@ const Sidebar = ({ open, onClose, miniSidebar, setMiniSidebar }) => {
     
   }
 
-  const menu = usePage().props.menu;
+  
   const folderMenu = menu.map((m) => m.folder_name_bahasa);
+  
   const folderMenuObject = folderMenu.reduce((acc, folderName) => {
     acc[folderName] = menu
       .filter((m) => m.folder_name_bahasa === folderName) 
@@ -88,10 +86,10 @@ const Sidebar = ({ open, onClose, miniSidebar, setMiniSidebar }) => {
   
     return acc;
   }, {});
-
   const [buttonExpand,setButtonExpand] = useState(true)
   useEffect(() => {
     window.addEventListener("resize", () => window.innerWidth < 1200 ? setButtonExpand(false) : setButtonExpand(true));
+    window.innerWidth < 1200 ? setButtonExpand(false) : setButtonExpand(true)
   }, []);
   
   
@@ -102,14 +100,14 @@ const Sidebar = ({ open, onClose, miniSidebar, setMiniSidebar }) => {
         ${open ? "translate-x-0" : "-translate-x-96"}`} style={{width : miniSidebar ? "3.5%" : ""}}
     >
       <span
-        className="absolute top-4 right-4 block cursor-pointer xl:hidden"
+        className="absolute top-4 right-4 block z-999 cursor-pointer xl:hidden"
         onClick={onClose}
       >
         <HiX />
       </span>
 
       <div>
-          <List className={`${buttonExpand ? '' : 'hidden'}`} style={{cursor:'pointer'}} onClick={() => {setMiniSidebar(!miniSidebar); setOpenDropdown(null)}}>
+          <List className={`${buttonExpand ? 'hidden lg:block' : 'hidden'} `} style={{cursor:'pointer'}} onClick={() => {setMiniSidebar(!miniSidebar); setOpenDropdown(null)}}>
               <ListItem className="flex justify-end">
                 <ListItemIcon>
                   {miniSidebar ? <FaExpandAlt className="ml-1" style={{color : "#b89474"}}/> : <FiMinimize2 className="ml-1" style={{color : "#b89474"}}/>}
@@ -155,7 +153,6 @@ const Sidebar = ({ open, onClose, miniSidebar, setMiniSidebar }) => {
           onToggle={() => handleToggle(menu)}
           icon={folderMenuObject[menu][0].icon}
           />
-          
         )}
         
       </div>

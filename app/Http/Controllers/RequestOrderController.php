@@ -22,6 +22,7 @@ class RequestOrderController extends Controller
         $request_order_diamond_list = DB::table('vw_request_order_diamondlist')
         ->where('row_id',$id)
         ->where('is_deleted',0)
+        ->orderBy('line_id','DESC')
         ->get();
         return response()->json([
             "data" => $request_order_diamond_list

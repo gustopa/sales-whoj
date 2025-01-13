@@ -12,13 +12,14 @@ export default function Layout(props) {
     window.addEventListener("resize", () => {
       if(window.innerWidth < 1200){
         setOpen(false)
+        setMiniSidebar(false)
       }else{
         setOpen(true) 
-        setMiniSidebar(false)
       } 
     }
     );
   }, []);
+
   
   document.documentElement.dir = "ltr";
   return (
