@@ -31,3 +31,6 @@
 .MuiSelect-select{
     border-color: #b89474 !important;
 }
+.agGridTable{
+    width: 100% !important;
+}

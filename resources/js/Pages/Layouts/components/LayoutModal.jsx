@@ -1,13 +1,10 @@
 import React, { useState } from 'react'
-import SearchIcon from "@mui/icons-material/Search"
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, Button, IconButton, Modal } from '@mui/material'
 import { useSnapshot } from 'valtio';
-import state from '../../store/store';
-import { AgGridReact } from 'ag-grid-react';
-import DataTable from '../Layouts/components/Datatable';
-import { useIsMobile } from '../../hooks/IsMobile';
-function ModalCity({city,setCity,setData}) {
+import state from '../../../store/store';
+import { useIsMobile } from '../../../hooks/IsMobile';
+function LayoutModal({iconButton,children,sxButton}) {
     const snap = useSnapshot(state)
     const [open,setOpen] = useState(false)
     const isMobile = useIsMobile()
@@ -17,28 +14,11 @@ function ModalCity({city,setCity,setData}) {
     const handleClose = () => {
         setOpen(false)
     }
-    const handleSelect = (data) => {
-        setCity(data.city_name)
-        setData(prev => ({
-            ...prev,
-            city_id : data.row_id,
-        }))
-        setOpen(false)
-    } 
-    const [columnDefs, setColumnDefs] = useState([
-        {field : "row_id", headerName : "", filter : false, maxWidth : 130,
-            cellRenderer : params => (
-                <Button onClick={() => handleSelect(params.data)} variant='text' >Select</Button>
-            )
-        },
-        {field : "province_name" , headerName : "Province", maxWidth : 300},
-        {field : "city_name", headerName : "City", flex : isMobile ? undefined  : 1}
-    ])
   return (
     <>
-        <IconButton onClick={handleModal} type="button" sx={{ border : "1px solid #b89474",borderRadius : "0 5px 5px 0px",padding : "16px 12px", }} aria-label="search">
-            <SearchIcon style={{color : "#b89474"}} />
-        </IconButton>
+        <Button onClick={handleModal} sx={sxButton} type="button" aria-label="search">
+            {iconButton}
+        </Button>
         <Modal open={open}>
             <div>
                 <Button onClick={handleClose} variant="contained" sx={{position:'absolute',right:'12%',background:'#b89474',top:'13%',zIndex:'999'}}>
@@ -61,7 +41,7 @@ function ModalCity({city,setCity,setData}) {
                         color : snap.theme == 'dark' ? 'white' : ''
                     }}
                 >
-                    <DataTable data={city} columns={columnDefs}/>
+                    {children}
                 </Box>
             </div>
         </Modal>
@@ -69,4 +49,4 @@ function ModalCity({city,setCity,setData}) {
   )
 }
 
-export default ModalCity
+export default LayoutModal

@@ -1,12 +1,16 @@
 import React, { useState } from 'react'
 import Layout from '../Layouts/Layout';
-import { Grid2 as Grid, TextField , Box, FormControl,InputLabel,Select, MenuItem, IconButton,InputBase, Paper} from '@mui/material';
+import { Grid2 as Grid, TextField , Box, FormControl,InputLabel,Select, MenuItem ,InputBase, Paper, InputAdornment, IconButton} from '@mui/material';
 
 import { useForm } from '@inertiajs/react';
 import ModalCity from './ModalCity';
-
+import { useSnapshot } from 'valtio';
+import state from '../../store/store';
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday"; 
+import FormDocument from './FormDocument';
+import FormUkuran from './FormUkuran';
 function Form({session,customer,city}) {
-  console.log(city);
+  const snap = useSnapshot(state)
   const [agama,setAgama] = useState("")
   const {data,setData,post} = useForm({
     name : customer.name == null ? "" : customer.name,
@@ -26,13 +30,6 @@ function Form({session,customer,city}) {
     "& .MuiFormLable-root" : {
       color : "#b89474 !important"
     },
-    "& .MuiOutlinedInput-root": {
-      color: "#b89474",
-      "& .MuiOutlinedInput-notchedOutline": {
-        borderColor: "#b89474",
-        borderWidth: "1px",
-      },
-    },
     "& .MuiInputLabel-outlined": {
       color: "#b89474",
     },
@@ -40,6 +37,11 @@ function Form({session,customer,city}) {
       color: '#b89474', 
     },
     '& .MuiOutlinedInput-root': {
+      color: "#b89474",
+      "& .MuiOutlinedInput-notchedOutline": {
+        borderColor: "#b89474",
+        borderWidth: "1px",
+      },
       '& fieldset': {
         borderColor: '#b89474', 
       },
@@ -50,7 +52,7 @@ function Form({session,customer,city}) {
         borderColor: '#b89474', 
       },
       '& .MuiInputBase-input': {
-        color: '#b89474', 
+        color: snap.theme == "dark" ? "white" : "black", 
       },
       '& .MuiInputBase-input::placeholder': {
         color: '#b89474', 
@@ -69,8 +71,11 @@ function Form({session,customer,city}) {
       
     },
   }
+  console.log(data);
+  
   const listAgama = ["","Budha","Hindu","Islam","Katolik","Khonghucu","Kristen"]
   const ListGender = ["Pria","Wanita"]
+  const [cityName, setCityName] = useState(customer.city_name)
   const handleInput = (e) => {
     const {name, value} = e.target
     setData((prev) => ({
@@ -91,21 +96,34 @@ function Form({session,customer,city}) {
           </Grid>
 
           <Grid size={{xs:12,md:4}}>
-            <TextField onChange={handleInput} name='nama' fullWidth color='#b89474' defaultValue={data.name} label="Nama" variant="outlined" sx={sxInputField} />
+            <TextField 
+            InputLabelProps={{
+              shrink: true,
+            }} 
+            onChange={handleInput} name='nama' fullWidth color='#b89474' defaultValue={data.name} label="Nama" variant="outlined" sx={sxInputField} />
           </Grid>
 
           <Grid size={{xs:12,md:4}}>
-            <TextField onChange={handleInput} fullWidth name='tanggal_lahir' type='date' defaultValue={data.tgl_lahir} focused  label="Tanggal Lahir" variant="outlined" sx={sxInputField} />
+            <TextField 
+            InputLabelProps={{
+              shrink: true,
+            }} 
+            onChange={handleInput} fullWidth name='tanggal_lahir' type='date' defaultValue={data.tgl_lahir} focused  label="Tanggal Lahir" variant="outlined" sx={sxInputField} />
           </Grid>
 
           <Grid size={{xs:12,md:4}}>
-            <TextField onChange={handleInput} fullWidth name='no_hp' color='#b89474' defaultValue={customer.hp_bo} label="HP No" variant="outlined" sx={sxInputField} />
+            <TextField 
+            InputLabelProps={{
+              shrink: true,
+            }} 
+            onChange={handleInput} fullWidth name='no_hp' color='#b89474' defaultValue={customer.hp_bo} label="HP No" variant="outlined" sx={sxInputField} />
           </Grid>
           
           <Grid size={{xs:12,md:4}} sx={sxInputField}>
             <FormControl fullWidth>
-              <InputLabel id="agama" style={{color:"#b89474"}}>Agama</InputLabel>
+              <InputLabel shrink id="agama" style={{color:"#b89474"}}>Agama</InputLabel>
               <Select
+                displayEmpty
                 sx={sxInputField}
                 name='agama'
                 labelId="agama"
@@ -123,8 +141,9 @@ function Form({session,customer,city}) {
 
           <Grid size={{xs:12,md:4}}>
             <FormControl fullWidth sx={sxInputField}>
-              <InputLabel id="jenis_kelamin" style={{color:"#b89474"}}>Gender</InputLabel>
+              <InputLabel shrink id="jenis_kelamin" style={{color:"#b89474"}}>Gender</InputLabel>
               <Select
+                displayEmpty
                 sx={sxInputField}
                 name='jenis_kelamin'
                 labelId="jenis_kelamin"
@@ -141,19 +160,35 @@ function Form({session,customer,city}) {
           </Grid>
 
           <Grid size={{xs:12,md:4}}>
-            <TextField onChange={handleInput} fullWidth name='member_PI' color='#b89474' defaultValue={data.member_PI} label="ID Member PI" variant="outlined" sx={sxInputField} />
+            <TextField 
+            InputLabelProps={{
+              shrink: true,
+            }} 
+            onChange={handleInput} fullWidth name='member_PI' color='#b89474' defaultValue={data.member_PI} label="ID Member PI" variant="outlined" sx={sxInputField} />
           </Grid>
 
           <Grid size={{xs:12,md:4}}>
-            <TextField onChange={handleInput} fullWidth name='instagram' color='#b89474' defaultValue={data.instagram} label="Instagram " variant="outlined" sx={sxInputField} />
+            <TextField 
+            InputLabelProps={{
+              shrink: true,
+            }} 
+            onChange={handleInput} fullWidth name='instagram' color='#b89474' defaultValue={data.instagram} label="Instagram " variant="outlined" sx={sxInputField} />
           </Grid>
 
           <Grid size={{xs:12,md:4}}>
-            <TextField onChange={handleInput} fullWidth name='tgl_datang' type='date' defaultValue={data.tgl_datang} focused label="Tanggal Datang" variant="outlined" sx={sxInputField} />
+            <TextField 
+            InputLabelProps={{
+              shrink: true,
+            }} 
+            onChange={handleInput} fullWidth name='tgl_datang' type='date' defaultValue={data.tgl_datang} focused label="Tanggal Datang" variant="outlined" sx={sxInputField} />
           </Grid>
 
           <Grid size={{xs:12,md:4}}>
-            <TextField minRows={2} multiline maxRows={4} onChange={handleInput} fullWidth name='alamat' color='#b89474' defaultValue={data.alamat} label="Alamat" variant="outlined" sx={sxInputField} />
+            <TextField 
+            InputLabelProps={{
+              shrink: true,
+            }} 
+            minRows={2} multiline maxRows={4} onChange={handleInput} fullWidth name='alamat' color='#b89474' defaultValue={data.alamat} label="Alamat" variant="outlined" sx={sxInputField} />
           </Grid>
 
           <Grid size={{xs:12,md:4}}>
@@ -162,18 +197,20 @@ function Form({session,customer,city}) {
               sx={{ display: 'flex', alignItems: 'center', boxShadow : "none",background : "transparent" }}
             >
               <InputBase
-                sx={{ flex: 1, border : "1px solid #b89474", boxShadow : "none",padding : "12px 12px",borderRadius : "5px 0 0 5px",color:"#b89474",borderRight : 'none' }}
-                defaultValue={customer.city_name}
+                sx={{ flex: 1, border : "1px solid #b89474", boxShadow : "none",padding : "12px 12px",borderRadius : "5px 0 0 5px",color:snap.theme == 'dark' ? 'white' : 'dark',borderRight : 'none' }}
+                value={cityName}
                 placeholder='Kota'
                 inputProps={{ 'aria-label': 'city', 'readOnly' : true }}
               />
-              <ModalCity city={city}/>
+              <ModalCity setCity={setCityName} setData={setData} city={city}/>
             </Paper>
           </Grid>
 
           
         </Grid>
       </Box>
+      <FormUkuran customer={customer}/>
+      <FormDocument customer={customer} />
     </Layout>
   )
 }

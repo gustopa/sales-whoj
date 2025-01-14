@@ -125,7 +125,7 @@ class CustomerController extends Controller
         $permission = checkPermission('customer');
         $menu = listMenu();
         checkAccess('customer');
-        $cityList = DB::table('vw_citylist')->get();
+        $cityList = DB::table('vw_citylist')->where('is_deleted',0)->get();
         $customer = CustomerModel::select('customer.*','city.city_name')->leftJoin('city','customer.city_id','=','city.row_id')->where('customer.row_id',intval(decrypt_id($id)))->first();
         return inertia('Customer/Form',['session' => session()->all(),'customer' => $customer,'menu' => $menu, 'city' => $cityList]);
     }
