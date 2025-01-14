@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RequestOrderController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\CustomerVisitController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Middleware\IsAuthenticated;
 use App\Http\Middleware\NotLogin;
@@ -26,15 +27,35 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
     Route::prefix('/customer')->group(function(){
         Route::get('/',[CustomerController::class,'index']);
         Route::get('/create',[CustomerController::class,'create']);
+        Route::post('/save',[CustomerController::class,'save']);
         Route::get('/form/{id}',[CustomerController::class,'form'])->name('form_customer');
         Route::delete('/delete/{id}',[CustomerController::class,'delete']);
         Route::post('/getAllCustomer',[CustomerController::class,'getAll']);
-        Route::post('/getDataSize',[CustomerController::class,'getSizeList']);
+        Route::post('/getCustomerById',[CustomerController::class,'getOneCustomer']);
+
+        Route::group([],function(){
+            Route::post('/getDataSize',[CustomerController::class,'getSizeList']);
+            Route::post('/addDataSize',[CustomerController::class,'addSize']);
+            Route::delete('/deleteDataSize/{id}',[CustomerController::class,'deleteSize']);
+            Route::post('/editDataSize',[CustomerController::class,'editSize']);
+        });
         Route::post('/getDataPayment',[CustomerController::class,'getPaymentList']);
         Route::post('/getDataOrder',[CustomerController::class,'getOrderList']);
         Route::post('/getDataRefund',[CustomerController::class,'getRefundList']);
-        Route::post('/getDataDocument',[CustomerController::class,'getDocumentList']);
+        Route::group([],function(){
+            Route::post('/getDataDocument',[CustomerController::class,'getDocumentList']);
+            Route::post('/addDocument',[CustomerController::class,'addDocument']);
+            Route::delete('/deleteDocument/{id}',[CustomerController::class,'deleteDocument']);
+            Route::post('/editDokumen',[CustomerController::class,'editDocument']);
+        });
         Route::post('/getDataVisit',[CustomerController::class,'getVisitList']);
+    });
+
+
+    Route::prefix('/customer_visit')->group(function(){
+        Route::get('/',[CustomerVisitController::Class,'index']);
+        Route::post('/getDataList',[CustomerVisitController::Class,'getList']);
+        Route::delete('/delete/{id}',[CustomerVisitController::class,'delete']);
     });
 });
 

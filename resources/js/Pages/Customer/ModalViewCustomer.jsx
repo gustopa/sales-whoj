@@ -5,7 +5,7 @@ import { useSnapshot } from 'valtio';
 import state from '../../store/store';
 import { formatDate } from '../../helper';
 import axios from 'axios';
-function ModalViewCustomer({params}) {
+function ModalViewCustomer({params,id_customer}) {
     const [open,setOpen] = useState(false)
     const [costumerSize, setCostumerSize] = useState([])
     const [costumerPayment,setCostumerPayment] = useState([])
@@ -14,17 +14,28 @@ function ModalViewCustomer({params}) {
     const [costumerDocument,setCostumerDocument] = useState([])
     const [costumerVisit,setCostumerVisit] = useState([])
     const [isLoaded,setIsLoaded] = useState(false)
-    const dataCustomer = params.data;
+    const [dataCustomer,setDataCustomer] = useState([]);
     const snap = useSnapshot(state)
     const handleModal = () => {
         setOpen(true)
         if(!isLoaded){
+            getDataCustomer()
             getDataSize()
             getDataPayment()
             getDataOrder()
             getDataRefund()
             getDataDocument()
             getDataVisit()
+            setIsLoaded(true)
+        }
+    }
+    const getDataCustomer = async () => {
+        try{
+            const response = await axios.post('customer/getCustomerById',{row_id : id_customer})
+            const data = await response.data
+            setDataCustomer(data)
+        }catch{
+
         }
     }
     const getDataSize = async () => {

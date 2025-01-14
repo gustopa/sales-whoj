@@ -7,10 +7,10 @@ import { Button } from '@mui/material';
 import { FaUserPlus, FaUserEdit } from "react-icons/fa";
 import {Link} from '@inertiajs/react';
 import { MdDeleteForever } from "react-icons/md";
-import md5 from 'md5'
 import { formatDate } from '../../helper';
 import ModalViewCustomer from './ModalViewCustomer';
 import Swal from 'sweetalert2';
+import { MdDone } from "react-icons/md";
 import { encrypt } from '../../helper';
 function Customer({permission}) {
   const menu_access = usePage().props.permission.menu_access;
@@ -45,7 +45,7 @@ function Customer({permission}) {
   }
 
   const [column, setColumn] = useState([
-    { field : 'row_id', headerName : "", filter: false,resizable: false, sortable: false,
+    { field : 'row_id', headerName : "", filter: false,resizable: false, sortable: false, width : 240,
       hide : menu_access != "Full control",
       headerComponent : props => (
         <Link href='/customer/create'>
@@ -68,21 +68,31 @@ function Customer({permission}) {
                 <MdDeleteForever style={{color: '#fa625e'}}/>
               </Button>
             </span>
+            <Button style={{cursor : "default"}}>
+              <MdDone style={{color : params.data.is_submitted == 0 ? '#bbb' : '#059c1b',fontWeight : "bold"}}/>
+            </Button>
           </>
         )
       }
     },
     { field: "customer_no", headerName: "Pelanggan No", 
         cellRenderer : params => {
-            return <ModalViewCustomer params={params} />
+            return <ModalViewCustomer params={params} id_customer={params.data.row_id}/>
         }
     },
     { field: "name", headerName: "Nama", filter : true,
       filterParams : {
         filterPlaceholder : "Search nama..."
-      } 
+      },
+      cellRenderer : params => {
+        return params.value != null && params.value != "" ? params.value : "-"
+      }
     },
-    { field: "hp_bo", headerName: "Hp no" },
+    { field: "hp_bo", headerName: "Hp no",
+      cellRenderer : params => {
+        return params.value != null && params.value != "" ? params.value : "-"
+      }
+    },
     { field: "address", width : 350, headerName: "Alamat",autoHeight : true, wrapText : true, cellStyle : {lineHeight : "1.3"},
       cellRenderer : params => {
         return params.value != null && params.value != "" ? params.value : "-"

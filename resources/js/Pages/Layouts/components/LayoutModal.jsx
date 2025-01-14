@@ -1,13 +1,16 @@
-import React, { useState } from 'react'
+import React, { useImperativeHandle, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, Button, IconButton, Modal } from '@mui/material'
 import { useSnapshot } from 'valtio';
 import state from '../../../store/store';
 import { useIsMobile } from '../../../hooks/IsMobile';
-function LayoutModal({iconButton,children,sxButton}) {
+function LayoutModal({iconButton,children,sxButton,closeButton=true,ref, width="70%", height="70%",variant=""}) {
     const snap = useSnapshot(state)
     const [open,setOpen] = useState(false)
     const isMobile = useIsMobile()
+    useImperativeHandle(ref, () => {
+        return {close : handleClose}
+    })
     const handleModal = () => {
         setOpen(true)
     }
@@ -16,22 +19,23 @@ function LayoutModal({iconButton,children,sxButton}) {
     }
   return (
     <>
-        <Button onClick={handleModal} sx={sxButton} type="button" aria-label="search">
+        <Button onClick={handleModal} sx={sxButton} variant={variant} type="button" aria-label="search">
             {iconButton}
         </Button>
         <Modal open={open}>
             <div>
-                <Button onClick={handleClose} variant="contained" sx={{position:'absolute',right:'12%',background:'#b89474',top:'13%',zIndex:'999'}}>
+                <Button onClick={handleClose} variant="contained" sx={{position:'absolute',right:'12%',background:'#b89474',top:'13%',zIndex:'999', display : closeButton ? 'block' : 'none'}}>
                     <CloseIcon style={{color:'white'}}/>
                 </Button>
                 <Box
+                    className='transition-all duration-300 ease-in-out'
                     sx={{
                         position: "absolute",
                         top: "50%",
                         left: "50%",
                         transform: "translate(-50%, -50%)",
-                        width: "70%",
-                        height : "70%",
+                        width: width,
+                        height : height,
                         bgcolor: "background.paper",
                         overflowY : 'auto',
                         boxShadow: 24,

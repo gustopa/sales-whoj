@@ -17,6 +17,7 @@ import { FiMinimize2 } from "react-icons/fi";
 
 
 const Dropdown = ({primary, isOpen, onToggle,subMenu,icon,color}) => {
+  const pathname = location.pathname.split('/')[1]
   return (
     <List className="m-0 dropdownParent" style={{color:'#b89474',padding:'0',cursor:'pointer'}}>
       {/* Menu Utama */}
@@ -27,17 +28,18 @@ const Dropdown = ({primary, isOpen, onToggle,subMenu,icon,color}) => {
         <ListItemText className="dropdownText" style={{color:color}} primary={primary} />
         {isOpen ? <ExpandLess style={{color:color}} className="dropdownIcon" /> : <ExpandMore style={{color:color}} className="dropdownIcon" />}
       </ListItem>
-
+      
+      
       {/* Submenu */}
       <Collapse in={isOpen} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           {subMenu.map((menu,index) => 
             <ListItem className="listItem" key={index} sx={{ pl: 4}}>
                 <ListItemIcon>
-                  <ShortcutIcon className="listIcon" style={{color: location.pathname == '/'+menu.link ? "#b89474" : "#a3aed0",transform: 'rotate(180deg) scaleX(-1)'}}/>
+                  <ShortcutIcon className="listIcon" style={{color: pathname == menu.link ? "#b89474" : "#a3aed0",transform: 'rotate(180deg) scaleX(-1)'}}/>
                 </ListItemIcon>
                 <Link href={`/${menu.link}`} underline="none" className="-ml-6 ">
-                  <ListItemText className="listText" style={{color: location.pathname == '/'+menu.link ? "#b89474" : "#a3aed0"}} primary={menu.name} />
+                  <ListItemText className="listText" style={{color: pathname == menu.link ? "#b89474" : "#a3aed0"}} primary={menu.name} />
                 </Link>
             </ListItem>
           )}

@@ -24,7 +24,7 @@ if(! function_exists('checkAccess')){
     function checkAccess($page){
         $access = checkPermission($page);
         if($access == null || $access == ''){
-            return redirect()->route('dashboard');
+            return abort(403);
         }
     }
 }

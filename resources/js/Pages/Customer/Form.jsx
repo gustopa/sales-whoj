@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
 import Layout from '../Layouts/Layout';
-import { Grid2 as Grid, TextField , Box, FormControl,InputLabel,Select, MenuItem ,InputBase, Paper, InputAdornment, IconButton} from '@mui/material';
+import { Grid2 as Grid, TextField , Box, FormControl,InputLabel,Select, MenuItem ,InputBase, Paper, Button} from '@mui/material';
 
-import { useForm } from '@inertiajs/react';
+import { Link, useForm } from '@inertiajs/react';
 import ModalCity from './ModalCity';
 import { useSnapshot } from 'valtio';
 import state from '../../store/store';
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday"; 
-import FormDocument from './FormDocument';
-import FormUkuran from './FormUkuran';
-function Form({session,customer,city}) {
+import FormDocument from './FormDokumen/FormDocument';
+import FormUkuran from './FormUkuran/FormUkuran';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+function Form({customer,city}) {
   const snap = useSnapshot(state)
   const [agama,setAgama] = useState("")
   const {data,setData,post} = useForm({
@@ -24,7 +25,7 @@ function Form({session,customer,city}) {
     alamat : customer.address == null ? "" : customer.address,
     city_id : customer.city_id == null ? "" : customer.city_id,
   })
-
+  
   
   const sxInputField = {
     "& .MuiFormLable-root" : {
@@ -71,17 +72,115 @@ function Form({session,customer,city}) {
       
     },
   }
-  console.log(data);
   
   const listAgama = ["","Budha","Hindu","Islam","Katolik","Khonghucu","Kristen"]
   const ListGender = ["Pria","Wanita"]
-  const [cityName, setCityName] = useState(customer.city_name)
+  const [cityName, setCityName] = useState(customer.city_name == null ? "" : customer.city_name)
   const handleInput = (e) => {
     const {name, value} = e.target
     setData((prev) => ({
       ...prev,
       [name]: value,
     }));
+  }
+  
+  const handleSimpan = async () => {
+    console.log(data.name);
+    
+    if(data.name == "" || data.name == null){
+      Swal.fire({
+        text : "Gagal",
+        icon : "warning",
+        text : "Nama harus diisi"
+      })
+      return false;
+    }
+    if(data.jenis_kelamin == "" || data.jenis_kelamin == null){
+      Swal.fire({
+        text : "Gagal",
+        icon : "warning",
+        text : "Gender harus diisi"
+      })
+      return false;
+    }
+    if(data.city_id == "" || data.city_id == null){
+      Swal.fire({
+        text : "Gagal",
+        icon : "warning",
+        text : "Kota harus diisi"
+      })
+      return false;
+    }
+    
+    try{
+      const response = await axios.post('/customer/save',{
+        row_id : customer.row_id,
+        ...data,
+        action : "simpan"
+      })
+      const response_data = await response.data
+      console.log(response_data);
+      Swal.fire({
+        text : "Berhasil",
+        icon : "success",
+        text : "Customer berhasiil disimpan"
+      })
+    }catch(err){
+      Swal.fire({
+        text : "Gagal",
+        icon : "error",
+        text : "Data gagal disimpan"
+      })
+    }
+    
+  }
+
+  const handleSubmit = async () => {
+    if(data.name == "" || data.name == null){
+      Swal.fire({
+        text : "Gagal",
+        icon : "warning",
+        text : "Nama harus diisi"
+      })
+      return false;
+    }
+    if(data.jenis_kelamin == "" || data.jenis_kelamin == null){
+      Swal.fire({
+        text : "Gagal",
+        icon : "warning",
+        text : "Gender harus diisi"
+      })
+      return false;
+    }
+    if(data.city_id == "" || data.city_id == null){
+      Swal.fire({
+        text : "Gagal",
+        icon : "warning",
+        text : "Kota harus diisi"
+      })
+      return false;
+    }
+    
+    try{
+      const response = await axios.post('/customer/save',{
+        row_id : customer.row_id,
+        ...data,
+        action : "submit"
+      })
+      const response_data = await response.data
+      console.log(response_data);
+      Swal.fire({
+        text : "Berhasil",
+        icon : "success",
+        text : "Data berhasiil disubmit"
+      })
+    }catch(err){
+      Swal.fire({
+        text : "Gagal",
+        icon : "error",
+        text : "Data gagal disubmit"
+      })
+    }
   }
   return (
     <Layout title="Form Customer" page="Form Customer">
@@ -100,7 +199,7 @@ function Form({session,customer,city}) {
             InputLabelProps={{
               shrink: true,
             }} 
-            onChange={handleInput} name='nama' fullWidth color='#b89474' defaultValue={data.name} label="Nama" variant="outlined" sx={sxInputField} />
+            onChange={handleInput} name='name' fullWidth color='#b89474' defaultValue={data.name} label={<h1>Nama <span style={{color:'red',fontSize:'24px'}}>*</span></h1>} variant="outlined" sx={sxInputField} />
           </Grid>
 
           <Grid size={{xs:12,md:4}}>
@@ -108,7 +207,7 @@ function Form({session,customer,city}) {
             InputLabelProps={{
               shrink: true,
             }} 
-            onChange={handleInput} fullWidth name='tanggal_lahir' type='date' defaultValue={data.tgl_lahir} focused  label="Tanggal Lahir" variant="outlined" sx={sxInputField} />
+            onChange={handleInput} fullWidth name='tgl_lahir' type='date' defaultValue={data.tgl_lahir} focused  label="Tanggal Lahir" variant="outlined" sx={sxInputField} />
           </Grid>
 
           <Grid size={{xs:12,md:4}}>
@@ -141,7 +240,7 @@ function Form({session,customer,city}) {
 
           <Grid size={{xs:12,md:4}}>
             <FormControl fullWidth sx={sxInputField}>
-              <InputLabel shrink id="jenis_kelamin" style={{color:"#b89474"}}>Gender</InputLabel>
+              <InputLabel shrink id="jenis_kelamin" style={{color:"#b89474"}}>Gender<span style={{color:'red',fontSize:'24px'}}>*</span></InputLabel>
               <Select
                 displayEmpty
                 sx={sxInputField}
@@ -199,14 +298,29 @@ function Form({session,customer,city}) {
               <InputBase
                 sx={{ flex: 1, border : "1px solid #b89474", boxShadow : "none",padding : "12px 12px",borderRadius : "5px 0 0 5px",color:snap.theme == 'dark' ? 'white' : 'dark',borderRight : 'none' }}
                 value={cityName}
-                placeholder='Kota'
-                inputProps={{ 'aria-label': 'city', 'readOnly' : true }}
+                placeholder='Kota*'
+                
+                inputProps={{ 'label': 'city', 'readOnly' : true }}
               />
               <ModalCity setCity={setCityName} setData={setData} city={city}/>
             </Paper>
           </Grid>
 
-          
+          <Grid size={{xs:12,md:4}}>
+            <Grid container justifyContent="center" spacing={1}>
+              <Grid size={{xs:4,md:4}} justifyContent="center">
+                <Link href="/customer">
+                  <Button variant="contained" style={{background: "#b89474"}}>Kembali</Button>
+                </Link>
+              </Grid>
+              <Grid size={{xs:4,md:4}}>
+                <Button onClick={handleSimpan} variant="contained" style={{background: "#b89474"}}>Simpan</Button>
+              </Grid>
+              <Grid size={{xs:4,md:4}}>
+                <Button onClick={handleSubmit} variant="contained" style={{background: "#b89474"}}>Submit</Button>
+              </Grid>
+            </Grid>
+          </Grid>
         </Grid>
       </Box>
       <FormUkuran customer={customer}/>
