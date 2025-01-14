@@ -113,7 +113,7 @@ function ModalViewCustomer({params,id_customer}) {
     }
   return (
     <>
-        <Button onClick={handleModal} variant="text" style={{color:'#b89474', textDecoration : 'underline'}}>
+        <Button onClick={handleModal} variant="text" style={{color:'#b89474', textDecoration : 'underline',textTransform: "capitalize"}}>
             {params.value}
         </Button>
         <Modal open={open}>

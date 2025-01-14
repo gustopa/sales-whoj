@@ -156,6 +156,7 @@ const Sidebar = ({ open, onClose, miniSidebar, setMiniSidebar }) => {
           icon={folderMenuObject[menu][0].icon}
           />
         )}
+        <div style={{marginBottom:"145px"}}></div>
         
       </div>
       

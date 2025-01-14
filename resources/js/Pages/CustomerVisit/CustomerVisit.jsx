@@ -9,6 +9,7 @@ import { FaCirclePlus } from 'react-icons/fa6'
 import ModalViewCustomer from '../Customer/ModalViewCustomer'
 import Swal from 'sweetalert2'
 import FormCustomerVisit from './FormCustomerVisit'
+import ModalProduct from '../Components/ModalProduct'
 function CustomerVisit() {
     const [update,setUpdate] = useState("")
     const handleDelete = id => {
@@ -52,7 +53,7 @@ function CustomerVisit() {
             cellRenderer : params => (
                 <>
                     <LayoutModal closeButton={false} ref={refModalEdit} variant="contained" iconButton={<MdEdit/>}>
-                        <FormCustomerVisit tanggal_visit={params.data.trans_date} data={params.data} refModal={refModalEdit} />
+                        <FormCustomerVisit customer={params.data.customer_id_txt} barang={params.data.item_id_txt} tanggal_visit={params.data.trans_date} notes={params.data.notes} data={params.data} refModal={refModalEdit} />
                     </LayoutModal>
                     <Button onClick={() => handleDelete(params.value)} style={{marginLeft: "10px"}} variant="contained" color="error">
                         <MdDelete/>
@@ -80,7 +81,8 @@ function CustomerVisit() {
     },[update])
   return (
     <Layout title="Kunjungan Pelanggan" page="Kunjungan Pelanggan">
-        <DataTable columns={columnDefs} data={rowData}/>
+        <ModalProduct/>
+        {/* <DataTable columns={columnDefs} data={rowData}/> */}
     </Layout>
   )
 }

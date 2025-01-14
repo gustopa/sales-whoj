@@ -51,6 +51,7 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         Route::post('/getDataVisit',[CustomerController::class,'getVisitList']);
     });
 
+    Route::get('/inventory/getAll',[HomeController::class,'getAllInventory']);
 
     Route::prefix('/customer_visit')->group(function(){
         Route::get('/',[CustomerVisitController::Class,'index']);

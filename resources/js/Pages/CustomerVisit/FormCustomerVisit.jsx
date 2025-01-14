@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
-import { Grid2 as Grid,TextField,Button, Paper, InputBase } from '@mui/material'
+import { Grid2 as Grid,TextField,Button, Paper, InputBase, Box, IconButton, InputAdornment } from '@mui/material'
 import { useSnapshot } from 'valtio'
 import state from '../../store/store'
 import LayoutModal from '../Layouts/components/LayoutModal'
+import { MdSearch } from 'react-icons/md'
+import ModalCustomer from '../Components/ModalCustomer'
+import ModalProduct from '../Components/ModalProduct'
 function FormCustomerVisit({refModal,tanggal_visit="",notes="",customer="",barang=""}) {
     const snap = useSnapshot(state)
     const sxInputField = {
@@ -53,24 +56,43 @@ function FormCustomerVisit({refModal,tanggal_visit="",notes="",customer="",baran
 
       const [tanggal,setTanggal] = useState(tanggal_visit)
       const [dataNotes,setDataNotes] = useState(notes)
+      const [dataCustomer,setDataCustomer] = useState(customer)
+      const [item,setItem] = useState(barang)
+      const [idCustomer,setIdCustomer] = useState("")
+      const [idItem,setIdItem] = useState("")
   return (
     <>
         <h2 className='mb-3 font-bold'>FORM KUNJUNGAN PELANGGAN</h2>
         <Grid container spacing={2}>
             <Grid size={{xs:12,md:12}}>
-                <Paper
-                component="form"
-                sx={{ display: 'flex', alignItems: 'center', boxShadow : "none",background : "transparent" }}
-                >
-                <InputBase
-                    sx={{ flex: 1, border : "1px solid #b89474", boxShadow : "none",padding : "12px 12px",borderRadius : "5px 0 0 5px",color:snap.theme == 'dark' ? 'white' : 'dark',borderRight : 'none' }}
-                    // value={cityName}
-                    placeholder='Kota*'
-                    
-                    inputProps={{ 'label': 'city', 'readOnly' : true }}
-                />
-                {/* <LayoutModal/> */}
-                </Paper>
+                <TextField variant="outlined" value={dataCustomer} sx={sxInputField} label="Pelanggan" fullWidth
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <ModalCustomer setCustomer={setDataCustomer} setIdCustomer={setIdCustomer} />
+                    </InputAdornment>
+                  ),
+                  readOnly : true
+                }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+            <Grid size={{xs:12,md:12}}>
+                <TextField variant="outlined" value={item} sx={sxInputField} label="Barang" fullWidth
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      {/* <ModalProduct/> */}
+                    </InputAdornment>
+                  ),
+                  readOnly : true
+                }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
             </Grid>
             <Grid size={12}>
                 <TextField 

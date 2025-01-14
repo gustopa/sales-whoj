@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\CustomerVisitModel;
+use App\Http\Controllers\CustomerController;
 class CustomerVisitController extends Controller
 {
     public function index(){
@@ -13,7 +14,9 @@ class CustomerVisitController extends Controller
             return abort(403);
         }
         $menu = listMenu();
-        return inertia('CustomerVisit/CustomerVisit',['menu' => $menu, 'session' => session()->all()]);
+        $customerController = new CustomerController();
+        $customer = $customerController->getAll();
+        return inertia('CustomerVisit/CustomerVisit',['menu' => $menu, 'session' => session()->all(),'customer' => $customer]);
     }
 
     public function getList(){
