@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { Grid2 as Grid,TextField,Button } from '@mui/material'
+import { Grid2 as Grid,TextField,Button, Paper, InputBase } from '@mui/material'
 import { useSnapshot } from 'valtio'
 import state from '../../store/store'
+import LayoutModal from '../Layouts/components/LayoutModal'
 function FormCustomerVisit({refModal,tanggal_visit="",notes="",customer="",barang=""}) {
     const snap = useSnapshot(state)
     const sxInputField = {
@@ -56,6 +57,21 @@ function FormCustomerVisit({refModal,tanggal_visit="",notes="",customer="",baran
     <>
         <h2 className='mb-3 font-bold'>FORM KUNJUNGAN PELANGGAN</h2>
         <Grid container spacing={2}>
+            <Grid size={{xs:12,md:12}}>
+                <Paper
+                component="form"
+                sx={{ display: 'flex', alignItems: 'center', boxShadow : "none",background : "transparent" }}
+                >
+                <InputBase
+                    sx={{ flex: 1, border : "1px solid #b89474", boxShadow : "none",padding : "12px 12px",borderRadius : "5px 0 0 5px",color:snap.theme == 'dark' ? 'white' : 'dark',borderRight : 'none' }}
+                    // value={cityName}
+                    placeholder='Kota*'
+                    
+                    inputProps={{ 'label': 'city', 'readOnly' : true }}
+                />
+                {/* <LayoutModal/> */}
+                </Paper>
+            </Grid>
             <Grid size={12}>
                 <TextField 
                 InputLabelProps={{
@@ -70,6 +86,7 @@ function FormCustomerVisit({refModal,tanggal_visit="",notes="",customer="",baran
                 }}
                 sx={sxInputField} fullWidth label="Notes" value={dataNotes} variant='outlined' />
             </Grid>
+            
             <Grid size={12}>
                 <Button onClick={() => refModal.current?.close() } variant="contained" color="error">Batal</Button>
                 <Button style={{marginLeft : '10px'}} variant='contained' color="success">Simpan</Button>
