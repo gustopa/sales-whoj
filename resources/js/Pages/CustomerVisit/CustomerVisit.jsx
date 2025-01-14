@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Layout from '../Layouts/Layout'
 import DataTable from '../Layouts/components/Datatable'
 import axios from 'axios'
@@ -8,6 +8,7 @@ import LayoutModal from '../Layouts/components/LayoutModal'
 import { FaCirclePlus } from 'react-icons/fa6'
 import ModalViewCustomer from '../Customer/ModalViewCustomer'
 import Swal from 'sweetalert2'
+import FormCustomerVisit from './FormCustomerVisit'
 function CustomerVisit() {
     const [update,setUpdate] = useState("")
     const handleDelete = id => {
@@ -39,16 +40,20 @@ function CustomerVisit() {
         }
       })
     }
+    const refModalTambah = useRef()
+    const refModalEdit = useRef()
     const [columnDefs, setColumnDefs] = useState([
         {field : "row_id", headerName : "" ,
             headerComponent : props => (
-                <LayoutModal variant="contained" sxButton={{backgroundColor : "#b89474"}} iconButton={<FaCirclePlus/>}>
-                    {/* <LayoutModal width="90vw" iconButton="Tes"/> */}
+                <LayoutModal ref={refModalTambah} closeButton={false} variant="contained" sxButton={{backgroundColor : "#b89474"}} iconButton={<FaCirclePlus/>}>
+                    <FormCustomerVisit refModal={refModalTambah}/>
                 </LayoutModal>
               ),
             cellRenderer : params => (
                 <>
-                    <LayoutModal variant="contained" iconButton={<MdEdit/>}/>
+                    <LayoutModal closeButton={false} ref={refModalEdit} variant="contained" iconButton={<MdEdit/>}>
+                        <FormCustomerVisit tanggal_visit={params.data.trans_date} data={params.data} refModal={refModalEdit} />
+                    </LayoutModal>
                     <Button onClick={() => handleDelete(params.value)} style={{marginLeft: "10px"}} variant="contained" color="error">
                         <MdDelete/>
                     </Button>
@@ -61,10 +66,9 @@ function CustomerVisit() {
         {field : "inventory_id_txt", headerName : "PLU"},
         {field : "item_id_txt", headerName : "Item"},
         {field : "trans_date", headerName : "Tanggal"},
-        {field : "notes", headerName : "Notes"},
+        {field : "notes", headerName : "Notes",autoHeight : true, wrapText : true},
     ])
     const [rowData, setRowData] = useState([])
-    console.log(rowData);
     
     const getDataCustomerVisit = async () => {
         const response = await axios.post('/customer_visit/getDataList')
