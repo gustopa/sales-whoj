@@ -27,7 +27,7 @@ function FormDocument({customer}) {
                 </>
             )
         },
-        {field : "name" , headerName : "Dokumen"},
+        {field : "name" , headerName : "Dokumens"},
         {field : "notes" , headerName : "Notes"},
         {field : "status", headerName : "Status", flex : isMobile ? undefined  : 1 }
     ])
