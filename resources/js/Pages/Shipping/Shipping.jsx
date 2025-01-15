@@ -30,7 +30,7 @@ function Shipping() {
                     icon : "success",
                     text : "Data berhasil dihapus"
                 })
-                tableRef.current.refreshData()
+                tableRef.current?.refreshData()
             }catch(err){
                 Swal.fire({
                     title : "gagal",
@@ -44,11 +44,23 @@ function Shipping() {
     
     const [columnDefs,setColumnDefs] = useState([
         {field : "row_id",headerName : "", resizable: false, sortable: false,
-            headerComponent : params => <FormShipping data={params.data} bgColor="#b89474" iconButton={<FaCirclePlus className='text-white'/>}/>,
+            headerComponent : params => <FormShipping tableRef={tableRef} action="tambah" bgColor="#b89474" iconButton={<FaCirclePlus className='text-white'/>}/>,
             cellRenderer : params => 
                 (
                     <>
-                        <FormShipping id={params.value} resi={params.data?.no_resi} customer={params.data?.customer_id_txt} invoiceID={params.data?.payment_id} invoice={params.data?.payment_id_txt} tanggal={params.data?.shipping_date} customerID={params.data?.customer_id} bgColor="#1976d2" iconButton={<MdEdit className='text-white' />}/>
+                        <FormShipping 
+                            tableRef={tableRef}
+                            action="edit"
+                            id={params.value} 
+                            resi={params.data?.no_resi == null ? "" : params.data?.no_resi} 
+                            customer={params.data?.customer_id_txt == null ? "" : params.data?.customer_id_txt} 
+                            invoiceID={params.data?.payment_id} 
+                            invoice={params.data?.payment_id_txt == null ? "" : params.data?.payment_id_txt == null} 
+                            tanggal={params.data?.shipping_date == null ? "" : params.data?.shipping_date} 
+                            customerID={params.data?.customer_id} 
+                            bgColor="#1976d2" 
+                            iconButton={<MdEdit className='text-white' />}
+                        />
                         <Button onClick={() => handleDelete(params.value)} style={{marginLeft : "10px"}} variant="contained" color="error"><MdDelete/></Button>
                     </>
                 )

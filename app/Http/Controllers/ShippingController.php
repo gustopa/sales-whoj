@@ -36,4 +36,30 @@ class ShippingController extends Controller
             "data" => "berhasil"
         ]);
     }
+
+    public function save(){
+        $data = [
+            "customer_id" => request("id_customer"),
+            "payment_id" => request("id_invoice"),
+            "shipping_date" => request("tanggal"),
+            "no_resi" => request("resi"),
+            "modified_date" => date("Y-m-d H:i:s"),
+            "modified_by" => session('username'),
+            "is_submitted" => 1,
+            "status" => "SHIPPING"
+        ];
+        if(request("action") == "tambah"){
+            $data["created_date"] = date("Y-m-d H:i:s");
+            $data["created_by"] = session("username");
+            $data['company_id'] = session('company_id');
+            $data["is_deleted"] = 0;
+            ShippingModel::insert($data);
+        }else if(request("action") == "edit"){
+            ShippingModel::where("row_id",request("row_id"))->update($data);
+        }
+
+        return response()->json([
+            "data" => "berhasil"
+        ]);
+    }
 }

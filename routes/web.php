@@ -64,6 +64,7 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         Route::get('/',[ShippingController::class,'index']);
         Route::get('/getAll',[ShippingController::class,'getAll']);
         Route::delete('/delete/{id}',[ShippingController::class,'delete']);
+        Route::post('/save',[ShippingController::class,'save']);
     });
 
     Route::get('/inventory/getAll',[HomeController::class,'getAllInventory']);

@@ -5,8 +5,9 @@ import ModalCustomer from '../Components/ModalCustomer'
 import { useSnapshot } from "valtio";
 import state from '../../store/store'
 import ModalPayment from '../Components/ModalPayment';
-function FormShipping({iconButton,bgColor,customer="",customerID="",invoice="",tanggal="",resi="",invoiceID,data,id}) {
-    console.log(data);
+import axios from 'axios';
+import Swal from 'sweetalert2';
+function FormShipping({iconButton,bgColor,customer="",customerID="",invoice="",tanggal="",resi="",invoiceID="",id,action,tableRef}) {
     
     const snap = useSnapshot(state)
     const [dataCustomer,setDataCustomer] = useState(customer)
@@ -62,12 +63,41 @@ function FormShipping({iconButton,bgColor,customer="",customerID="",invoice="",t
         },
       }
 
-      const handleSimpan = () => {
-        console.log(id);
+      const handleSimpan = async () => {
+        const data = {
+            row_id : id,
+            id_customer : idCustomer,
+            id_invoice : idInvoice,
+            tanggal : dataTanggal,
+            resi : dataResi,
+            action : action
+        }
+        try{
+            const response = await axios.post('shipping/save',data)
+            const response_data = await response.data
+            console.log(response_data);
+            Swal.fire({
+                title : "Berhasil",
+                text : "Data berhasil ditambahkan",
+                icon : "success"
+            })
+            tableRef.current?.refreshData()
+            refModal.current.close()
+            
+        }catch(err){
+            console.log(err);
+            Swal.fire({
+                title : "Gagal",
+                text : "Data gagal ditambahkan",
+                icon : "error"
+            })
+            refModal.current.close()
+        }
+        
         
       }
   return (
-    <LayoutModal ref={refModal} sxButton={{backgroundColor : bgColor}} iconButton={iconButton}>
+    <LayoutModal closeButton={false} ref={refModal} sxButton={{backgroundColor : bgColor}} iconButton={iconButton}>
         <h2 className='font-bold text-2xl mb-[10px]'>FORM PENGIRIMAN</h2>
         <Grid container spacing={2}>
             <Grid size={{xs:12,md:12}}>
@@ -75,7 +105,7 @@ function FormShipping({iconButton,bgColor,customer="",customerID="",invoice="",t
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
-                      <ModalCustomer setCustomer={setDataCustomer} setIdCustomer={setIdCustomer} />
+                      <ModalCustomer setDataInvoice={setDataInvoice} setIdInvoice={setIdInvoice} setCustomer={setDataCustomer} setIdCustomer={setIdCustomer} />
                     </InputAdornment>
                   ),
                   readOnly : true
@@ -90,7 +120,7 @@ function FormShipping({iconButton,bgColor,customer="",customerID="",invoice="",t
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
-                      <ModalPayment id_customer={idCustomer}/>
+                      <ModalPayment setIdInvoice={setIdInvoice} setInvoice={setDataInvoice} id_customer={idCustomer}/>
                     </InputAdornment>
                   ),
                   readOnly : true

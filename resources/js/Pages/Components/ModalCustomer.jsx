@@ -5,11 +5,13 @@ import { usePage } from '@inertiajs/react';
 import DataTable from '../Layouts/components/Datatable';
 import { Button } from '@mui/material';
 
-const ButtonSelect = ({setCustomer,setIdCustomer,params,refModal}) => {
+const ButtonSelect = ({setCustomer,setIdCustomer,params,refModal, setDataInvoice,setIdInvoice}) => {
     const handleClick = () => {
         const customer = params.data
         setCustomer(customer.name)
         setIdCustomer(customer.row_id)
+        setDataInvoice("")
+        setIdInvoice("")
         refModal.current.close()
     }
     return (
@@ -17,13 +19,13 @@ const ButtonSelect = ({setCustomer,setIdCustomer,params,refModal}) => {
     )
 }
 
-function ModalCustomer({setCustomer,setIdCustomer}) {
+function ModalCustomer({setCustomer,setIdCustomer, setDataInvoice,setIdInvoice}) {
     const refModal = useRef()
     const customer = usePage().props.customer.original
     const [columnDefs,setColumnDefs] = useState([
         {field : "row_id", headerName: "", 
             cellRenderer : params => (
-                <ButtonSelect refModal={refModal} setCustomer={setCustomer} setIdCustomer={setIdCustomer} params={params}/>
+                <ButtonSelect setDataInvoice={setDataInvoice} setIdInvoice={setIdInvoice} refModal={refModal} setCustomer={setCustomer} setIdCustomer={setIdCustomer} params={params}/>
             )
         },
         {field : "name", headerName: "Name"},
