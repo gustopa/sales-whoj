@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Dropdown from "$/components/dropdown";
 import { FiAlignJustify } from "react-icons/fi";
 import { Link, usePage } from "@inertiajs/react";
@@ -9,14 +9,33 @@ import {
   IoMdNotificationsOutline,
 } from "react-icons/io";
 import icon from '../../../../assets/favicon.ico'
-import { useSnapshot } from "valtio";
 import state from "../../../store/store";
+
 const Navbar = (props) => {
   const session = usePage().props.session
   const { onOpenSidenav, brandText } = props;
   const [darkmode, setDarkmode] = React.useState(localStorage.getItem('theme') == 'dark');
- 
+  const [autocompleteSearchHidden,setAutocompleteSearchHidden] = useState(true)
   
+  const menu = usePage().props.menu
+  const allMenu = menu.map(m => ({ 
+    name : m.menu_name_bahasa,
+    link : m.controller_menu,
+  }))
+
+  const [links,setLinks] = useState([])
+  function handleChange(e){
+    const filteredLinks = allMenu.filter(link => link.name.toLowerCase().includes(e.target.value.toLowerCase()))
+    setLinks(filteredLinks)
+    setAutocompleteSearchHidden(false)
+  }
+  
+  const handleBlur = (e) => {
+    if (links.length == 0 || e.target.value == "") {
+      setAutocompleteSearchHidden(true);
+    }
+    
+  }
   
   return (
     <nav className="sticky top-4 z-40 flex flex-row flex-wrap items-center justify-between rounded-xl bg-white/10 p-2 backdrop-blur-xl dark:bg-[#0b14374d]">
@@ -56,10 +75,23 @@ const Navbar = (props) => {
           </p>
           <input
             type="text"
-            placeholder="Search..."
+            // onChange={() => setAutocompleteSearchHidden(false)}
+            onBlur={handleBlur}
+            onChange={handleChange}
+            placeholder="Search menu..."
             className="block h-full w-full rounded-full bg-lightPrimary text-sm font-medium outline-none placeholder:!text-[#b89474] dark:bg-navy-900 text-[#b89474] dark:placeholder:!text-[#b89474] sm:w-fit"
           />
+          <div className={`${autocompleteSearchHidden ? 'hidden' : ''} bg-white`} style={{position:'absolute',top:'90%',maxHeight:'200px',overflowY:'auto',borderRadius:'15px',padding:'12px',width:'100%'}}>
+            <ul>
+              {links.map((link,index)=>
+                <li key={index} className="my-1">
+                  <Link href={link.link}>{link.name}</Link> 
+                </li>
+              )}
+            </ul>
+          </div>
         </div>
+          
         <span
           className="flex cursor-pointer text-xl text-gray-600 dark:text-white xl:hidden"
           onClick={onOpenSidenav}
@@ -94,9 +126,6 @@ const Navbar = (props) => {
                   <p className="mb-1 text-left text-base font-bold text-gray-900 dark:text-white">
                     Coming soon!
                   </p>
-                  {/* <p className="font-base text-left text-xs text-gray-900 dark:text-white">
-                    A new update for your downloaded item is available!
-                  </p> */}
                 </div>
               </button>
             </div>
@@ -139,19 +168,19 @@ const Navbar = (props) => {
               <div className="p-4">
                 <div className="flex items-center gap-2">
                   <p className="text-sm font-bold text-navy-700 dark:text-white">
-                    👋 Hallo, {session.name}
+                    👋 Hallo, {session.username}
                   </p>{" "}
                 </div>
               </div>
               <div className="h-px w-full bg-gray-200 dark:bg-white/20 " />
 
               <div className="flex flex-col p-4">
-                <a
-                  href="profile"
+                <Link
+                  href="/profile"
                   className="text-sm text-gray-800 dark:text-white hover:dark:text-white"
                 >
-                  Profile Settings
-                </a>
+                  Profile
+                </Link>
                 <Link
                   href="/logout"
                   className="mt-3 text-sm font-medium text-red-500 hover:text-red-500 transition duration-150 ease-out hover:ease-in"

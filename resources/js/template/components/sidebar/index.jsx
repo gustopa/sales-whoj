@@ -2,81 +2,46 @@
 
 import { HiX } from "react-icons/hi";
 import logo from '../../../../assets/logo.jpg'
-import { useState } from "react";
-import { Link } from "@inertiajs/react";
-import { List, ListItem, ListItemText, Collapse, ListItemIcon } from '@mui/material';
+import logo2 from '../../../../assets/favicon.ico'
+import { useState,useEffect } from "react";
+import { Link, usePage } from "@inertiajs/react";
+import { List, ListItem, ListItemText, Collapse, ListItemIcon, Button } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import ShortcutIcon from '@mui/icons-material/Shortcut';
 import MemoryIcon from '@mui/icons-material/Memory';
-import {Pelanggan,Transaksi,Inventory,Produksi,Laporan,Master,Konfigurasi} from "./routes";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import ReceiptIcon from '@mui/icons-material/Receipt';
-import InventoryIcon from '@mui/icons-material/Inventory';
-import FactoryIcon from '@mui/icons-material/Factory';
-import AssessmentIcon from '@mui/icons-material/Assessment';
-import SettingsIcon from '@mui/icons-material/Settings';
+import {Pelanggan,Transaksi,Inventory,Laporan,Master,Konfigurasi} from "./routes";
 import HomeIcon from '@mui/icons-material/Home';
-
-const Dropdown = ({primary, isOpen, onToggle,subMenu,icon}) => {
-  const [open, setOpen] = useState(null)
-  
-  const handleOpen = (name)=>{
-    setOpen((prev) => (prev === name ? null : name))
-  }
-
-  
+import '@fortawesome/fontawesome-svg-core/styles.css'
+import { FaExpandAlt } from "react-icons/fa";
+import { FiMinimize2 } from "react-icons/fi";
 
 
+const Dropdown = ({primary, isOpen, onToggle,subMenu,icon,color}) => {
+  const pathname = location.pathname.split('/')[1]
   return (
-    <List className="m-0" style={{color:'#b89474',padding:'0'}}>
+    <List className="m-0 dropdownParent" style={{color:'#b89474',padding:'0',cursor:'pointer'}}>
       {/* Menu Utama */}
       <ListItem onClick={onToggle}>
-        <ListItemIcon>
-          {icon}
+        <ListItemIcon >
+          <i className={`fa ${icon} dropdownIcon`} style={{color:color}}></i>
         </ListItemIcon>
-        <ListItemText primary={primary} />
-        {isOpen ? <ExpandLess /> : <ExpandMore />}
+        <ListItemText className="dropdownText" style={{color:color}} primary={primary} />
+        {isOpen ? <ExpandLess style={{color:color}} className="dropdownIcon" /> : <ExpandMore style={{color:color}} className="dropdownIcon" />}
       </ListItem>
-
+      
+      
       {/* Submenu */}
       <Collapse in={isOpen} timeout="auto" unmountOnExit>
-        <List key={primary} component="div" disablePadding>
-          {subMenu?.map((menu,index) =>
-            <>
-            <ListItem key={`${primary}-${index}`} sx={{ pl: 4}} onClick={() => menu.IsSubMenu ? handleOpen(menu.name) : ''}>
+        <List component="div" disablePadding>
+          {subMenu.map((menu,index) => 
+            <ListItem className="listItem" key={index} sx={{ pl: 4}}>
                 <ListItemIcon>
-                  <ShortcutIcon style={{color: '#b89474',transform: 'rotate(180deg) scaleX(-1)'}}/>
+                  <ShortcutIcon className="listIcon" style={{color: pathname == menu.link ? "#b89474" : "#a3aed0",transform: 'rotate(180deg) scaleX(-1)'}}/>
                 </ListItemIcon>
-              {!menu.IsSubMenu ? 
-                <Link href={menu.link} underline="none" className="-ml-6">
-                  <ListItemText primary={menu.name} />
+                <Link href={`/${menu.link}`} underline="none" className="-ml-6 ">
+                  <ListItemText className="listText" style={{color: pathname == menu.link ? "#b89474" : "#a3aed0"}} primary={menu.name} />
                 </Link>
-              : 
-                <>
-                  <ListItemText primary={menu.name} />
-                  {open === menu.name ? <ExpandLess /> : <ExpandMore />}
-                </>
-              }
             </ListItem>
-            {menu.IsSubMenu ? 
-              <Collapse key={`${primary}-${index}`} in={open === menu.name} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  {menu.childMenu?.map((child,k)=>
-                    <ListItem key={`${primary}-${k}`} sx={{pl:8}}>
-                      <ListItemIcon>
-                        <ShortcutIcon style={{color: '#b89474',transform: 'rotate(180deg) scaleX(-1)'}}/>
-                      </ListItemIcon>
-                      <Link href={child.link} underline="none" className="-ml-6">
-                        <ListItemText primary={child.name} />
-                      </Link>
-                    </ListItem>
-                  )}
-                </List>
-              </Collapse>
-            : 
-                <div key={`${primary}-${index}`}></div>
-            }
-            </>
           )}
         </List>
       </Collapse>
@@ -85,111 +50,116 @@ const Dropdown = ({primary, isOpen, onToggle,subMenu,icon}) => {
 };
 
 
-const Sidebar = ({ open, onClose }) => {
+const Sidebar = ({ open, onClose, miniSidebar, setMiniSidebar }) => {
   
-  const [openDropdown, setOpenDropdown] = useState(null); 
+  const menu = usePage().props.menu;
+  
+  const AllLinks = menu.map((m) => [m.controller_menu,m.folder_name_bahasa])
+  const path = location.pathname
+  
+  let ActiveGroupLink = null
+  if(path != "/"){
+    ActiveGroupLink = AllLinks.filter(link => link[0] == path.split('/')[1] ? link[1] : null)[0][1]
+  }
+  
+  const [openDropdown, setOpenDropdown] = useState(ActiveGroupLink); 
 
   const handleToggle = (id) => {
     setOpenDropdown((prev) => (prev === id ? null : id)); 
+    setMiniSidebar(false)
   };
+
+  function activeRoute(route){
+    return location.pathname == route;
+    
+  }
+
+  
+  const folderMenu = menu.map((m) => m.folder_name_bahasa);
+  
+  const folderMenuObject = folderMenu.reduce((acc, folderName) => {
+    acc[folderName] = menu
+      .filter((m) => m.folder_name_bahasa === folderName) 
+      .map((m) => ({ 
+        name : m.menu_name_bahasa, 
+        link : m.controller_menu,
+        icon : m.folder_icon
+      })) 
+  
+    return acc;
+  }, {});
+  const [buttonExpand,setButtonExpand] = useState(true)
+  useEffect(() => {
+    window.addEventListener("resize", () => window.innerWidth < 1200 ? setButtonExpand(false) : setButtonExpand(true));
+    window.innerWidth < 1200 ? setButtonExpand(false) : setButtonExpand(true)
+  }, []);
+  
+  
+  
   return (
     <div
-      className={`sm:none duration-175 linear fixed !z-50 flex min-h-full flex-col bg-white pb-10 shadow-2xl shadow-white/5 transition-all dark:!bg-navy-800 dark:text-white md:!z-50 lg:!z-50 xl:!z-0 ${
-        open ? "translate-x-0" : "-translate-x-96"
-      }`}
+      className={`sm:none duration-175 linear fixed !z-50 flex min-h-full flex-col bg-white pb-10 shadow-2xl shadow-white/5 transition-all dark:!bg-navy-800 dark:text-white md:!z-50 lg:!z-50 xl:!z-0 
+        ${open ? "translate-x-0" : "-translate-x-96"}`} style={{width : miniSidebar ? "3.5%" : ""}}
     >
       <span
-        className="absolute top-4 right-4 block cursor-pointer xl:hidden"
+        className="absolute top-4 right-4 block z-999 cursor-pointer xl:hidden"
         onClick={onClose}
       >
         <HiX />
       </span>
 
-      <div className={`mx-[56px] mt-[35px] flex items-center`}>
+      <div>
+          <List className={`${buttonExpand ? 'hidden lg:block' : 'hidden'} `} style={{cursor:'pointer'}} onClick={() => {setMiniSidebar(!miniSidebar); setOpenDropdown(null)}}>
+              <ListItem className="flex justify-end">
+                <ListItemIcon>
+                  {miniSidebar ? <FaExpandAlt className="ml-1" style={{color : "#b89474"}}/> : <FiMinimize2 className="ml-1" style={{color : "#b89474"}}/>}
+                </ListItemIcon>
+              </ListItem>
+          </List>
+        </div>
+
+      <div className={`mx-[56px] mt-[5px] flex items-center ${miniSidebar ? 'hidden' : ''}`}>
         <div className="mt-1 ml-1 h-2.5 font-poppins text-[26px] font-bold uppercase text-navy-700 dark:text-white">
           <img src={logo} alt="logo" width="200" />
         </div>
       </div>
-      <div className="mt-[58px] mb-1 h-px bg-[#b89474]" />
+      
+      <div className={`${miniSidebar ? '' : 'hidden'} mx-auto flex items-center`}>
+        <img src={logo2} width="25" alt="" />
+      </div>
+
+      <div className={`${miniSidebar ? 'mt-[20px]' :'mt-[58px]'} mb-1 h-px bg-[#b89474]`} />
       {/* Nav item */}
+
       <div className="" style={{overflowY:'auto',height : '100vh'}}>
-        <List className="m-0" style={{color:'#b89474',padding:'0'}}>
-          <ListItem>
-            <ListItemIcon>
-              <HomeIcon style={{color:'#b89474'}}/>
-            </ListItemIcon>
-            <Link href="/">
-              <ListItemText primary="Beranda"/>
-            </Link>
-          </ListItem>
-        </List>
-        <Dropdown 
-          id="Pelanggan"
-          primary="Pelanggan"
-          key="Pelanggan"
-          isOpen={openDropdown === 'Pelanggan'}
-          onToggle={() => handleToggle('Pelanggan')}
-          subMenu={Pelanggan}
-          icon={<AccountCircleIcon style={{color:'#b89474'}} />}
-        />
-        <Dropdown 
-          id="Transaksi"
-          primary="Transaksi"
-          key="Transaksi"
-          isOpen={openDropdown === 'Transaksi'}
-          onToggle={() => handleToggle('Transaksi')}
-          subMenu={Transaksi}
-          icon={<ReceiptIcon style={{color:'#b89474'}} />}
-        />
-        <Dropdown 
-          id="Inventory"
-          primary="Inventory"
-          key="Inventory"
-          isOpen={openDropdown === 'Inventory'}
-          onToggle={() => handleToggle('Inventory')}
-          subMenu={Inventory}
-          icon={<InventoryIcon style={{color:'#b89474'}}  />}
-        />
-        <Dropdown 
-          id="Produksi"
-          primary="Produksi"
-          key="Produksi"
-          isOpen={openDropdown === 'Produksi'}
-          onToggle={() => handleToggle('Produksi')}
-          subMenu={Produksi}
-          icon={<FactoryIcon style={{color:'#b89474'}}  />}
-        />
-        <Dropdown 
-          id="Master"
-          primary="Master"
-          key="Master"
-          isOpen={openDropdown === 'Master'}
-          onToggle={() => handleToggle('Master')}
-          subMenu={Master}
-          icon={<MemoryIcon style={{color:'#b89474'}}  />}
-        />
-        <Dropdown 
-          id="Laporan"
-          primary="Laporan"
-          key="Laporan"
-          isOpen={openDropdown === 'Laporan'}
-          onToggle={() => handleToggle('Laporan')}
-          subMenu={Laporan}
-          icon={<AssessmentIcon style={{color:'#b89474'}}  />}
-        />
-        <Dropdown 
-          id="Konfigurasi"
-          primary="Konfigurasi"
-          key="Konfigurasi"
-          isOpen={openDropdown === 'Konfigurasi'}
-          onToggle={() => handleToggle('Konfigurasi')}
-          subMenu={Konfigurasi}
-          icon={<SettingsIcon style={{color:'#b89474'}}  />}
-        />
+          <Link href="/">
+            <List className={`m-0 ${activeRoute('/') ? 'text-[#b89474]' : 'text-gray-600'} dropdownParent`} style={{padding:'0'}}>
+              <ListItem>
+                <ListItemIcon>
+                  <HomeIcon className={`m-0 ${activeRoute('/') ? 'text-[#b89474]' : 'text-gray-600'} dropdownIcon`} />
+                </ListItemIcon>
+                  <ListItemText className="dropdownText" primary="Beranda"/>
+              </ListItem>
+            </List>
+          </Link>
+
+        
+        {Object.keys(folderMenuObject).map((menu,index)=>
+          <Dropdown 
+          color={ActiveGroupLink == menu ? "#b89474" : "#a3aed0"} 
+          key={index} 
+          primary={menu} 
+          id={menu} 
+          isOpen={openDropdown === menu} 
+          subMenu={folderMenuObject[menu]} 
+          onToggle={() => handleToggle(menu)}
+          icon={folderMenuObject[menu][0].icon}
+          />
+        )}
+        <div style={{marginBottom:"145px"}}></div>
         
       </div>
       
-
     </div>
   );
 };

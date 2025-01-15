@@ -10,10 +10,8 @@ import { Button, Chip } from "@mui/material";
 import ModalComponent from "./Modal";
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-const gridDiv = document.querySelector("#myGrid");
 
-
-const DataTable = () => {
+const DataTable = ({tipe_order}) => {
   const [rowData, setRowData] = useState([
   ]);
   const snap = useSnapshot(state)
@@ -36,7 +34,7 @@ const DataTable = () => {
         cellRenderer :  (params) => {
             return (
                 <div className="dark:text-white">
-                    <Chip className="dark:text-white" label={params.value} variant="filled" />
+                    <Chip className={`dark:text-white ${params.value == "ON GOING" ? 'bg-navy-700' : ''}`} label={params.value} variant="filled" />
                 </div>
             )
         }
@@ -56,7 +54,7 @@ const DataTable = () => {
 
   const getDataRequestOrder = async () =>{
     try{
-        const response = await axios.post('/request_order/getAll')
+        const response = await axios.post('/request_order/getAll',{tipe : tipe_order})
         const data = await response.data;
         setRowData(data.data)
         
@@ -71,12 +69,13 @@ const DataTable = () => {
 
   
   return (
-    <div className={`${snap.theme == 'dark' ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'}`} style={{ height: 500,border:'none' }}>
+    <div className={`${snap.theme == 'dark' ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'}`} style={{border:'none' }}>
       <AgGridReact
         rowData={rowData}
         columnDefs={columnDefs}
         defaultColDef={defaultColDef}
         pagination={true}
+        domLayout="autoHeight"
         paginationPageSize={10}
         paginationPageSizeSelector={[10, 25, 50]}
         localeText={localeText}
