@@ -20,7 +20,7 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
     Route::get('/dashboard_sales',[TransaksiController::class,'dashboard']);
 
     Route::prefix('/request_order')->group(function(){
-        Route::post('/getAll',[RequestOrderController::class,'getAll']);
+        Route::get('/getAll/{type}',[RequestOrderController::class,'getAll']);
         Route::post('/view/{id}',[RequestOrderController::class,'view']);
         Route::post('/getDPList/{id}',[RequestOrderController::class,'getDPList']);
     });
@@ -31,7 +31,7 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         Route::post('/save',[CustomerController::class,'save']);
         Route::get('/form/{id}',[CustomerController::class,'form'])->name('form_customer');
         Route::delete('/delete/{id}',[CustomerController::class,'delete']);
-        Route::post('/getAllCustomer',[CustomerController::class,'getAll']);
+        Route::get('/getAllCustomer',[CustomerController::class,'getAll']);
         Route::post('/getCustomerById',[CustomerController::class,'getOneCustomer']);
         Route::post('/getDataVisit',[CustomerController::class,'getVisitList']);
 
@@ -55,7 +55,7 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
 
     Route::prefix('/customer_visit')->group(function(){
         Route::get('/',[CustomerVisitController::Class,'index']);
-        Route::post('/getDataList',[CustomerVisitController::Class,'getList']);
+        Route::get('/getDataList',[CustomerVisitController::Class,'getList']);
         Route::delete('/delete/{id}',[CustomerVisitController::class,'delete']);
         Route::post('/save',[CustomerVisitController::class,'save']);
     });

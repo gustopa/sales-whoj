@@ -11,10 +11,8 @@ import Swal from 'sweetalert2'
 import FormCustomerVisit from './FormCustomerVisit'
 import ModalProduct from '../Components/ModalProduct'
 import { useIsMobile } from '../../hooks/IsMobile'
+import Table from '../Components/Table'
 function CustomerVisit({access}) {
-    console.log(access);
-  
-    const [update,setUpdate] = useState("")
     const handleDelete = id => {
         Swal.fire({
             title: "Are you sure?",
@@ -33,7 +31,7 @@ function CustomerVisit({access}) {
                 icon : "success",
                 text : "Data berhasil dihapus"
             })
-            setUpdate(`delete ${data.data}`)
+            refresh()
           }catch(err){
             Swal.fire({
                 title : "Gagal",
@@ -50,42 +48,40 @@ function CustomerVisit({access}) {
         {field : "row_id", headerName : "" ,
             headerComponent : props => (
                 <LayoutModal ref={refModalTambah} closeButton={false} variant="contained" sxButton={{backgroundColor : "#b89474"}} iconButton={<FaCirclePlus/>}>
-                    <FormCustomerVisit onSuccess={setUpdate} action="tambah" refModal={refModalTambah}/>
+                    <FormCustomerVisit onSuccess={refresh} action="tambah" refModal={refModalTambah}/>
                 </LayoutModal>
               ),
-            cellRenderer : params => (
-                <>
-                    <LayoutModal closeButton={false} ref={refModalEdit} variant="contained" iconButton={<MdEdit/>}>
-                        <FormCustomerVisit onSuccess={setUpdate} lineId={params.data.row_id} action="edit" itemID={params.data.inventory_id} customerID={params.data.customer_id} customer={params.data.customer_id_txt} barang={params.data.item_id_txt} tanggal_visit={params.data.trans_date} notes={params.data.notes} data={params.data} refModal={refModalEdit} />
-                    </LayoutModal>
-                    <Button onClick={() => handleDelete(params.value)} style={{marginLeft: "10px"}} variant="contained" color="error">
-                        <MdDelete/>
-                    </Button>
-                </>
-            ),
+            cellRenderer : params => {
+                if(params.data){
+                  return (
+                      <>
+                          <LayoutModal closeButton={false} ref={refModalEdit} variant="contained" iconButton={<MdEdit/>}>
+                              <FormCustomerVisit onSuccess={refresh} lineId={params.data?.row_id} action="edit" itemID={params.data?.inventory_id} customerID={params.data?.customer_id} customer={params.data?.customer_id_txt} barang={params.data?.item_id_txt} tanggal_visit={params.data?.trans_date} notes={params.data?.notes} data={params.data} refModal={refModalEdit} />
+                          </LayoutModal>
+                          <Button onClick={() => handleDelete(params.value)} style={{marginLeft: "10px"}} variant="contained" color="error">
+                              <MdDelete/>
+                          </Button>
+                      </>
+                  )
+                }
+            },
             hide : access == "Read only" ? true : false
         },
         {field : "customer_id_txt", headerName : "Pelanggan",
-            cellRenderer : params => <ModalViewCustomer params={params} id_customer={params.data.customer_id} />
+            cellRenderer : params => <ModalViewCustomer params={params} id_customer={params.data?.customer_id} />
         },
         {field : "inventory_id_txt", headerName : "PLU"},
         {field : "item_id_txt", headerName : "Item"},
         {field : "trans_date", headerName : "Tanggal"},
-        {field : "notes", headerName : "Notes",autoHeight : true, wrapText : true, flex : useIsMobile() ? undefined : 1},
+        {field : "notes", headerName : "Notes", },
     ])
-    const [rowData, setRowData] = useState([])
-    
-    const getDataCustomerVisit = async () => {
-        const response = await axios.post('/customer_visit/getDataList')
-        const data = await response.data
-        setRowData(data)
+    const refTable = useRef(null)
+    const refresh = () => {
+      refTable.current?.refreshData()
     }
-    useEffect(()=>{
-        getDataCustomerVisit()
-    },[update])
   return (
     <Layout title="Kunjungan Pelanggan" page="Kunjungan Pelanggan">
-        <DataTable columns={columnDefs} data={rowData}/>
+        <Table ref={refTable} columnDefs={columnDefs} endpoint="/customer_visit/getDataList" />
     </Layout>
   )
 }

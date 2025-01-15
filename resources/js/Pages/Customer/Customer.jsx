@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from 'react'
+import React,{useEffect, useRef, useState} from 'react'
 import Layout from '../Layouts/Layout'
 import DataTable from '../Layouts/components/Datatable';
 import axios from 'axios';
@@ -12,6 +12,7 @@ import ModalViewCustomer from './ModalViewCustomer';
 import Swal from 'sweetalert2';
 import { MdDone } from "react-icons/md";
 import { encrypt } from '../../helper';
+import Table from '../Components/Table';
 function Customer({permission}) {
   const menu_access = usePage().props.permission.menu_access;
   const handleDelete = (row_id,data) => {
@@ -55,29 +56,31 @@ function Customer({permission}) {
         </Link>
       ),
       cellRenderer : params => {
+        if(params.value && params.data){
+          return (
+            <>
+              <Link href={`/customer/form/${encrypt(params.value ? params.value : "")}`}>
+                <Button variant='contained' color="primary" style={{borderColor: '#0084ff'}}>
+                  <FaUserEdit style={{color : 'white'}}/>
+                </Button>
+              </Link>
+              <span className='ml-3'>
+                <Button onClick={() => handleDelete(params.value,params.data)} variant='contained' color="error" style={{borderColor : '#fa625e'}}>
+                  <MdDeleteForever style={{color: 'white'}}/>
+                </Button>
+              </span>
+              <Button style={{cursor : "default"}}>
+                <MdDone style={{color : params.data.is_submitted == 0 ? '#bbb' : '#059c1b',fontWeight : "bold"}}/>
+              </Button>
+            </>
+          )
+        }
+        }
         
-        return (
-          <>
-            <Link href={`/customer/form/${encrypt(params.value)}`}>
-              <Button variant='contained' color="primary" style={{borderColor: '#0084ff'}}>
-                <FaUserEdit style={{color : 'white'}}/>
-              </Button>
-            </Link>
-            <span className='ml-3'>
-              <Button onClick={() => handleDelete(params.value,params.data)} variant='contained' color="error" style={{borderColor : '#fa625e'}}>
-                <MdDeleteForever style={{color: 'white'}}/>
-              </Button>
-            </span>
-            <Button style={{cursor : "default"}}>
-              <MdDone style={{color : params.data.is_submitted == 0 ? '#bbb' : '#059c1b',fontWeight : "bold"}}/>
-            </Button>
-          </>
-        )
-      }
     },
     { field: "customer_no", headerName: "Pelanggan No", 
         cellRenderer : params => {
-            return <ModalViewCustomer params={params} id_customer={params.data.row_id}/>
+            return <ModalViewCustomer params={params} id_customer={params.data?.row_id}/>
         }
     },
     { field: "name", headerName: "Nama", filter : true,
@@ -93,14 +96,13 @@ function Customer({permission}) {
         return params.value != null && params.value != "" ? params.value : "-"
       }
     },
-    { field: "address", width : 350, headerName: "Alamat",autoHeight : true, wrapText : true, cellStyle : {lineHeight : "1.3"},
+    { field: "address", headerName: "Alamat",width: 350, wrapText : false, cellStyle : {lineHeight : "1.3"},
       cellRenderer : params => {
         return params.value != null && params.value != "" ? params.value : "-"
       }
     },
     { field: "pi_no", headerName: "ID Member PI" },
     { field: "birth_date", headerName: "Tgl Lahir",
-      // filter : 'agDateColumnFilter',
       cellRenderer : params => {
         return params.value != "0000-00-00" && params.value != null ? formatDate(params.value) : "-"
       }
@@ -112,21 +114,10 @@ function Customer({permission}) {
     },
   ]);
 
-  const [rowData, setRowData] = useState([])
-  
-  const getData = async () => {
-    const response = await axios.post('/customer/getAllCustomer')
-    const data = await response.data
-    setRowData(data)
-  }
-  
-  useEffect(()=>{
-    getData()
-  },[])
-  
+  const refTable = useRef(null)
   return (
     <Layout title="Pelanggan" page="Pelanggan">
-      <DataTable height="100%" columns={column} data={rowData} />
+      <Table ref={refTable} columnDefs={column} endpoint="/customer/getAllCustomer" />
     </Layout>
   )
 }

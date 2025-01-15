@@ -8,15 +8,10 @@ class HomeController extends Controller
 {
     public function index(){
         $menu = listMenu();
-        return inertia('Home',[
-            'page' => 'Home', 
-            'name' => session('name'), 
+        return inertia('Home/Home',[
             'session' => session()->all(),
             'menu' => $menu
         ]);
-    }
-    public function profile(Request $request){
-        dd($request->session()->all());
     }
 
     public function getAllInventory(Request $request)

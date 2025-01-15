@@ -20,15 +20,18 @@ class CustomerVisitController extends Controller
     }
 
     public function getList(){
-        $access = checkPermission('customer_visit');
-        if($access == null || $access == ""){
-            return abort(403);
-        }
-        $data = DB::table('vw_customer_visitlist')->where([
-            "is_deleted" => 0,
-            "company_id" => session('company_id'),
-        ])->orderBy('row_id','desc')->get();
-        return response()->json($data);
+        // $access = checkPermission('customer_visit');
+        // if($access == null || $access == ""){
+        //     return abort(403);
+        // }
+        // $data = DB::table('vw_customer_visitlist')->where([
+        //     "is_deleted" => 0,
+        //     "company_id" => session('company_id'),
+        // ])->orderBy('row_id','desc')->get();
+        $data = datatable("vw_customer_visitlist",function($query){
+            $query->orderBy("row_id","desc");
+        });
+        return $data;
     }
 
     public function delete($id){

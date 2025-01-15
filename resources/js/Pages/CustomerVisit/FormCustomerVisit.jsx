@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
-import { Grid2 as Grid,TextField,Button, Paper, InputBase, Box, IconButton, InputAdornment } from '@mui/material'
+import { Grid2 as Grid,TextField,Button, InputAdornment } from '@mui/material'
 import { useSnapshot } from 'valtio'
 import state from '../../store/store'
-import LayoutModal from '../Layouts/components/LayoutModal'
-import { MdSearch } from 'react-icons/md'
 import ModalCustomer from '../Components/ModalCustomer'
 import ModalProduct from '../Components/ModalProduct'
 import axios from 'axios'
@@ -82,7 +80,7 @@ function FormCustomerVisit({refModal,tanggal_visit="",notes="",customer="",baran
             text : `Data berhasil ${action == "tambah" ? "ditambahkan" : "diedit"}`,
             icon : "success"
           })
-          onSuccess(data_response.data)
+          onSuccess()
         }catch(err){
           console.log(err);
           Swal.fire({

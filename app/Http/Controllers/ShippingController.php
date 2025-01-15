@@ -22,7 +22,9 @@ class ShippingController extends Controller
         if($access == null || $access == ""){
             return abort(403);
         }
-        $data = datatable('vw_shippinglist',["field" => "row_id","order" => "desc"]);
+        $data = datatable('vw_shippinglist',function($query){
+            $query->orderBy("row_id","desc");
+        });
         return $data;
     }
 

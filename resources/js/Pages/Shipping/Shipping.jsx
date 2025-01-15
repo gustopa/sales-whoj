@@ -55,7 +55,7 @@ function Shipping() {
                             resi={params.data?.no_resi == null ? "" : params.data?.no_resi} 
                             customer={params.data?.customer_id_txt == null ? "" : params.data?.customer_id_txt} 
                             invoiceID={params.data?.payment_id} 
-                            invoice={params.data?.payment_id_txt == null ? "" : params.data?.payment_id_txt == null} 
+                            invoice={params.data?.payment_id_txt == null ? "" : params.data?.payment_id_txt} 
                             tanggal={params.data?.shipping_date == null ? "" : params.data?.shipping_date} 
                             customerID={params.data?.customer_id} 
                             bgColor="#1976d2" 

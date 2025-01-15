@@ -24,8 +24,10 @@ class CustomerController extends Controller
     }
 
     public function getAll(){
-        $data = DB::table('vw_customerlist')->where('is_deleted','0')->where('company_id',session('company_id'))->orderBy('row_id','DESC')->get();
-        return response()->json($data);
+        $data = datatable('vw_customerlist',function($query){
+            $query->orderBy("row_id","DESC");
+        });
+        return $data;
     }
     public function getOneCustomer(){
         $data = DB::table('vw_customerlist')->where('row_id',request('row_id'))->where('company_id',session('company_id'))->first();
