@@ -10,7 +10,6 @@ import { Button, Chip } from "@mui/material";
 import ModalComponent from "./Modal";
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-const gridDiv = document.querySelector("#myGrid");
 
 const DataTable = ({tipe_order}) => {
   const [rowData, setRowData] = useState([

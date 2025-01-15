@@ -1,69 +1,53 @@
-import React, { useMemo, useRef, useState } from 'react';
-import { AgGridReact } from 'ag-grid-react';
-import axios from 'axios';
-import { useSnapshot } from 'valtio';
-import state from '../../store/store';
-const ModalProduct = () => {
-    const gridRef = useRef(null);
-    const [columnDefs] = useState([
-        { field: 'row_id', sortable: true, filter: true },
-        { field: 'identity_code', sortable: true, filter: true },
-        { field: 'item_id_txt', sortable: true, filter: true },
-        { field: 'photo_inventory_id_txt', sortable: true, filter: true },
-    ]);
+import React, { useRef, useState } from 'react'
+import LayoutModal from '../Layouts/components/LayoutModal'
+import { FaFolderOpen } from "react-icons/fa";
+import { Button } from '@mui/material';
+import Table from './Table'
+import { useIsMobile } from '../../hooks/IsMobile'
 
-    const snap = useSnapshot(state)
-
-    const fetchServerData = async (params) => {
-        const request = {
-            startRow: params.startRow,
-            endRow: params.endRow,
-            sortModel: params.sortModel,
-            filterModel: params.filterModel,
-        };
-        gridRef.current.api.setGridOption("loading",true);
-        try {
-            const response = await axios.get('/inventory/getAll', { params: request });
-            params.successCallback(response.data.rows, response.data.lastRow);
-            gridRef.current.api.setGridOption("loading",false);
-        } catch (error) {
-            params.failCallback();
-            gridRef.current.api.setGridOption("loading",false);
-        }
-    };
-
-    const defaultColDef = useMemo(() => {
-        return {
-          filter: "agTextColumnFilter",
-          floatingFilter: true,
-        };
-      }, []);
-
-      const localeText = {
-        page : "",
-        pageSizeSelectorLabel : ""
-      }
-
+const ButtonSelect = ({setItem,setIdItem,params,refModal}) => {
+    const handleClick = () => {
+        const item = params.data
+        console.log(item);
+        
+        setIdItem(item.row_id)
+        setItem(item.item_id_txt)
+        refModal.current.close()
+    }
     return (
+        <Button onClick={handleClick}>SELECT</Button>
+    )
+}
 
-        <div className={`${snap.theme == 'dark' ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'}`} style={{border:'none' }}>
-            <AgGridReact
-            ref={gridRef}
-            rowModelType="infinite"
-            columnDefs={columnDefs}
-            defaultColDef={defaultColDef}
-            cacheBlockSize={25}
-            domLayout="autoHeight"
-            pagination={true}
-            paginationPageSize={10}
-            paginationPageSizeSelector={[10,20,50]}
-            localeText={localeText}
-            datasource={{
-                getRows: fetchServerData,
-            }}
-            />
-      </div>
-    );
-};
+function ModalProduct({setItem,setIdItem}) {
+    const refModal = useRef()
+    const isMobile = useIsMobile()
+    const [rowHeight, setRowHeight] = useState(45)
+    const [columnDefs] = useState([
+        { field: 'row_id', headerName : "", sortable: true, filter: true,
+            cellRenderer : params => (
+                <ButtonSelect params={params} refModal={refModal} setItem={setItem} setIdItem={setIdItem} />
+            )
+        },
+        { field: 'identity_code', headerName : "PLU", sortable: true, filter: true,flex : isMobile ? undefined : 1, },
+        { field: 'item_id_txt',headerName : "Item", sortable: true, filter: true, flex : isMobile ? undefined : 1, },
+        { field: 'photo_inventory_id_txt',headerName : "Photo", sortable: true, filter: true, wrapText : true, flex : isMobile ? undefined : 1,
+            cellRenderer: params => {
+                return (
+                    <>
+                        <img src={`https://system-mahakarya.com/assets/uploaded/${params.value}`} onLoad={() => setRowHeight(150)} width={150} alt="" />
+                    </>
+                )
+            }
+        },
+    ]);
+    
+  return (
+    <LayoutModal ref={refModal} height='77%' sxButton={{background : "#b89474",width : "100%"}} iconButton={<FaFolderOpen style={{color: "white"}}/>}>
+         <Table endpoint="/inventory/getAll" columnDefs={columnDefs} rowHeight={rowHeight}/>
+    </LayoutModal>
+  )
+}
 
-export default ModalProduct;
+export default ModalProduct
+

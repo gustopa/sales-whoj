@@ -1,16 +1,21 @@
-import React, { useState } from 'react'
-import { Grid2 as Grid,TextField,Button, Paper, InputBase, Box, IconButton, InputAdornment } from '@mui/material'
-import { useSnapshot } from 'valtio'
-import state from '../../store/store'
+import React, { useRef, useState } from 'react'
 import LayoutModal from '../Layouts/components/LayoutModal'
-import { MdSearch } from 'react-icons/md'
+import { Button, Grid2 as Grid, InputAdornment, TextField } from '@mui/material'
 import ModalCustomer from '../Components/ModalCustomer'
-import ModalProduct from '../Components/ModalProduct'
-import axios from 'axios'
-import Swal from 'sweetalert2'
-function FormCustomerVisit({refModal,tanggal_visit="",notes="",customer="",barang="",customerID="",itemID="",lineId="", action,onSuccess}) {
+import { useSnapshot } from "valtio";
+import state from '../../store/store'
+import ModalPayment from '../Components/ModalPayment';
+function FormShipping({iconButton,bgColor,customer="",customerID="",invoice="",tanggal="",resi="",invoiceID,data,id}) {
+    console.log(data);
     
-  const snap = useSnapshot(state)
+    const snap = useSnapshot(state)
+    const [dataCustomer,setDataCustomer] = useState(customer)
+    const [idCustomer,setIdCustomer] = useState(customerID)
+    const [dataInvoice,setDataInvoice] = useState(invoice)
+    const [idInvoice,setIdInvoice] = useState(invoiceID)
+    const [dataTanggal,setDataTanggal] = useState(tanggal)
+    const [dataResi,setDataResi] = useState(resi)
+    const refModal = useRef(null)
     const sxInputField = {
         "& .MuiFormLable-root" : {
           color : "#b89474 !important"
@@ -57,45 +62,13 @@ function FormCustomerVisit({refModal,tanggal_visit="",notes="",customer="",baran
         },
       }
 
-      const [tanggal,setTanggal] = useState(tanggal_visit)
-      const [dataNotes,setDataNotes] = useState(notes)
-      const [dataCustomer,setDataCustomer] = useState(customer)
-      const [item,setItem] = useState(barang)
-      const [idCustomer,setIdCustomer] = useState(customerID)
-      const [idItem,setIdItem] = useState(itemID)
-
-      const handleSimpan = async () => {
-        const data = {
-          id_customer : idCustomer,
-          id_item : idItem,
-          tanggal : tanggal,
-          notes : dataNotes,
-          line_id : lineId,
-          action : action
-        }
-        try{
-          const response = await axios.post('/customer_visit/save',data)
-          const data_response = await response.data
-          console.log(data_response);
-          Swal.fire({
-            title : "Berhasil",
-            text : `Data berhasil ${action == "tambah" ? "ditambahkan" : "diedit"}`,
-            icon : "success"
-          })
-          onSuccess(data_response.data)
-        }catch(err){
-          console.log(err);
-          Swal.fire({
-            title : "Gagal",
-            text : `Data gagal ${action == "tambah" ? "ditambahkan" : "diedit"}`,
-            icon : "error"
-          })
-        }
-        refModal.current.close()
+      const handleSimpan = () => {
+        console.log(id);
+        
       }
   return (
-    <>
-        <h2 className='mb-3 font-bold'>FORM KUNJUNGAN PELANGGAN</h2>
+    <LayoutModal ref={refModal} sxButton={{backgroundColor : bgColor}} iconButton={iconButton}>
+        <h2 className='font-bold text-2xl mb-[10px]'>FORM PENGIRIMAN</h2>
         <Grid container spacing={2}>
             <Grid size={{xs:12,md:12}}>
                 <TextField variant="outlined" value={dataCustomer} sx={sxInputField} label="Pelanggan" fullWidth
@@ -113,11 +86,11 @@ function FormCustomerVisit({refModal,tanggal_visit="",notes="",customer="",baran
               />
             </Grid>
             <Grid size={{xs:12,md:12}}>
-                <TextField variant="outlined" value={item} sx={sxInputField} label="Barang" fullWidth
+                <TextField variant="outlined" value={dataInvoice} sx={sxInputField} label="Invoice" fullWidth
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
-                      <ModalProduct setItem={setItem} setIdItem={setIdItem}/>
+                      <ModalPayment id_customer={idCustomer}/>
                     </InputAdornment>
                   ),
                   readOnly : true
@@ -132,23 +105,23 @@ function FormCustomerVisit({refModal,tanggal_visit="",notes="",customer="",baran
                 InputLabelProps={{
                     shrink: true,
                 }}
-                sx={sxInputField} fullWidth label="Tanggal" onChange={e => setTanggal(e.target.value)} value={tanggal} type='date' variant='outlined' />
+                sx={sxInputField} fullWidth label="Tanggal" onChange={e => setDataTanggal(e.target.value)} value={dataTanggal} type='date' variant='outlined' />
             </Grid>
             <Grid size={12}>
                 <TextField 
                 InputLabelProps={{
                     shrink: true,
                 }}
-                sx={sxInputField} fullWidth onChange={e => setDataNotes(e.target.value)} label="Notes" value={dataNotes} variant='outlined' />
+                sx={sxInputField} fullWidth label="Resi No" onChange={e => setDataResi(e.target.value)} value={dataResi} type='text' variant='outlined' />
             </Grid>
-            
+
             <Grid size={12}>
                 <Button onClick={() => refModal.current?.close() } variant="contained" color="error">Batal</Button>
                 <Button style={{marginLeft : '10px'}} onClick={handleSimpan} variant='contained' color="success">Simpan</Button>
             </Grid>
         </Grid>
-    </>
+    </LayoutModal>
   )
 }
 
-export default FormCustomerVisit
+export default FormShipping

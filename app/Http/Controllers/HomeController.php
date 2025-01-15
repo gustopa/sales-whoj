@@ -20,47 +20,27 @@ class HomeController extends Controller
     }
 
     public function getAllInventory(Request $request)
-{
-    $startRow = $request->get('startRow', 0);
-    $endRow = $request->get('endRow', 100);
-
-    $filterModel = $request->get('filterModel',[]);
-    $sortModel = $request->get('sortModel',[]);
-    
-    // Query dasar
-    $query = DB::table('vw_inventorylist');
-    
-    // Terapkan filter
-    if (!empty($filterModel)) {
-        foreach ($filterModel as $field => $filter) {
-            if ($filter['filterType'] === 'text') {
-                $query->where($field, 'like', '%' . $filter['filter'] . '%');
-            } elseif ($filter['filterType'] === 'number') {
-                $query->where($field, $filter['type'], $filter['filter']);
-            }
-        }
+    {
+        $data = datatable('vw_inventorylist');
+        return $data;
     }
 
-    // Terapkan sorting
-    if (!empty($sortModel)) {
-        foreach ($sortModel as $sort) {
-            $query->orderBy($sort['colId'], $sort['sort']);
-        }
+    public function getById($id){
+        $data = DB::table('vw_paymentlist')->where('row_id',$id)->first();
+        return response()->json([
+            "data" => $data
+        ]);
     }
 
-    // Total hasil pencarian
-    $totalCount = $query->count();
-
-    // Ambil data
-    $data = $query->skip($startRow)
-                ->take($endRow - $startRow)
-                ->get();
-
-    return response()->json([
-        'rows' => $data,
-        'lastRow' => $totalCount,
-    ]);
-}
+    public function getByCustomer($id){
+        $data = DB::table('vw_paymentlist')->where([
+            ['customer_id','=',$id],
+            ['status','=','PAID'],
+        ])->get();
+        return response()->json([
+            "data" => $data
+        ]);
+    }
 
 
 }

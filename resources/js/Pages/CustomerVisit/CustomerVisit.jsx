@@ -10,7 +10,10 @@ import ModalViewCustomer from '../Customer/ModalViewCustomer'
 import Swal from 'sweetalert2'
 import FormCustomerVisit from './FormCustomerVisit'
 import ModalProduct from '../Components/ModalProduct'
-function CustomerVisit() {
+import { useIsMobile } from '../../hooks/IsMobile'
+function CustomerVisit({access}) {
+    console.log(access);
+  
     const [update,setUpdate] = useState("")
     const handleDelete = id => {
         Swal.fire({
@@ -47,19 +50,20 @@ function CustomerVisit() {
         {field : "row_id", headerName : "" ,
             headerComponent : props => (
                 <LayoutModal ref={refModalTambah} closeButton={false} variant="contained" sxButton={{backgroundColor : "#b89474"}} iconButton={<FaCirclePlus/>}>
-                    <FormCustomerVisit refModal={refModalTambah}/>
+                    <FormCustomerVisit onSuccess={setUpdate} action="tambah" refModal={refModalTambah}/>
                 </LayoutModal>
               ),
             cellRenderer : params => (
                 <>
                     <LayoutModal closeButton={false} ref={refModalEdit} variant="contained" iconButton={<MdEdit/>}>
-                        <FormCustomerVisit customer={params.data.customer_id_txt} barang={params.data.item_id_txt} tanggal_visit={params.data.trans_date} notes={params.data.notes} data={params.data} refModal={refModalEdit} />
+                        <FormCustomerVisit onSuccess={setUpdate} lineId={params.data.row_id} action="edit" itemID={params.data.inventory_id} customerID={params.data.customer_id} customer={params.data.customer_id_txt} barang={params.data.item_id_txt} tanggal_visit={params.data.trans_date} notes={params.data.notes} data={params.data} refModal={refModalEdit} />
                     </LayoutModal>
                     <Button onClick={() => handleDelete(params.value)} style={{marginLeft: "10px"}} variant="contained" color="error">
                         <MdDelete/>
                     </Button>
                 </>
-            )
+            ),
+            hide : access == "Read only" ? true : false
         },
         {field : "customer_id_txt", headerName : "Pelanggan",
             cellRenderer : params => <ModalViewCustomer params={params} id_customer={params.data.customer_id} />
@@ -67,7 +71,7 @@ function CustomerVisit() {
         {field : "inventory_id_txt", headerName : "PLU"},
         {field : "item_id_txt", headerName : "Item"},
         {field : "trans_date", headerName : "Tanggal"},
-        {field : "notes", headerName : "Notes",autoHeight : true, wrapText : true},
+        {field : "notes", headerName : "Notes",autoHeight : true, wrapText : true, flex : useIsMobile() ? undefined : 1},
     ])
     const [rowData, setRowData] = useState([])
     
@@ -81,8 +85,7 @@ function CustomerVisit() {
     },[update])
   return (
     <Layout title="Kunjungan Pelanggan" page="Kunjungan Pelanggan">
-        <ModalProduct/>
-        {/* <DataTable columns={columnDefs} data={rowData}/> */}
+        <DataTable columns={columnDefs} data={rowData}/>
     </Layout>
   )
 }

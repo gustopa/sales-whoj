@@ -59,13 +59,13 @@ function Customer({permission}) {
         return (
           <>
             <Link href={`/customer/form/${encrypt(params.value)}`}>
-              <Button variant='outlined' style={{borderColor: '#0084ff'}}>
-                <FaUserEdit style={{color : '#0084ff'}}/>
+              <Button variant='contained' color="primary" style={{borderColor: '#0084ff'}}>
+                <FaUserEdit style={{color : 'white'}}/>
               </Button>
             </Link>
             <span className='ml-3'>
-              <Button onClick={() => handleDelete(params.value,params.data)} variant='outlined' style={{borderColor : '#fa625e'}}>
-                <MdDeleteForever style={{color: '#fa625e'}}/>
+              <Button onClick={() => handleDelete(params.value,params.data)} variant='contained' color="error" style={{borderColor : '#fa625e'}}>
+                <MdDeleteForever style={{color: 'white'}}/>
               </Button>
             </span>
             <Button style={{cursor : "default"}}>

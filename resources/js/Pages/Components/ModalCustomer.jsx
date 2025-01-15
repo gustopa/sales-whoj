@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import LayoutModal from '../Layouts/components/LayoutModal'
 import { FaFolderOpen } from "react-icons/fa";
-import axios from 'axios';
 import { usePage } from '@inertiajs/react';
 import DataTable from '../Layouts/components/Datatable';
 import { Button } from '@mui/material';

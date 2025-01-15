@@ -1,5 +1,5 @@
 import { Button,Modal,Box,Grid2 as Grid, Table, TableHead, TableRow, TableCell, TableBody, Chip } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import { useSnapshot } from 'valtio';
 import state from '../../store/store';
@@ -20,15 +20,20 @@ function ModalViewCustomer({params,id_customer}) {
         setOpen(true)
         if(!isLoaded){
             getDataCustomer()
-            getDataSize()
-            getDataPayment()
-            getDataOrder()
-            getDataRefund()
-            getDataDocument()
-            getDataVisit()
             setIsLoaded(true)
         }
     }
+    useEffect(() => {
+        if (dataCustomer) {
+            getDataSize();
+            getDataPayment();
+            getDataOrder();
+            getDataRefund();
+            getDataDocument();
+            getDataVisit();
+        }
+    }, [dataCustomer]);
+    
     const getDataCustomer = async () => {
         try{
             const response = await axios.post('customer/getCustomerById',{row_id : id_customer})
@@ -43,7 +48,6 @@ function ModalViewCustomer({params,id_customer}) {
             const response = await axios.post('/customer/getDataSize',{row_id : dataCustomer.row_id})
             const data = await response.data
             setCostumerSize(data)
-            console.log(data);
             
         }catch(err){
             console.log(err);
@@ -101,8 +105,6 @@ function ModalViewCustomer({params,id_customer}) {
             const response = await axios.post('/customer/getDataVisit',{row_id : dataCustomer.row_id})
             const data = await response.data
             setCostumerVisit(data)
-            console.log(data);
-            
         }catch(err){
             console.log(err);
         }
@@ -118,7 +120,7 @@ function ModalViewCustomer({params,id_customer}) {
         </Button>
         <Modal open={open}>
             <div>
-                <Button onClick={handleClose} variant="contained" sx={{position:'absolute',right:'3%',background:'#b89474',top:'30px',zIndex:'999'}}>
+                <Button onClick={handleClose} variant="contained" sx={{position:'absolute',right:'8%',background:'#b89474',top:'8%',zIndex:'999'}}>
                     <CloseIcon style={{color:'white'}}/>
                 </Button>
                 <Box
@@ -127,8 +129,8 @@ function ModalViewCustomer({params,id_customer}) {
                         top: "50%",
                         left: "50%",
                         transform: "translate(-50%, -50%)",
-                        width: "90%",
-                        height : "90%",
+                        width: "80%",
+                        height : "80%",
                         bgcolor: "background.paper",
                         overflowY : 'auto',
                         boxShadow: 24,

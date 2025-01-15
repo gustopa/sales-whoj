@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerVisitController;
 use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\ShippingController;
 use App\Http\Middleware\IsAuthenticated;
 use App\Http\Middleware\NotLogin;
 
@@ -32,6 +33,7 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         Route::delete('/delete/{id}',[CustomerController::class,'delete']);
         Route::post('/getAllCustomer',[CustomerController::class,'getAll']);
         Route::post('/getCustomerById',[CustomerController::class,'getOneCustomer']);
+        Route::post('/getDataVisit',[CustomerController::class,'getVisitList']);
 
         Route::group([],function(){
             Route::post('/getDataSize',[CustomerController::class,'getSizeList']);
@@ -48,16 +50,25 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
             Route::delete('/deleteDocument/{id}',[CustomerController::class,'deleteDocument']);
             Route::post('/editDokumen',[CustomerController::class,'editDocument']);
         });
-        Route::post('/getDataVisit',[CustomerController::class,'getVisitList']);
+        
     });
-
-    Route::get('/inventory/getAll',[HomeController::class,'getAllInventory']);
 
     Route::prefix('/customer_visit')->group(function(){
         Route::get('/',[CustomerVisitController::Class,'index']);
         Route::post('/getDataList',[CustomerVisitController::Class,'getList']);
         Route::delete('/delete/{id}',[CustomerVisitController::class,'delete']);
+        Route::post('/save',[CustomerVisitController::class,'save']);
     });
+
+    Route::prefix('/shipping')->group(function(){
+        Route::get('/',[ShippingController::class,'index']);
+        Route::get('/getAll',[ShippingController::class,'getAll']);
+        Route::delete('/delete/{id}',[ShippingController::class,'delete']);
+    });
+
+    Route::get('/inventory/getAll',[HomeController::class,'getAllInventory']);
+    Route::get('/invoice/getById/{id}',[HomeController::class,'getById']);
+    Route::get('/payment/getByCustomer/{id}',[HomeController::class,'getByCustomer']);
 });
 
 
