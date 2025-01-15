@@ -1,11 +1,8 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-// import { ModuleRegistry } from "ag-grid-community";
-// import { ServerSideRowModelModule } from 'ag-grid-enterprise';
 import axios from 'axios';
 import { useSnapshot } from 'valtio';
 import state from '../../store/store';
-// ModuleRegistry.registerModules([ServerSideRowModelModule]);
 const ModalProduct = () => {
     const gridRef = useRef(null);
     const [columnDefs] = useState([
@@ -42,6 +39,11 @@ const ModalProduct = () => {
         };
       }, []);
 
+      const localeText = {
+        page : "",
+        pageSizeSelectorLabel : ""
+      }
+
     return (
 
         <div className={`${snap.theme == 'dark' ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'}`} style={{border:'none' }}>
@@ -55,6 +57,7 @@ const ModalProduct = () => {
             pagination={true}
             paginationPageSize={10}
             paginationPageSizeSelector={[10,20,50]}
+            localeText={localeText}
             datasource={{
                 getRows: fetchServerData,
             }}
