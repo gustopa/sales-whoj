@@ -85,7 +85,6 @@ function FormShipping({iconButton,bgColor,customer="",customerID="",invoice="",t
             })
             tableRef.current?.refreshData()
             refModal.current.close()
-            
         }catch(err){
             console.log(err);
             Swal.fire({

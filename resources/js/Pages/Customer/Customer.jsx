@@ -32,7 +32,7 @@ function Customer({permission}) {
             title: "Deleted!",
             icon: "success"
           });
-          getData()
+          refTable.current.refreshData()
         }catch(err){
           Swal.fire({
             title: "Something wrong!",
