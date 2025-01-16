@@ -96,18 +96,22 @@ function Customer({permission}) {
         return params.value != null && params.value != "" ? params.value : "-"
       }
     },
-    { field: "address", headerName: "Alamat",width: 350, wrapText : false, cellStyle : {lineHeight : "1.3"},
+    { field: "address", headerName: "Alamat",width: 350, wrapText : false, cellStyle : {lineHeight : "1.3"}, 
+      editable : true,
+      cellEditor: "agLargeTextCellEditor",
+      cellEditorPopup: true,
+      
       cellRenderer : params => {
         return params.value != null && params.value != "" ? params.value : "-"
       }
     },
     { field: "pi_no", headerName: "ID Member PI" },
-    { field: "birth_date", headerName: "Tgl Lahir",
+    { field: "birth_date", headerName: "Tgl Lahir", 
       cellRenderer : params => {
         return params.value != "0000-00-00" && params.value != null ? formatDate(params.value) : "-"
       }
     },
-    { field: "visit_date", headerName: "Tanggal datang",
+    { field: "visit_date", headerName: "Tanggal datang",editable : true, cellEditor: "agDateCellEditor",
       cellRenderer : params => {
         return params.value != "0000-00-00" && params.value ? formatDate(params.value) : "-"
       }
