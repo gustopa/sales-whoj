@@ -17,7 +17,6 @@ function FormShipping({iconButton,bgColor,customer="",customerID="",invoice="",t
     const [dataTanggal,setDataTanggal] = useState(tanggal)
     const [dataResi,setDataResi] = useState(resi)
     const refModal = useRef(null)
-    console.log(invoice);
     
     const sxInputField = {
         "& .MuiFormLable-root" : {

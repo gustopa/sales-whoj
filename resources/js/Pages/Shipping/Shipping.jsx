@@ -8,7 +8,7 @@ import { FaCirclePlus } from 'react-icons/fa6';
 import { MdDelete, MdEdit } from 'react-icons/md';
 import ModalInvoice from '../Components/ModalInvoice';
 import Swal from 'sweetalert2';
-function Shipping() {
+function Shipping({access}) {
     const tableRef = useRef(null)
     const handleDelete = (id) => {
         Swal.fire({
@@ -23,7 +23,6 @@ function Shipping() {
             try{
                 const response = await axios.delete(`/shipping/delete/${id}`)
                 const data = await response.data
-                console.log(data);
                 
                 Swal.fire({
                     title : "Berhasil",
@@ -43,11 +42,12 @@ function Shipping() {
     }
     
     const [columnDefs,setColumnDefs] = useState([
-        {field : "row_id",headerName : "", resizable: false, sortable: false,
+        {field : "row_id",headerName : "", resizable: false, sortable: false, hide : access == "Read only" ? true : false,
             headerComponent : params => <FormShipping tableRef={tableRef} action="tambah" bgColor="#b89474" iconButton={<FaCirclePlus className='text-white'/>}/>,
             cellRenderer : params => 
-                (
-                    <>
+            {
+                return (
+                    <div key={params.value}>
                         <FormShipping 
                             tableRef={tableRef}
                             action="edit"
@@ -62,8 +62,9 @@ function Shipping() {
                             iconButton={<MdEdit className='text-white' />}
                         />
                         <Button onClick={() => handleDelete(params.value)} style={{marginLeft : "10px"}} variant="contained" color="error"><MdDelete/></Button>
-                    </>
+                    </div>
                 )
+            }
         },
         {field : "no_resi", headerName : "No resi"},
         {field : "customer_id_txt", headerName : "Pelanggan",
