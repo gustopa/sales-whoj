@@ -15,7 +15,6 @@ class CustomerController extends Controller
             return redirect()->route('dashboard');
         }
         $menu = listMenu();
-        checkAccess('customer');
         return inertia('Customer/Customer',[
             'session' => session()->all(),
             'permission' => $permission,

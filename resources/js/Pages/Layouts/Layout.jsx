@@ -16,8 +16,13 @@ export default function Layout(props) {
       }else{
         setOpen(true) 
       } 
-    }
-    );
+    });
+    if(window.innerWidth < 1200){
+      setOpen(false)
+      setMiniSidebar(false)
+    }else{
+      setOpen(true) 
+    } 
   }, []);
 
   
@@ -40,9 +45,8 @@ export default function Layout(props) {
                 <Navbar
                   name={name}
                   onOpenSidenav={() => setOpen(true)}
-                  logoText={"Horizon UI Tailwind React"}
+                  logoText={"Wanda House Of Jewels"}
                   brandText={props.page}
-                  // secondary={getActiveNavbar(routes)}
                   {...rest}
                 />
                 <div className="pt-7 mx-auto mb-auto h-full min-h-[92dvh] p-2 md:pr-2">

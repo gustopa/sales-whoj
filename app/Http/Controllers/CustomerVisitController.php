@@ -14,9 +14,7 @@ class CustomerVisitController extends Controller
             return abort(403);
         }
         $menu = listMenu();
-        $customerController = new CustomerController();
-        $customer = $customerController->getAll();
-        return inertia('CustomerVisit/CustomerVisit',['menu' => $menu, 'session' => session()->all(),'customer' => $customer, 'access' => $access->menu_access]);
+        return inertia('CustomerVisit/CustomerVisit',['menu' => $menu, 'session' => session()->all(), 'access' => $access->menu_access]);
     }
 
     public function getList(){

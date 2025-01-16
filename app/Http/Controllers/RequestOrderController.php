@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\DB;
 class RequestOrderController extends Controller
 {
     public function getAll($type){
-        $request_order = datatable("vw_request_orderlist",[],[],function ($query) use ($type) {
+        $request_order = datatable("vw_request_orderlist",function ($query) use ($type) {
             $query->whereIn('status',['ORDER','ON GOING']);
-            $query->where('type_order',$type);
+            $query->where('type_order',"CUSTOM");
         });
         return $request_order;
     }

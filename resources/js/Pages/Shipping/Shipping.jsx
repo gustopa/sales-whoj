@@ -81,7 +81,8 @@ function Shipping({access}) {
             cellRenderer : params => (
                 <Chip label={params.value} color="success" variant="filled"/>
             )
-        }
+        },
+        
     ])
   return (
     <Layout title="Pengiriman" page="Shipping">

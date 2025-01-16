@@ -89,7 +89,7 @@ function Form({customer,city}) {
     
     if(data.name == "" || data.name == null){
       Swal.fire({
-        text : "Gagal",
+        title : "Gagal",
         icon : "warning",
         text : "Nama harus diisi"
       })
@@ -97,7 +97,7 @@ function Form({customer,city}) {
     }
     if(data.jenis_kelamin == "" || data.jenis_kelamin == null){
       Swal.fire({
-        text : "Gagal",
+        title : "Gagal",
         icon : "warning",
         text : "Gender harus diisi"
       })
@@ -105,7 +105,7 @@ function Form({customer,city}) {
     }
     if(data.city_id == "" || data.city_id == null){
       Swal.fire({
-        text : "Gagal",
+        title : "Gagal",
         icon : "warning",
         text : "Kota harus diisi"
       })
@@ -121,13 +121,13 @@ function Form({customer,city}) {
       const response_data = await response.data
       console.log(response_data);
       Swal.fire({
-        text : "Berhasil",
+        title : "Berhasil",
         icon : "success",
         text : "Customer berhasiil disimpan"
       })
     }catch(err){
       Swal.fire({
-        text : "Gagal",
+        title : "Gagal",
         icon : "error",
         text : "Data gagal disimpan"
       })
@@ -138,7 +138,7 @@ function Form({customer,city}) {
   const handleSubmit = async () => {
     if(data.name == "" || data.name == null){
       Swal.fire({
-        text : "Gagal",
+        title : "Gagal",
         icon : "warning",
         text : "Nama harus diisi"
       })
@@ -146,7 +146,7 @@ function Form({customer,city}) {
     }
     if(data.jenis_kelamin == "" || data.jenis_kelamin == null){
       Swal.fire({
-        text : "Gagal",
+        title : "Gagal",
         icon : "warning",
         text : "Gender harus diisi"
       })
@@ -154,7 +154,7 @@ function Form({customer,city}) {
     }
     if(data.city_id == "" || data.city_id == null){
       Swal.fire({
-        text : "Gagal",
+        title : "Gagal",
         icon : "warning",
         text : "Kota harus diisi"
       })
@@ -170,13 +170,13 @@ function Form({customer,city}) {
       const response_data = await response.data
       console.log(response_data);
       Swal.fire({
-        text : "Berhasil",
+        title : "Berhasil",
         icon : "success",
         text : "Data berhasiil disubmit"
       })
     }catch(err){
       Swal.fire({
-        text : "Gagal",
+        title : "Gagal",
         icon : "error",
         text : "Data gagal disubmit"
       })

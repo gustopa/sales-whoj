@@ -19,20 +19,30 @@ function ModalViewCustomer({params,id_customer}) {
     const handleModal = () => {
         setOpen(true)
         if(!isLoaded){
-            getDataCustomer()
-            setIsLoaded(true)
+            axios.post('/customer/getCustomerById',{row_id : id_customer}).then(response => {
+                setDataCustomer(response.data)
+                getDataSize();
+                getDataPayment();
+                getDataOrder();
+                getDataRefund();
+                getDataDocument();
+                getDataVisit();
+                setIsLoaded(true)
+            })
+            
+            // getDataCustomer()
         }
     }
-    useEffect(() => {
-        if (dataCustomer) {
-            getDataSize();
-            getDataPayment();
-            getDataOrder();
-            getDataRefund();
-            getDataDocument();
-            getDataVisit();
-        }
-    }, [dataCustomer]);
+    // useEffect(() => {
+    //     if (dataCustomer) {
+    //         getDataSize();
+    //         getDataPayment();
+    //         getDataOrder();
+    //         getDataRefund();
+    //         getDataDocument();
+    //         getDataVisit();
+    //     }
+    // }, [dataCustomer]);
     
     const getDataCustomer = async () => {
         try{

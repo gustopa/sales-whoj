@@ -5,7 +5,6 @@ import { useSnapshot } from 'valtio';
 import state from '../../store/store';
 const Table = ({endpoint,columnDefs,rowHeight,ref}) => {
     const gridRef = useRef(null);
-    
     const snap = useSnapshot(state)
 
     const fetchServerData = async (params) => {
@@ -21,7 +20,12 @@ const Table = ({endpoint,columnDefs,rowHeight,ref}) => {
             const response = await axios.get(endpoint, { params: request });
             params.successCallback(response.data.rows, response.data.lastRow);
             gridRef.current.api.setGridOption("loading",false);
-            response.data.rows.length == 0 ? gridRef.api.showNoRowsOverlay() : gridRef.api.hideOverlay();
+            // response.data.rows.length == 0 ? gridRef.api.showNoRowsOverlay() : gridRef.api.hideOverlay();
+            if (gridRef.current?.api.getDisplayedRowCount() === 0) {
+                gridRef.current.api.showNoRowsOverlay();
+            } else {
+                gridRef.current.api.hideOverlay();
+            }
             
         } catch (error) {
             params.failCallback();
@@ -50,10 +54,13 @@ const Table = ({endpoint,columnDefs,rowHeight,ref}) => {
             gridRef.current.api.refreshInfiniteCache();
         }
     };
+
+    
     
     useImperativeHandle(ref,()=>{
         return {refreshData : refreshData}
     })
+    
     return (
 
         <div className={`${snap.theme == 'dark' ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'}`} style={{border:'none' }}>
@@ -62,7 +69,7 @@ const Table = ({endpoint,columnDefs,rowHeight,ref}) => {
             rowModelType="infinite"
             columnDefs={columnDefs}
             defaultColDef={defaultColDef}
-            cacheBlockSize={25}
+            cacheBlockSize={20}
             domLayout="autoHeight"
             pagination={true}
             paginationPageSize={10}
