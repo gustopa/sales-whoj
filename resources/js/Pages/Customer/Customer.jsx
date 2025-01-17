@@ -46,7 +46,7 @@ function Customer({permission}) {
   }
 
   const [column, setColumn] = useState([
-    { field : 'row_id', headerName : "", filter: false,resizable: false, sortable: false, width : 240,
+    { field : 'row_id', headerName : "", filter: false,resizable: false, sortable: false, width : 170,
       hide : menu_access != "Full control",
       headerComponent : props => (
         <Link href='/customer/create'>
@@ -64,12 +64,12 @@ function Customer({permission}) {
                   <FaUserEdit style={{color : 'white'}}/>
                 </Button>
               </Link>
-              <span className='ml-3'>
+              {/* <span className='ml-3'>
                 <Button onClick={() => handleDelete(params.value,params.data)} variant='contained' color="error" style={{borderColor : '#fa625e'}}>
                   <MdDeleteForever style={{color: 'white'}}/>
                 </Button>
-              </span>
-              <Button style={{cursor : "default"}}>
+              </span> */}
+              <Button size="small" style={{cursor : "default"}}>
                 <MdDone style={{color : params.data.is_submitted == 0 ? '#bbb' : '#059c1b',fontWeight : "bold"}}/>
               </Button>
             </>

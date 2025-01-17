@@ -7,7 +7,7 @@ import Table from './Table';
 const ButtonSelect = ({setCustomer,setIdCustomer,params,refModal, setDataInvoice,setIdInvoice}) => {
     const handleClick = () => {
         const customer = params.data
-        setCustomer(customer.name)
+        setCustomer(customer.name == null ? "" : customer.name)
         setIdCustomer(customer.row_id)
         if(setDataInvoice) setDataInvoice("")
         if(setIdInvoice) setIdInvoice("")

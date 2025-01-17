@@ -81,7 +81,7 @@ function TambahDokumen({params,customerID,onSuccess}) {
       }
       
   return (
-    <LayoutModal ref={refModal} width={isMobile ? '80vw' : '50vw'} height={isMobile ? "45vh" : "25vw"} closeButton={false} sxButton={{backgroundColor : "#b89474"}} iconButton={<FaCirclePlus style={{color:'white'}}/>}>
+    <LayoutModal ref={refModal} width={isMobile ? '80vw' : '50vw'} height={isMobile ? "45vh" : "25vw"} closeButton={false} sxButton={{backgroundColor : "#2e7d32"}} iconButton={<FaCirclePlus style={{color:'white'}}/>}>
         <h2 className='mb-3 font-bold'>FORM DOKUMEN</h2>
         <Grid container spacing={2}>
             <Grid size={12}>

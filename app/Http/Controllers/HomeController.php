@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Imports\InventoryImport;
+use Maatwebsite\Excel\Facades\Excel;
 class HomeController extends Controller
 {
     public function index(){
@@ -37,5 +39,12 @@ class HomeController extends Controller
         ]);
     }
 
+    public function import(Request $request){
+        $data = Excel::toCollection(new InventoryImport,$request->file('file'));
+        dd($data->first()[0]);
+    }
+    public function testImport(){
+        return view('test');
+    }
 
 }

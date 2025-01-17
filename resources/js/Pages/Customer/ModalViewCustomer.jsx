@@ -1,10 +1,12 @@
 import { Button,Modal,Box,Grid2 as Grid, Table, TableHead, TableRow, TableCell, TableBody, Chip } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import { useSnapshot } from 'valtio';
 import state from '../../store/store';
 import { formatDate } from '../../helper';
 import axios from 'axios';
+import DataTable from '../Layouts/components/Datatable'
+import '../../../css/datatable.css'
 function ModalViewCustomer({params,id_customer}) {
     const [open,setOpen] = useState(false)
     const [costumerSize, setCostumerSize] = useState([])
@@ -19,110 +21,117 @@ function ModalViewCustomer({params,id_customer}) {
     const handleModal = () => {
         setOpen(true)
         if(!isLoaded){
-            axios.post('/customer/getCustomerById',{row_id : id_customer}).then(response => {
+            axios.post('/customer/getCustomerById',{row_id : id_customer})
+            .then(response => {
                 setDataCustomer(response.data)
-                getDataSize();
-                getDataPayment();
-                getDataOrder();
-                getDataRefund();
-                getDataDocument();
-                getDataVisit();
-                setIsLoaded(true)
+                Promise.all([
+                    getDataSize(),
+                    getDataPayment(),
+                    getDataOrder(),
+                    getDataRefund(),
+                    getDataDocument(),
+                    getDataVisit(),
+                ]).then(() => setIsLoaded(true))
             })
-            
-            // getDataCustomer()
+            .catch(err => console.log(err))
         }
+        
     }
-    // useEffect(() => {
-    //     if (dataCustomer) {
-    //         getDataSize();
-    //         getDataPayment();
-    //         getDataOrder();
-    //         getDataRefund();
-    //         getDataDocument();
-    //         getDataVisit();
-    //     }
-    // }, [dataCustomer]);
     
-    const getDataCustomer = async () => {
-        try{
-            const response = await axios.post('customer/getCustomerById',{row_id : id_customer})
-            const data = await response.data
-            setDataCustomer(data)
-        }catch{
-
-        }
-    }
     const getDataSize = async () => {
-        try{
-            const response = await axios.post('/customer/getDataSize',{row_id : dataCustomer.row_id})
-            const data = await response.data
-            setCostumerSize(data)
-            
-        }catch(err){
-            console.log(err);
-        }
+        return axios.post('/customer/getDataSize',{row_id : id_customer})
+        .then(response => {setCostumerSize(response.data); setLoadingSize(false)})
+        .catch(err => console.log(err))
     }
     
     const getDataPayment = async () => {
-        try{
-            const response = await axios.post('/customer/getDataPayment',{row_id : dataCustomer.row_id})
-            const data = await response.data
-            setCostumerPayment(data)
-            
-        }catch(err){
-            console.log(err);
-            
-        }
+        return axios.post('/customer/getDataPayment',{row_id : id_customer})
+        .then(response => {setCostumerPayment(response.data); setLoadingPayment(false)})
+        .catch(err => console.log(err))
     }
 
     const getDataOrder = async () => {
-        try{
-            const response = await axios.post('/customer/getDataOrder',{row_id : dataCustomer.row_id})
-            const data = await response.data
-            setCostumerOrder(data)
-            
-        }catch(err){
-            console.log(err);
-            
-        }
+        return axios.post('/customer/getDataOrder',{row_id : id_customer})
+        .then(response => {setCostumerOrder(response.data); setLoadingOrder(false)})
+        .catch(err => console.log(err))
     }
 
     const getDataRefund = async () => {
-        try{
-            const response = await axios.post('/customer/getDataRefund',{row_id : dataCustomer.row_id})
-            const data = await response.data
-            setCostumerRefund(data)
-        }catch(err){
-            console.log(err);
-            
-        }
+        return axios.post('/customer/getDataRefund',{row_id : id_customer})
+        .then(response => {setCostumerRefund(response.data); setLoadingRefund(false)})
+        .catch(err => console.log(err))
     }
 
     const getDataDocument = async () => {
-        try{
-            const response = await axios.post('/customer/getDataDocument',{row_id : dataCustomer.row_id})
-            const data = await response.data
-            setCostumerDocument(data)
-        }catch(err){
-            console.log(err);
-            
-        }
+        return axios.post('/customer/getDataDocument',{row_id : id_customer})
+        .then(response => {setCostumerDocument(response.data); setLoadingDokumen(false)})
+        .catch(err => console.log(err))
     }
 
     const getDataVisit = async () => {
-        try{
-            const response = await axios.post('/customer/getDataVisit',{row_id : dataCustomer.row_id})
-            const data = await response.data
-            setCostumerVisit(data)
-        }catch(err){
-            console.log(err);
-        }
+        return axios.post('/customer/getDataVisit',{row_id : id_customer})
+        .then(response => {setCostumerVisit(response.data); setLoadingCustomerVisit(false)})
+        .catch(err => console.log(err))
     }
     
     const handleClose = () => {
         setOpen(false)
     }
+
+    // Customer Payment
+    const columnDefsPembayaran = [
+        {field : "doc_no", headerName : "Invoice No"},
+        {field : "created_date", headerName : "Tanggal", cellRenderer : params => formatDate(params.value)},
+        {field : "identity_code", headerName : "PLU"},
+        {field : "model_id_txt", headerName : "Model"},
+        {field : "inventory_id_txt", headerName : "Barang"},
+        {field : "inventory_price", headerName : "Harga Jual", cellRenderer : params => "Rp." + Intl.NumberFormat("id-ID").format(params.value)},
+        {field : "status", headerName : "Status", cellRenderer : params => <Chip label={params.value} color="success"/>}
+    ]
+    const [loadingPayment,setLoadingPayment] = useState(true) 
+
+    // Customer Size
+    const columnDefsUkuran = [
+        {field : "product", headerName : "Barang",flex : 1},
+        {field : "txt", headerName : "Detail", flex : 1}
+    ]
+    const [loadingSize,setLoadingSize] = useState(true)
+
+    // Customer Order
+    const columnDefsPesanan = [
+        {field : "doc_no", headerName : "Doc No."},
+        {field : "created_date", headerName : "Doc No.", cellRenderer : params => formatDate(params.value)},
+        {field : "estimated_date", headerName : "Perkiraan Delivery", cellRenderer : params => params.value == "0000-00-00" ? "-" : formatDate(params.value)},
+        {field : "name", headerName : "Nama Item", cellRenderer : params => params.value == "" ? "-" : params.value},
+        {field : "estimated_price",headerName : "Harga Perkiraan", cellRenderer : params => Intl.NumberFormat("id-ID").format(params.value)},
+        {field : "status", headerName : "Status", cellRenderer : params => <Chip label={params.value == "" ? "DRAFT" : params.value} color={`${params.value == "PAID" ? "success" : "primary"}`} />}
+    ]
+    const [loadingOrder,setLoadingOrder] = useState(true)
+
+    // Customer Refund
+    const columnDefsRefund = [
+        {field : "doc_no",headerName : "Refund No"},
+        {field : "created_date", headerName : "Tanggal", cellRenderer : params => formatDate(params.value)},
+        {field : "txt", headerName : "Alasan", flex : 1, minWidth : 140},
+        {field : "payment_id_txt", headerName : "Pembelian",flex : 1, minWidth : 150}
+    ]
+    const [loadingRefund,setLoadingRefund] = useState(true)
+
+    // Customer Dokumen
+    const columnDefsDokumen = [
+        {field : "name", headerName : "Dokumen", flex : 1, minWidth : 150},
+        {field : "notes", headerName : "Notes", flex : 1, minWidth : 150},
+        {field : "status", headerName : "Status", flex : 1, minWidth : 150},
+    ]
+    const [loadingDokumen, setLoadingDokumen] =  useState(true)
+
+    // Customer Visit
+    const columnDefsCustomerVisit = [
+        {field : "trans_date", headerName : "Tanggal", cellRenderer: params =>  formatDate(params.value), flex : 1, minWidth : 150 }, 
+        {field : "inventory_id_txt", headerName : "PLU", flex : 1, minWidth : 150},
+        {field : "item_id_txt", headerName : "ITEM", flex : 1, minWidth : 150},
+    ]
+    const [loadingCustomerVisit, setLoadingCustomerVisit] = useState(true)
   return (
     <>
         <Button onClick={handleModal} variant="text" style={{color:'#b89474', textDecoration : 'underline',textTransform: "capitalize"}}>
@@ -197,207 +206,43 @@ function ModalViewCustomer({params,id_customer}) {
                         </Grid>
 
                         <Grid size={{md:12,xs:12}}>
-                            <h2 className='my-3 ml-2 font-bold dark:text-[#b89474] text-center'>UKURAN</h2>
-                            <div style={{width:"100%",overflowX : 'auto'}}>
-                                <Table>
-                                    <TableHead>
-                                        <TableRow style={{background:'#b89474'}}>
-                                            <TableCell><b className='text-white'>Barang</b></TableCell>
-                                            <TableCell><b className='text-white'>Details</b></TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {costumerSize.length > 0 ? (
-                                            costumerSize.map((item,index) => 
-                                                <TableRow key={index} >
-                                                    <TableCell><span className='dark:text-white'>{ item.product == null ? "-" : item.product }</span></TableCell>
-                                                    <TableCell><span className='dark:text-white'>{ item.txt == null ? "-" : item.txt }</span></TableCell>
-                                                </TableRow>
-                                            )
-                                        ) : (
-                                                <TableRow>
-                                                    <TableCell colSpan={2} align="center">
-                                                        <span className='dark:text-white'>Data tidak tersedia</span>
-                                                    </TableCell>
-                                                </TableRow>
-                                        ) }
-                                    </TableBody>
-                                </Table>
+                            <h2 className='my-3 ml-2 font-bold dark:text-white text-1xl'>UKURAN</h2>
+                            <div style={{width:"100%",overflowX : 'auto'}}>   
+                                <DataTable loading={loadingSize} columns={columnDefsUkuran} data={costumerSize}/>
                             </div>
                         </Grid>
 
                         <Grid size={{md:12,xs:12}}>
-                            <h2 className='my-3 ml-2 font-bold dark:text-[#b89474] text-center'>PEMBAYARAN</h2>
+                            <h2 className='my-3 ml-2 font-bold dark:text-white text-1xl'>PEMBAYARAN</h2>
                             <div style={{width:"100%",overflowX : 'auto'}}>
-                                <Table>
-                                    <TableHead>
-                                        <TableRow style={{background:'#b89474'}}>
-                                            <TableCell><b className='text-white'>Invoice No</b></TableCell>
-                                            <TableCell><b className='text-white'>Tanggal</b></TableCell>
-                                            <TableCell><b className='text-white'>PLU</b></TableCell>
-                                            <TableCell><b className='text-white'>Model</b></TableCell>
-                                            <TableCell><b className='text-white'>Barang</b></TableCell>
-                                            <TableCell><b className='text-white'>Harga Jual</b></TableCell>
-                                            <TableCell><b className='text-white'>Status</b></TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {costumerPayment.length > 0 ? (
-                                            costumerPayment.map((item,index) => 
-                                                <TableRow key={index} >
-                                                    <TableCell><span className='dark:text-white'>{ item.doc_no }</span></TableCell>
-                                                    <TableCell><span className='dark:text-white'>{ formatDate(item.created_date) }</span></TableCell>
-                                                    <TableCell><span className='dark:text-white'>{ item.identity_code }</span></TableCell>
-                                                    <TableCell><span className='dark:text-white'>{ item.model_id_txt }</span></TableCell>
-                                                    <TableCell><span className='dark:text-white'>{ item.inventory_id_txt }</span></TableCell>
-                                                    <TableCell><span className='dark:text-white'>Rp.{ Intl.NumberFormat('id-ID').format(item.inventory_price) }</span></TableCell>
-                                                    <TableCell><span className='dark:text-white'><Chip label={item.status} color="success" /></span></TableCell>
-                                                </TableRow>
-                                            )
-                                        ) : (
-                                                <TableRow>
-                                                    <TableCell colSpan={7} align="center">
-                                                        <span className='dark:text-white'>Data tidak tersedia</span>
-                                                    </TableCell>
-                                                </TableRow>
-                                        ) }
-                                    </TableBody>
-                                </Table>
+                                <DataTable loading={loadingPayment} columns={columnDefsPembayaran} data={costumerPayment} />
                             </div>
                         </Grid>
 
                         <Grid size={{md:12,xs:12}}>
-                            <h2 className='my-3 ml-2 font-bold dark:text-[#b89474] text-center'>PESANAN</h2>
+                            <h2 className='my-3 ml-2 font-bold dark:text-white text-1xl'>PESANAN</h2>
                             <div style={{width:"100%",overflowX : 'auto'}}>
-                                <Table>
-                                    <TableHead>
-                                        <TableRow style={{background:'#b89474'}}>
-                                            <TableCell><b className='text-white'>Doc No.</b></TableCell>
-                                            <TableCell><b className='text-white'>Tanggal</b></TableCell>
-                                            <TableCell><b className='text-white' style={{whiteSpace: "nowrap"}}>Perkiraan Dlivery</b></TableCell>
-                                            <TableCell><b className='text-white'>Nama Item</b></TableCell>
-                                            <TableCell><b className='text-white' style={{whiteSpace: "nowrap"}}>Harga Perkiraan</b></TableCell>
-                                            <TableCell><b className='text-white'>Status</b></TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {costumerOrder.length > 0 ? (
-                                            costumerOrder.map((item,index) => 
-                                                <TableRow key={index} >
-                                                    <TableCell><span className='dark:text-white' style={{whiteSpace: "nowrap"}}>{ item.doc_no }</span></TableCell>
-                                                    <TableCell><span className='dark:text-white' style={{whiteSpace: "nowrap"}}>{ formatDate(item.created_date) }</span></TableCell>
-                                                    <TableCell><span className='dark:text-white'>{ item.estimated_date == "0000-00-00" ? "-" : formatDate(item.estimated_date) }</span></TableCell>
-                                                    <TableCell><span className='dark:text-white'>{ item.name == "" ? "-" : item.name }</span></TableCell>
-                                                    <TableCell><span className='dark:text-white'>Rp.{  Intl.NumberFormat('id-ID').format(item.estimated_price) }</span></TableCell>
-                                                    <TableCell><span className='dark:text-white'><Chip label={item.status == "" ? "DRAFT" : item.status} color={`${item.status == "PAID" ? "success" : "primary"}`} /></span></TableCell>
-                                                </TableRow>
-                                            )
-                                        ) : (
-                                                <TableRow>
-                                                    <TableCell colSpan={7} align="center">
-                                                        <span className='dark:text-white'>Data tidak tersedia</span>
-                                                    </TableCell>
-                                                </TableRow>
-                                        ) }
-                                    </TableBody>
-                                </Table>
+                                <DataTable loading={loadingOrder} columns={columnDefsPesanan} data={costumerOrder}/>
                             </div>
                         </Grid>
 
                         <Grid size={{md:12,xs:12}}>
-                            <h2 className='my-3 ml-2 font-bold dark:text-[#b89474] text-center'>PENGEMBALIAN</h2>
+                            <h2 className='my-3 ml-2 font-bold dark:text-white text-1xl'>PENGEMBALIAN</h2>
                             <div style={{width:"100%",overflowX : 'auto'}}>
-                                <Table>
-                                    <TableHead>
-                                        <TableRow style={{background:'#b89474'}}>
-                                            <TableCell><b className='text-white' style={{whiteSpace: "nowrap"}}>Refund No</b></TableCell>
-                                            <TableCell><b className='text-white'>Tanggal</b></TableCell>
-                                            <TableCell><b className='text-white'>Alasan</b></TableCell>
-                                            <TableCell><b className='text-white'>Pembelian</b></TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {costumerRefund.length > 0 ? (
-                                            costumerRefund.map((item,index) => 
-                                                <TableRow key={index} >
-                                                    <TableCell><span className='dark:text-white' style={{whiteSpace: "nowrap"}}>{ item.doc_no }</span></TableCell>
-                                                    <TableCell><span className='dark:text-white' style={{whiteSpace: "nowrap"}}>{ formatDate(item.created_date) }</span></TableCell>
-                                                    <TableCell><span className='dark:text-white'>{ item.txt }</span></TableCell>
-                                                    <TableCell><span className='dark:text-white' style={{whiteSpace: "nowrap"}}>{ item.payment_id_txt }</span></TableCell>
-                                                </TableRow>
-                                            )
-                                        ) : (
-                                                <TableRow>
-                                                    <TableCell colSpan={7} align="center">
-                                                        <span className='dark:text-white'>Data tidak tersedia</span>
-                                                    </TableCell>
-                                                </TableRow>
-                                        ) }
-                                    </TableBody>
-                                </Table>
+                                <DataTable loading={loadingRefund} columns={columnDefsRefund} data={costumerRefund} />   
                             </div>
                         </Grid>
 
                         <Grid size={{md:12,xs:12}}>
-                            <h2 className='my-3 ml-2 font-bold dark:text-[#b89474] text-center'>DOKUMEN</h2>
+                            <h2 className='my-3 ml-2 font-bold dark:text-white text-1xl'>DOKUMEN</h2>
                             <div style={{width:"100%",overflowX : 'auto'}}>
-                                <Table>
-                                    <TableHead>
-                                        <TableRow style={{background:'#b89474'}}>
-                                            <TableCell><b className='text-white'>Dokumen</b></TableCell>
-                                            <TableCell><b className='text-white'>Notes</b></TableCell>
-                                            <TableCell><b className='text-white'>Status</b></TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {costumerDocument.length > 0 ? (
-                                            costumerDocument.map((item,index) => 
-                                                <TableRow key={index} >
-                                                    <TableCell><span className='dark:text-white'>{ item.name }</span></TableCell>
-                                                    <TableCell><span className='dark:text-white'>{ item.notes }</span></TableCell>
-                                                    <TableCell><span className='dark:text-white'>{ item.status }</span></TableCell>
-                                                </TableRow>
-                                            )
-                                        ) : (
-                                                <TableRow>
-                                                    <TableCell colSpan={7} align="center">
-                                                        <span className='dark:text-white'>Data tidak tersedia</span>
-                                                    </TableCell>
-                                                </TableRow>
-                                        ) }
-                                    </TableBody>
-                                </Table>
+                                <DataTable loading={loadingDokumen} columns={columnDefsDokumen} data={costumerDocument}/>
                             </div>
                         </Grid>
                         <Grid size={{md:12,xs:12}}>
-                            <h2 className='my-3 ml-2 font-bold dark:text-[#b89474] text-center'>KUNJUNGAN PELANGGAN</h2>
+                            <h2 className='my-3 ml-2 font-bold dark:text-white text-1xl'>KUNJUNGAN PELANGGAN</h2>
                             <div style={{width:"100%",overflowX : 'auto'}}>
-                                <Table>
-                                    <TableHead>
-                                        <TableRow style={{background:'#b89474'}}>
-                                            <TableCell><b className='text-white'>Tanggal</b></TableCell>
-                                            <TableCell><b className='text-white'>PLU</b></TableCell>
-                                            <TableCell><b className='text-white'>Item</b></TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {costumerVisit.length > 0 ? (
-                                            costumerVisit.map((item,index) => 
-                                                <TableRow key={index} >
-                                                    <TableCell><span className='dark:text-white'>{ formatDate(item.trans_date) }</span></TableCell>
-                                                    <TableCell><span className='dark:text-white'>{ item.inventory_id_txt }</span></TableCell>
-                                                    <TableCell><span className='dark:text-white'>{ item.item_id_txt }</span></TableCell>
-                                                </TableRow>
-                                            )
-                                        ) : (
-                                                <TableRow>
-                                                    <TableCell colSpan={7} align="center">
-                                                        <span className='dark:text-white'>Data tidak tersedia</span>
-                                                    </TableCell>
-                                                </TableRow>
-                                        ) }
-                                    </TableBody>
-                                </Table>
+                                <DataTable loading={loadingCustomerVisit} columns={columnDefsCustomerVisit} data={costumerVisit} />
                             </div>
                         </Grid>
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Box, Button, Grid2 as Grid } from '@mui/material'
 import DataTable from '../../Layouts/components/Datatable'
 import { MdDelete } from "react-icons/md";
@@ -41,7 +41,7 @@ function FormUkuran({customer}) {
       
     }
     const [columnDefs, setColumnDefs] = useState([
-        {field : "line_id", headerName : "", filter : false,
+        {field : "line_id", headerName : "", filter : false, width : 100,
             headerComponent : params => (
                     <TambahUkuran onSuccess={setUpdate} customerID={customer.row_id} params={params}/>
               ),
@@ -55,7 +55,7 @@ function FormUkuran({customer}) {
             )
         },
         {field : "product" , headerName : "Barang"},
-        {field : "txt", headerName : "Details", flex : isMobile ? undefined  : 1 }
+        {field : "txt", headerName : "Details", flex : 1, minWidth : 150}
     ])
 
     const [rowsData,setRowsData] = useState([])
@@ -63,16 +63,18 @@ function FormUkuran({customer}) {
         const response = await axios.post('/customer/getDataSize',{row_id : customer.row_id})
         const data = await response.data
         setRowsData(data);
+        table.current?.isLoading(false)
     }
     useEffect(()=>{
         getCustomerSize()
     },[update])
+    const table = useRef(null)
   return (
     <Box className="dark:bg-[#111c44] bg-white p-5 mt-4" style={{borderRadius:"10px"}}>
         <h2 className='font-bold text-[#b89474]'>UKURAN</h2>
         <Grid container spacing={2}>
             <Grid size={12}>
-                <DataTable columns={columnDefs} data={rowsData}/>
+                <DataTable ref={table} columns={columnDefs} data={rowsData}/>
             </Grid>
         </Grid>
     </Box>

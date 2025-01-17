@@ -30,7 +30,7 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         Route::get('/create',[CustomerController::class,'create']);
         Route::post('/save',[CustomerController::class,'save']);
         Route::get('/form/{id}',[CustomerController::class,'form'])->name('form_customer');
-        Route::delete('/delete/{id}',[CustomerController::class,'delete']);
+        // Route::delete('/delete/{id}',[CustomerController::class,'delete']);
         Route::get('/getAllCustomer',[CustomerController::class,'getAll']);
         Route::post('/getCustomerById',[CustomerController::class,'getOneCustomer']);
         Route::post('/getDataVisit',[CustomerController::class,'getVisitList']);
@@ -72,7 +72,8 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
     Route::get('/payment/getByCustomer/{id}',[HomeController::class,'getByCustomer']);
 });
 
-
+Route::get('/testImport',[HomeController::class,'testImport']);
+Route::post('/import',[HomeController::class,'import']);
 Route::post('/encrypt',function(){
     $encrypt_id = encrypt_id(request('id'));
     return response()->json(["encrypted" => $encrypt_id]);

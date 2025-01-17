@@ -43,7 +43,7 @@ function FormDocument({customer}) {
       })
     }
     const [columnDefs, setColumnDefs] = useState([
-        {field : "line_id", headerName : "", filter : false,
+        {field : "line_id", headerName : "", filter : false, width : 100,
             headerComponent : params => (
                 <TambahDokumen onSuccess={setUpdate} params={params} customerID={customer.row_id} />
             ),
@@ -56,9 +56,9 @@ function FormDocument({customer}) {
                 </>
             )
         },
-        {field : "name" , headerName : "Dokumens"},
-        {field : "notes" , headerName : "Notes"},
-        {field : "status", headerName : "Status", flex : isMobile ? undefined  : 1 }
+        {field : "name" , headerName : "Dokumens", flex : 1, minWidth : 150},
+        {field : "notes" , headerName : "Notes",flex : 1 , minWidth : 150},
+        {field : "status", headerName : "Status", flex : 1, minWidth : 150 }
     ])
     const [rowsData,setRowsData] = useState([])
     const getCustomerDocument = async () => {
