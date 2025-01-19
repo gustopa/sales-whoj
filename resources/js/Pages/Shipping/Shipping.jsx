@@ -42,13 +42,14 @@ function Shipping({access}) {
     }
     
     const [columnDefs,setColumnDefs] = useState([
-        {field : "row_id",headerName : "", resizable: false, sortable: false, hide : access == "Read only" ? true : false,
+        {field : "row_id",headerName : "", filter: false,resizable: false, pinned : "left", sortable: false, hide : access == "Read only" ? true : false,
             headerComponent : params => <FormShipping tableRef={tableRef} action="tambah" bgColor="#b89474" iconButton={<FaCirclePlus className='text-white'/>}/>,
             cellRenderer : params => 
             {
                 return (
                     <div key={params.value}>
                         <FormShipping 
+                            size="small"
                             tableRef={tableRef}
                             action="edit"
                             id={params.value} 

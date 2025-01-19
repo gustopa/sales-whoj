@@ -30,6 +30,24 @@ function ModalInvoice({row_id,params}) {
     const handleClose = () => {
         setOpen(false)
     }
+
+    let color = ""
+    switch(data.status){
+        case "PAID" : 
+            color = "success"
+            break
+        case "CANCELLED" : 
+            color = "error"
+            break
+        case "EXCHANGE" : 
+            color = "warning"
+            break
+        case "BUYBACK" : 
+            color = "info"
+            break
+        default : 
+            color = "secondary"
+    }
   return (
     <>
         <Button onClick={handleOpen}>
@@ -64,15 +82,15 @@ function ModalInvoice({row_id,params}) {
                         </Grid>
                         <Grid size={{md : 4, xs: 6}}>
                             <label className='text-[#999]' style={{fontSize:'10px'}}>SALES</label><br />
-                            <span>{data.sales_id_txt}</span>
+                            <span>{data.sales_id_txt == "" || data.sales_id_txt == null ? "-" : data.sales_id_txt}</span>
                         </Grid>
                         <Grid size={{md : 4, xs: 6}}>
                             <label className='text-[#999]' style={{fontSize:'10px'}}>STORE</label><br />
-                            <span>{data.store_id_txt}</span>
+                            <span>{data.store_id_txt == "" || data.store_id_txt == null ? "-" : data.store_id_txt}</span>
                         </Grid>
                         <Grid size={{md : 4, xs: 6}}>
                             <label className='text-[#999]' style={{fontSize:'10px'}}>PELANGGAN</label><br />
-                            <span>{data.customer_id_txt}</span>
+                            <span>{data.customer_id_txt == "" || data.customer_id_txt == null ? "-" : data.customer_id_txt}</span>
                         </Grid>
                         <Grid size={{md : 4, xs: 6}}>
                             <label className='text-[#999]' style={{fontSize:'10px'}}>TANGGAL</label><br />
@@ -80,11 +98,11 @@ function ModalInvoice({row_id,params}) {
                         </Grid>
                         <Grid size={{md : 4, xs: 6}}>
                             <label className='text-[#999]' style={{fontSize:'10px'}}>CATATAN</label><br />
-                            <span>{data.notes == "" ? "-" : data.notes}</span>
+                            <span>{data.notes == "" || data.notes == null ? "-" : data.notes}</span>
                         </Grid>
                         <Grid size={{md : 4, xs: 6}}>
                             <label className='text-[#999]' style={{fontSize:'10px'}}>STATUS</label><br />
-                            <Chip label={data.status} color="success"/>
+                            <Chip label={data.status == null || data.status == "" ? "DRAFT" : data.status} color={color}/>
                         </Grid>
                         <Grid size={12}>
                             <h2 className='font-bold mb-2'>UKURAN</h2>
@@ -104,7 +122,7 @@ function ModalInvoice({row_id,params}) {
                                         <TableCell><span className='dark:text-white'>{data.inventory_id_txt}</span></TableCell>
                                         <TableCell><span className='dark:text-white'>{data.inventory_price}</span></TableCell>
                                         <TableCell><span className='dark:text-white'>{data.percent_disc}</span></TableCell>
-                                        <TableCell><span className='dark:text-white'>{data.diff_percent}</span></TableCell>
+                                        <TableCell><span className='dark:text-white'>{data.diff_percent == null ? "0.00" : data.diff_percent}</span></TableCell>
                                     </TableRow>
                                     <TableRow>
                                         <TableCell style={{background:'#b89474'}} colSpan={1}><b className='text-white'>Harga Jual</b></TableCell>
@@ -124,11 +142,11 @@ function ModalInvoice({row_id,params}) {
 
                         <Grid size={4}>
                             <label className='text-[#999]' style={{fontSize:'10px'}}>TIPE PEMBAYARAN</label><br />
-                            <span className='dark:text-white'>{data.payment_type_id_txt}</span>
+                            <span className='dark:text-white'>{data.payment_type_id_txt == "" || data.payment_type_id_txt == null ? "-" : data.payment_type_id_txt}</span>
                         </Grid>
                         <Grid size={4}>
                             <label className='text-[#999]' style={{fontSize:'10px'}}>EDC</label><br />
-                            <span className='dark:text-white'>{data.edc_id_txt}</span>
+                            <span className='dark:text-white'>{data.edc_id_txt == "" || data.edc_id_txt == null ? "-" : data.edc_id_txt}</span>
                         </Grid>
                     </Grid>
                     <hr className='mt-[20px]' />

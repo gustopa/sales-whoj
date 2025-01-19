@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import Layout from '../Layouts/Layout'
-import DataTable from '../Layouts/components/Datatable'
 import axios from 'axios'
 import { Button } from '@mui/material'
 import { MdDelete, MdEdit } from 'react-icons/md'
@@ -9,8 +8,6 @@ import { FaCirclePlus } from 'react-icons/fa6'
 import ModalViewCustomer from '../Customer/ModalViewCustomer'
 import Swal from 'sweetalert2'
 import FormCustomerVisit from './FormCustomerVisit'
-import ModalProduct from '../Components/ModalProduct'
-import { useIsMobile } from '../../hooks/IsMobile'
 import Table from '../Components/Table'
 function CustomerVisit({access}) {
     const handleDelete = id => {
@@ -45,7 +42,7 @@ function CustomerVisit({access}) {
     const refModalTambah = useRef()
     const refModalEdit = useRef()
     const [columnDefs, setColumnDefs] = useState([
-        {field : "row_id", headerName : "" ,
+        {field : "row_id", headerName : "" , pinned : "left", filter : false,resizable: false, width : 180,
             headerComponent : props => (
                 <LayoutModal ref={refModalTambah} closeButton={false} variant="contained" sxButton={{backgroundColor : "#b89474"}} iconButton={<FaCirclePlus/>}>
                     <FormCustomerVisit onSuccess={refresh} action="tambah" refModal={refModalTambah}/>
@@ -54,21 +51,21 @@ function CustomerVisit({access}) {
             cellRenderer : params => {
                 if(params.data){
                   return (
-                      <>
-                          <LayoutModal closeButton={false} ref={refModalEdit} variant="contained" iconButton={<MdEdit/>}>
+                      <div key={params.value}>
+                          <LayoutModal size="small" closeButton={false} ref={refModalEdit} variant="contained" iconButton={<MdEdit/>}>
                               <FormCustomerVisit onSuccess={refresh} lineId={params.data?.row_id} action="edit" itemID={params.data?.inventory_id} customerID={params.data?.customer_id} customer={params.data?.customer_id_txt} barang={params.data?.item_id_txt} tanggal_visit={params.data?.trans_date} notes={params.data?.notes} data={params.data} refModal={refModalEdit} />
                           </LayoutModal>
-                          <Button onClick={() => handleDelete(params.value)} style={{marginLeft: "10px"}} variant="contained" color="error">
+                          <Button size='small' onClick={() => handleDelete(params.value)} style={{marginLeft: "10px"}} variant="contained" color="error">
                               <MdDelete/>
                           </Button>
-                      </>
+                      </div>
                   )
                 }
             },
             hide : access == "Read only" ? true : false
         },
         {field : "customer_id_txt", headerName : "Pelanggan",
-            cellRenderer : params => <ModalViewCustomer params={params} id_customer={params.data?.customer_id} />
+            cellRenderer : params => <ModalViewCustomer key={params.data?.customer_id} params={params} id_customer={params.data?.customer_id} />
         },
         {field : "inventory_id_txt", headerName : "PLU"},
         {field : "item_id_txt", headerName : "Item"},

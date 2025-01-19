@@ -41,7 +41,7 @@ function FormUkuran({customer}) {
       
     }
     const [columnDefs, setColumnDefs] = useState([
-        {field : "line_id", headerName : "", filter : false, width : 100,
+        {field : "line_id", headerName : "", filter : false, width : 180,
             headerComponent : params => (
                     <TambahUkuran onSuccess={setUpdate} customerID={customer.row_id} params={params}/>
               ),

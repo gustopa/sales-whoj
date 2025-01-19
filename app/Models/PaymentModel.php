@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class InventoryModel extends Model
+class PaymentModel extends Model
 {
-    protected $table = "inventory";
+    protected $table = "payment";
     protected $guarded = [];
     public $timestamps = false;
 }

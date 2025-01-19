@@ -43,7 +43,7 @@ function FormDocument({customer}) {
       })
     }
     const [columnDefs, setColumnDefs] = useState([
-        {field : "line_id", headerName : "", filter : false, width : 100,
+        {field : "line_id", headerName : "", filter : false, width : 180,
             headerComponent : params => (
                 <TambahDokumen onSuccess={setUpdate} params={params} customerID={customer.row_id} />
             ),

@@ -46,7 +46,7 @@ function Customer({permission}) {
   }
 
   const [column, setColumn] = useState([
-    { field : 'row_id', headerName : "", filter: false,resizable: false, sortable: false, width : 170,
+    { field : 'row_id', headerName : "", filter: false,resizable: false, sortable: false, width : 164, pinned : "left",
       hide : menu_access != "Full control",
       headerComponent : props => (
         <Link href='/customer/create'>
@@ -60,7 +60,7 @@ function Customer({permission}) {
           return (
             <>
               <Link href={`/customer/form/${encrypt(params.value ? params.value : "")}`}>
-                <Button variant='contained' color="primary" style={{borderColor: '#0084ff'}}>
+                <Button size='small' variant='contained' color="primary" style={{borderColor: '#0084ff'}}>
                   <FaUserEdit style={{color : 'white'}}/>
                 </Button>
               </Link>

@@ -8,6 +8,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerVisitController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\ShippingController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Middleware\IsAuthenticated;
 use App\Http\Middleware\NotLogin;
 
@@ -19,65 +20,88 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
 
     Route::get('/dashboard_sales',[TransaksiController::class,'dashboard']);
 
+    // Start Request order
     Route::prefix('/request_order')->group(function(){
         Route::get('/getAll/{type}',[RequestOrderController::class,'getAll']);
         Route::post('/view/{id}',[RequestOrderController::class,'view']);
         Route::post('/getDPList/{id}',[RequestOrderController::class,'getDPList']);
     });
+    // End Request order
 
+    // Customer
     Route::prefix('/customer')->group(function(){
+        // Stat crud Customer
         Route::get('/',[CustomerController::class,'index']);
         Route::get('/create',[CustomerController::class,'create']);
         Route::post('/save',[CustomerController::class,'save']);
         Route::get('/form/{id}',[CustomerController::class,'form'])->name('form_customer');
+        // End Crud customer
+
         // Route::delete('/delete/{id}',[CustomerController::class,'delete']);
         Route::get('/getAllCustomer',[CustomerController::class,'getAll']);
         Route::post('/getCustomerById',[CustomerController::class,'getOneCustomer']);
         Route::post('/getDataVisit',[CustomerController::class,'getVisitList']);
 
+        // Start customer size
         Route::group([],function(){
             Route::post('/getDataSize',[CustomerController::class,'getSizeList']);
             Route::post('/addDataSize',[CustomerController::class,'addSize']);
             Route::delete('/deleteDataSize/{id}',[CustomerController::class,'deleteSize']);
             Route::post('/editDataSize',[CustomerController::class,'editSize']);
         });
-        Route::post('/getDataPayment',[CustomerController::class,'getPaymentList']);
-        Route::post('/getDataOrder',[CustomerController::class,'getOrderList']);
-        Route::post('/getDataRefund',[CustomerController::class,'getRefundList']);
+        // End customer size
+
+        // Start customer document
         Route::group([],function(){
             Route::post('/getDataDocument',[CustomerController::class,'getDocumentList']);
             Route::post('/addDocument',[CustomerController::class,'addDocument']);
             Route::delete('/deleteDocument/{id}',[CustomerController::class,'deleteDocument']);
             Route::post('/editDokumen',[CustomerController::class,'editDocument']);
         });
+        // End customer document
+
+        Route::post('/getDataPayment',[CustomerController::class,'getPaymentList']);
+        Route::post('/getDataOrder',[CustomerController::class,'getOrderList']);
+        Route::post('/getDataRefund',[CustomerController::class,'getRefundList']);
         
     });
+    // End customer
 
+    // Start customer visit
     Route::prefix('/customer_visit')->group(function(){
         Route::get('/',[CustomerVisitController::Class,'index']);
         Route::get('/getDataList',[CustomerVisitController::Class,'getList']);
         Route::delete('/delete/{id}',[CustomerVisitController::class,'delete']);
         Route::post('/save',[CustomerVisitController::class,'save']);
     });
+    // End customer visit
 
+    // Start shipping
     Route::prefix('/shipping')->group(function(){
         Route::get('/',[ShippingController::class,'index']);
         Route::get('/getAll',[ShippingController::class,'getAll']);
         Route::delete('/delete/{id}',[ShippingController::class,'delete']);
         Route::post('/save',[ShippingController::class,'save']);
     });
+    // End shipping
 
     Route::get('/inventory/getAll',[HomeController::class,'getAllInventory']);
     Route::get('/invoice/getById/{id}',[HomeController::class,'getById']);
     Route::get('/payment/getByCustomer/{id}',[HomeController::class,'getByCustomer']);
+
+    // Start payment
+    Route::prefix('/payment')->group(function(){
+        Route::get('/',[PaymentController::class,'index']);
+        Route::get('/getAll',[PaymentController::class,'getAll']);
+        Route::get('/print/{id}',[PaymentController::class,'print']);
+        Route::delete('/cancel/{id}',[PaymentController::class,'cancel']);
+        Route::get('/form/{id}',[PaymentController::class,'form']);
+    });
 });
 
 Route::get('/testImport',[HomeController::class,'testImport']);
 Route::post('/import',[HomeController::class,'import']);
-Route::post('/encrypt',function(){
-    $encrypt_id = encrypt_id(request('id'));
-    return response()->json(["encrypted" => $encrypt_id]);
-});
+
 
 Route::get('/login',function(){
     return inertia('Auth/Login');
