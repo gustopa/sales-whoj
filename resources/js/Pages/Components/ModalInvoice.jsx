@@ -120,7 +120,7 @@ function ModalInvoice({row_id,params}) {
                                     <TableRow>
                                         <TableCell><span className='dark:text-white'>{data.identity_code}</span></TableCell>
                                         <TableCell><span className='dark:text-white'>{data.inventory_id_txt}</span></TableCell>
-                                        <TableCell><span className='dark:text-white'>{data.inventory_price}</span></TableCell>
+                                        <TableCell><span className='dark:text-white'>Rp. {Intl.NumberFormat("id-ID").format(data.inventory_price)}</span></TableCell>
                                         <TableCell><span className='dark:text-white'>{data.percent_disc}</span></TableCell>
                                         <TableCell><span className='dark:text-white'>{data.diff_percent == null ? "0.00" : data.diff_percent}</span></TableCell>
                                     </TableRow>

@@ -6,7 +6,9 @@ import { Button, Chip } from '@mui/material'
 import { FaCirclePlus } from 'react-icons/fa6'
 import ModalViewCustomer from '../Customer/ModalViewCustomer'
 import { Link } from '@inertiajs/react'
-import { MdDelete, MdEdit, MdPrint } from 'react-icons/md'
+import { MdCancel, MdDelete, MdEdit, MdPrint } from 'react-icons/md'
+import { IoMdDocument } from "react-icons/io";
+
 import { encrypt } from '../../helper'
 import Swal from 'sweetalert2'
 function Payment({access}) {
@@ -47,16 +49,16 @@ function Payment({access}) {
             hide : access == "Read only" ? true : false,
             pinned : "left",
             headerComponent : params => (
-                <Button  variant="contained" className='!bg-[#b89474]'>
-                    <FaCirclePlus/>
-                </Button>
+                <Link className='flex justify-center' href='/payment/create' method="post" style={{background: "#b89474",padding : "10px",borderRadius : "10px",width : "80%",textAlign : "center"}}>
+                    <FaCirclePlus className='text-white'/>
+                </Link>
             ),
             cellRenderer : params => (
                 <div key={params.value}>
                     {params.data && 
                         <>
-                            {params.data?.status != "CANCELLED" && 
-                                <Link style={{ width: "30px", display: 'inline-block' }} href={`/payment/form/${encrypt(params?.value)}`}>
+                            {params.data?.status == null && params.data?.is_print == 0 && 
+                                <Link style={{ width: "30px", display: 'inline-block', marginLeft : "5px" }} href={`/payment/form/${encrypt(params?.value)}`}>
                                     <Button sx={{ width: "30px", minWidth: "30px" }} size="small" variant='contained' color="primary">
                                         <MdEdit />
                                     </Button>
@@ -64,16 +66,32 @@ function Payment({access}) {
                             }
                         </>
                     }
-                    {params.data?.status === "PAID" &&
+                    {params.data?.file_certificate != "" && 
                         <a
-                            target="__blank"
-                            style={{ marginLeft: '5px', display: 'inline-block', width: "30px" }}
-                            href={`/payment/print/${encrypt(params.data?.row_id)}`}
+                        target="__blank"
+                        style={{ marginLeft: '5px', display: 'inline-block', width: "30px" }}
+                        href={`https://system-mahakarya.com/assets/uploaded/${(params.data?.file_certificate)}`}
                         >
-                            <Button sx={{ width: "100%", minWidth: "30px" }} size="small" variant='contained' color="inherit">
-                                <MdPrint style={{color: "black"}} />
+                            <Button sx={{ width: "100%", minWidth: "30px" }} size="small" variant='contained' color="success">
+                                <IoMdDocument style={{color: "white"}} />
                             </Button>
                         </a>
+                    }
+                    {params.data?.status == "PAID" || params.data?.status == null &&
+                        <>
+                            {params.data?.is_print == 0 && 
+                                <a
+                                    target="__blank"
+                                    style={{ marginLeft: '5px', display: 'inline-block', width: "30px" }}
+                                    onClick={() => tableRef.current?.refreshData()}
+                                    href={`/payment/print/${encrypt(params.data?.row_id)}`}
+                                >
+                                    <Button sx={{ width: "100%", minWidth: "30px" }} size="small" variant='contained' color="inherit">
+                                        <MdPrint style={{color: "black"}} />
+                                    </Button>
+                                </a>
+                            }
+                        </>
                     }
                     {params.data?.status !== "CANCELLED" &&
                         <Button
@@ -83,7 +101,7 @@ function Payment({access}) {
                             variant='contained'
                             color='error'
                         >
-                            <MdDelete />
+                            <MdCancel />
                         </Button>
                     }
                 </div>

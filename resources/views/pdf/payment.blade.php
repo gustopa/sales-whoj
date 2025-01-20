@@ -38,7 +38,7 @@
 <table class="noborder">
 <tr>
   <td class="width-150 text-left" style="color:#999"><b><i>AMOUNT</i><b></td>
-  <td class="text-left"><?= $payment->amount ?></td>
+  <td class="text-left">Rp. <?= number_format($payment->amount,0, ',', '.') ?></td>
 </tr>     
 </table>
 

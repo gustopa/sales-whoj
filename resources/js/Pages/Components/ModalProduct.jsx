@@ -5,11 +5,11 @@ import { Button } from '@mui/material';
 import Table from './Table'
 import { useIsMobile } from '../../hooks/IsMobile'
 
-const ButtonSelect = ({setItem,setIdItem,params,refModal}) => {
+const ButtonSelect = ({setItem,setIdItem,params,refModal,setPrice}) => {
     const handleClick = () => {
         const item = params.data
         console.log(item);
-        
+        if(setPrice) setPrice(item.sell_price)
         setIdItem(item.row_id)
         setItem(item.item_id_txt)
         refModal.current.close()
@@ -18,15 +18,15 @@ const ButtonSelect = ({setItem,setIdItem,params,refModal}) => {
         <Button onClick={handleClick}>SELECT</Button>
     )
 }
-
-function ModalProduct({setItem,setIdItem}) {
+function ModalProduct({setItem,setIdItem,store_id,setPrice}) {
+    const endpoint = store_id == null ? "/inventory/getAll" : `/inventory/getByStore/${store_id}`
     const refModal = useRef()
     const isMobile = useIsMobile()
     const [rowHeight, setRowHeight] = useState(45)
     const [columnDefs] = useState([
-        { field: 'row_id', headerName : "", sortable: true, filter: true,
+        { field: 'row_id', headerName : "", sortable: false, filter: false,
             cellRenderer : params => (
-                <ButtonSelect params={params} refModal={refModal} setItem={setItem} setIdItem={setIdItem} />
+                <ButtonSelect setPrice={setPrice} params={params} refModal={refModal} setItem={setItem} setIdItem={setIdItem} />
             )
         },
         { field: 'identity_code', headerName : "PLU", sortable: true, filter: true,flex : isMobile ? undefined : 1, },
@@ -44,7 +44,7 @@ function ModalProduct({setItem,setIdItem}) {
     
   return (
     <LayoutModal ref={refModal} height='77%' sxButton={{background : "#b89474",width : "100%"}} iconButton={<FaFolderOpen style={{color: "white"}}/>}>
-         <Table endpoint="/inventory/getAll" columnDefs={columnDefs} rowHeight={rowHeight}/>
+         <Table endpoint={endpoint} columnDefs={columnDefs} rowHeight={rowHeight}/>
     </LayoutModal>
   )
 }

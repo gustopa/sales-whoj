@@ -24,6 +24,7 @@ class CustomerController extends Controller
 
     public function getAll(){
         $data = datatable('vw_customerlist',function($query){
+            $query->where('is_submitted',1);
             $query->orderBy("row_id","DESC");
         });
         return $data;

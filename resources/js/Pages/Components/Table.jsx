@@ -20,7 +20,8 @@ const Table = ({endpoint,columnDefs,rowHeight,ref}) => {
             const response = await axios.get(endpoint, { params: request });
             params.successCallback(response.data.rows, response.data.lastRow);
             gridRef.current.api.setGridOption("loading",false);
-            // response.data.rows.length == 0 ? gridRef.api.showNoRowsOverlay() : gridRef.api.hideOverlay();
+            console.log(response.data);
+            
             if (gridRef.current?.api.getDisplayedRowCount() === 0) {
                 gridRef.current.api.showNoRowsOverlay();
             } else {

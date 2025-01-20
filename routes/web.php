@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RequestOrderController;
 use App\Http\Controllers\AuthController;
@@ -9,6 +10,8 @@ use App\Http\Controllers\CustomerVisitController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\InventoryController;
+
 use App\Http\Middleware\IsAuthenticated;
 use App\Http\Middleware\NotLogin;
 
@@ -86,12 +89,14 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
     // End shipping
 
     Route::get('/inventory/getAll',[HomeController::class,'getAllInventory']);
+    Route::get('/inventory/getByStore/{store_id}',[InventoryController::class,'getByStore']);
     Route::get('/invoice/getById/{id}',[HomeController::class,'getById']);
     Route::get('/payment/getByCustomer/{id}',[HomeController::class,'getByCustomer']);
 
     // Start payment
     Route::prefix('/payment')->group(function(){
         Route::get('/',[PaymentController::class,'index']);
+        Route::post('/create',[PaymentController::class,'create']);
         Route::get('/getAll',[PaymentController::class,'getAll']);
         Route::get('/print/{id}',[PaymentController::class,'print']);
         Route::delete('/cancel/{id}',[PaymentController::class,'cancel']);
