@@ -11,6 +11,10 @@ use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\ReparasiController;
+use App\Http\Controllers\RefundController;
+use App\Http\Controllers\TandaTerimaController;
+use App\Http\Controllers\ExrateController;
 
 use App\Http\Middleware\IsAuthenticated;
 use App\Http\Middleware\NotLogin;
@@ -27,10 +31,53 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
     Route::prefix('/request_order')->group(function(){
         Route::get('/',[RequestOrderController::class,'index']);
         Route::get('/getAll/{type}',[RequestOrderController::class,'getAll']);
+        Route::get('/getBySales/{id}',[RequestOrderController::class,'getBySales']);
         Route::get('/getCustomOrder',[RequestOrderController::class,'getCustomOrder']);
         Route::post('/view/{id}',[RequestOrderController::class,'view']);
         Route::post('/getDPList/{id}',[RequestOrderController::class,'getDPList']);
     });
+
+    // Start Request Order By Sales
+    Route::prefix('/request_order_bysales')->group(function(){
+        Route::get('/',[RequestOrderController::class,'requestBySales']);
+    });
+    // End Request Order By Sales
+
+    // Start reparation
+    Route::prefix('/reparation')->group(function(){
+        Route::get('/',[ReparasiController::class,'index']);
+        Route::get('/getAll',[ReparasiController::class,'getAll']);
+    });
+    // End reparation
+
+    // Start refund
+    Route::prefix('/refund')->group(function(){
+        Route::get('/',[RefundController::class,'index']);
+        Route::get('/getAll',[RefundController::class,'getAll']);
+    });
+    // End refund
+
+    // Start tanda terima
+    Route::prefix('/tanda_terima')->group(function(){
+        Route::get('/',[TandaTerimaController::class,'index']);
+        Route::get('/getAll',[TandaTerimaController::class,'getAll']);
+        Route::get('/getItem/{id}',[TandaTerimaController::class,'getItem']);
+    });
+    // End tanda terima
+
+    // Start setup rate
+    Route::prefix('/exrate')->group(function(){
+        Route::get('/',[ExrateController::class,'index']);
+        Route::get('/getAll',[ExrateController::class,'getAll']);
+    });
+    // End setup rate
+
+    // Start inventory summary
+    Route::prefix('/inventory_summary')->group(function(){
+        Route::get('/',[InventoryController::class,'summary']);
+    });
+    // End inventory summary
+
     // End Request order
 
     // Customer

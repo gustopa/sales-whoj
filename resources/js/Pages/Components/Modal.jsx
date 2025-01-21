@@ -5,7 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useSnapshot } from 'valtio';
 import state from '../../store/store';
 function ModalComponent({params}) {
-    const row_id = params.data.row_id;
+    const row_id = params.data?.row_id;
     const dataOrder = params.data
     const snap = useSnapshot(state)
     const [open, setOpen] = useState(false);
@@ -49,7 +49,7 @@ function ModalComponent({params}) {
     
   return (
     <div className=''>
-      <Button onClick={handleModal} style={{color:'#b89474'}}>
+      <Button onClick={handleModal} style={{color:'#b89474', textDecoration : "underline"}}>
         {params.value}
       </Button>
       <Modal
@@ -84,99 +84,99 @@ function ModalComponent({params}) {
             <Grid container spacing={2}>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>DOC NO</label><br />
-                    <span>{dataOrder.doc_no}</span>
+                    <span>{dataOrder?.doc_no}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>STORE</label><br />
-                    <span>{dataOrder.store_id_txt}</span>
+                    <span>{dataOrder?.store_id_txt}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>SALES</label><br />
-                    <span>{dataOrder.sales_id_txt == null ? "-" : dataOrder.sales_id_txt}</span>
+                    <span>{dataOrder?.sales_id_txt == null ? "-" : dataOrder?.sales_id_txt}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>PELANGGAN</label><br />
-                    <span>{dataOrder.customer_id_txt}</span>
+                    <span>{dataOrder?.customer_id_txt}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>TANGGAL</label><br />
-                    <span>{dataOrder.created_date}</span>
+                    <span>{dataOrder?.created_date}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>PERKIRAAN DELIVERY</label><br />
-                    <span>{dataOrder.estimated_date}</span>
+                    <span>{dataOrder?.estimated_date}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>TIPE ITEM</label><br />
-                    <span>{dataOrder.item_id_txt}</span>
+                    <span>{dataOrder?.item_id_txt}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>GROUPING ORDER</label><br />
-                    <span>{dataOrder.grouping_order_id_txt == null ? '-' : dataOrder.grouping_order_id_txt}</span>
+                    <span>{dataOrder?.grouping_order_id_txt == null ? '-' : dataOrder?.grouping_order_id_txt}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>PLU</label><br />
-                    <span>{dataOrder.identify_code == null ? '-' : dataOrder.identify_code}</span>
+                    <span>{dataOrder?.identify_code == null ? '-' : dataOrder?.identify_code}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>TIPE ORDER</label><br />
-                    <span>{dataOrder.type_order}</span>
+                    <span>{dataOrder?.type_order}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>OUTSOURCE / INTERN</label><br />
-                    <span>{dataOrder.outsource_intern == "" ? '-' : dataOrder.outsource_intern}</span>
+                    <span>{dataOrder?.outsource_intern == "" ? '-' : dataOrder?.outsource_intern}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>PENGIRIMAN</label><br />
-                    <span>{dataOrder.qty}</span>
+                    <span>{dataOrder?.qty}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>UKURAN</label><br />
-                    <span>{dataOrder.size == "" ? "-" : dataOrder.size}</span>
+                    <span>{dataOrder?.size == "" ? "-" : dataOrder?.size}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>WARNA EMAS</label><br />
-                    <span>{dataOrder.warna_emas}</span>
+                    <span>{dataOrder?.warna_emas}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>KADAR EMAS</label><br />
-                    <span>{dataOrder.kadar_emas}</span>
+                    <span>{dataOrder?.kadar_emas}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>BERAT EMAS</label><br />
-                    <span>{dataOrder.berat_emas}</span>
+                    <span>{dataOrder?.berat_emas}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>CUSTOMERS MATERIAL</label><br />
-                    <span>{dataOrder.customer_materil == null ? "-" : dataOrder.customer_materil}</span>
+                    <span>{dataOrder?.customer_materil == null ? "-" : dataOrder?.customer_materil}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>ESTIMATED PRICE</label><br />
-                    <span>Rp.{new Intl.NumberFormat('id-ID').format(dataOrder.estimated_price)}</span>
+                    <span>Rp.{new Intl.NumberFormat('id-ID').format(dataOrder?.estimated_price)}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>UANG MUKA</label><br />
-                    <span>Rp.{new Intl.NumberFormat('id-ID').format(dataOrder.down_payment)}</span>
+                    <span>Rp.{new Intl.NumberFormat('id-ID').format(dataOrder?.down_payment)}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>PELUNASAN</label><br />
-                    <span>Rp.{new Intl.NumberFormat('id-ID').format(dataOrder.settlement)}</span>
+                    <span>Rp.{new Intl.NumberFormat('id-ID').format(dataOrder?.settlement)}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>CUSTOM BOX</label><br />
-                    <span>{dataOrder.custom_box == "" ? "-" : dataOrder.custom_box}</span>
+                    <span>{dataOrder?.custom_box == "" ? "-" : dataOrder?.custom_box}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>ONLINE/OFFLINE</label><br />
-                    <span>{dataOrder.online_offline == "" ? '-' : dataOrder.online_offline}</span>
+                    <span>{dataOrder?.online_offline == "" ? '-' : dataOrder?.online_offline}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>STATUS</label><br />
-                    <span>{dataOrder.status}</span>
+                    <span>{dataOrder?.status}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>FOTO</label><br />
-                    <a target='__blank' style={{textDecoration:'underline'}} href={`https://system-mahakarya.com/assets/uploaded/${dataOrder.photo_file}`}>
+                    <a target='__blank' style={{textDecoration:'underline'}} href={`https://system-mahakarya.com/assets/uploaded/${dataOrder?.photo_file}`}>
                         <FileOpenIcon/> 
                         <span className='ml-1'>
                             View File
@@ -244,19 +244,19 @@ function ModalComponent({params}) {
                     <Grid container>
                         <Grid size={{md:3,xs:6}}>
                             <label className='text-[#999]' style={{fontSize:'10px'}}>CREATED DATE</label><br />
-                            <span>{dataOrder.created_date}</span>
+                            <span>{dataOrder?.created_date}</span>
                         </Grid>
                         <Grid size={{md:3,xs:6}}>
                             <label className='text-[#999]' style={{fontSize:'10px'}}>CREATED BY</label><br />
-                            <span>{dataOrder.created_by}</span>
+                            <span>{dataOrder?.created_by}</span>
                         </Grid>
                         <Grid size={{md:3,xs:6}}>
                             <label className='text-[#999]' style={{fontSize:'10px'}}>MODIFIED DATE</label><br />
-                            <span>{dataOrder.modified_date}</span>
+                            <span>{dataOrder?.modified_date}</span>
                         </Grid>
                         <Grid size={{md:3,xs:6}}>
                             <label className='text-[#999]' style={{fontSize:'10px'}}>MODIFIED DATE</label><br />
-                            <span>{dataOrder.modified_by}</span>
+                            <span>{dataOrder?.modified_by}</span>
                         </Grid>
                     </Grid>
                 </Grid>

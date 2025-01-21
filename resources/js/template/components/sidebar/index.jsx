@@ -36,10 +36,10 @@ const Dropdown = ({primary, isOpen, onToggle,subMenu,icon,color}) => {
           {subMenu.map((menu,index) => 
             <ListItem className="listItem" key={index} sx={{ pl: 4}}>
                 <ListItemIcon>
-                  <ShortcutIcon className="listIcon" style={{color: pathname == menu.link ? "#b89474" : "#a3aed0",transform: 'rotate(180deg) scaleX(-1)'}}/>
+                  <ShortcutIcon className="listIcon" style={{color: pathname == menu.link.toLowerCase() ? "#b89474" : "#a3aed0",transform: 'rotate(180deg) scaleX(-1)'}}/>
                 </ListItemIcon>
-                <Link href={`/${menu.link}`} underline="none" className="-ml-6 ">
-                  <ListItemText className="listText" style={{color: pathname == menu.link ? "#b89474" : "#a3aed0"}} primary={menu.name} />
+                <Link href={`/${menu.link.toLowerCase()}`} underline="none" className="-ml-6 ">
+                  <ListItemText className="listText" style={{color: pathname == menu.link.toLowerCase() ? "#b89474" : "#a3aed0"}} primary={menu.name} />
                 </Link>
             </ListItem>
           )}
@@ -58,8 +58,10 @@ const Sidebar = ({ open, onClose, miniSidebar, setMiniSidebar }) => {
   const path = location.pathname
   
   let ActiveGroupLink = null
+  // console.log(AllLinks[6]);
+  
   if(path != "/"){
-    ActiveGroupLink = AllLinks.filter(link => link[0] == path.split('/')[1] ? link[1] : null)[0][1]
+    ActiveGroupLink = AllLinks.filter(link => link[0].toLowerCase() == path.split('/')[1] ? link[1] : null)[0][1]
   }
   
   const [openDropdown, setOpenDropdown] = useState(ActiveGroupLink); 

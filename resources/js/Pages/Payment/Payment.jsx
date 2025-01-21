@@ -49,7 +49,7 @@ function Payment({access}) {
             hide : access == "Read only" ? true : false,
             pinned : "left",
             headerComponent : params => (
-                <Link className='flex justify-center' href='/payment/create' method="post" style={{background: "#b89474",padding : "10px",borderRadius : "10px",width : "80%",textAlign : "center"}}>
+                <Link key={params.value} className='flex justify-center' href='/payment/create' method="post" style={{background: "#b89474",padding : "10px",borderRadius : "10px",width : "80%",textAlign : "center"}}>
                     <FaCirclePlus className='text-white'/>
                 </Link>
             ),
@@ -108,12 +108,12 @@ function Payment({access}) {
             )
         },
         {field : "doc_no",headerName : "Invoice No",
-            cellRenderer : params => <ModalInvoice row_id={params.data?.row_id} params={params}/>
+            cellRenderer : params => <ModalInvoice key={params.value} row_id={params.data?.row_id} params={params}/>
         },
         {field : "trans_date",headerName : "Tanggal"},
         {field : "sales_id_txt",headerName : "Sales"},
         {field : "customer_id_txt",headerName : "Customer",
-            cellRenderer : params => <ModalViewCustomer id_customer={params.data?.customer_id} params={params}/>
+            cellRenderer : params => <ModalViewCustomer key={params.value} id_customer={params.data?.customer_id} params={params}/>
         },
         {field : "notes",headerName : "Catatan"},
         {field : "identity_code",headerName : "PLU"},

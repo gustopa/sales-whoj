@@ -41,6 +41,20 @@ class RequestOrderController extends Controller
         return $request_order;
     }
 
+    public function getBySales($id){
+        $status = request('status');
+        $status = array_map(function($value){
+            return $value === null ? "" : $value;
+        },$status);
+        $data = datatable("vw_request_orderlist",function($query) use ($id,$status){
+            $query->where('sales_id',$id);
+            $query->whereIn('status',$status);
+            $query->whereIn('type_order',['CUSTOM', 'Custom (DP PO)', 'Custom (DP Stock)', 'Custom (DP Stock)', 'Nabung Bareng']);
+            $query->orderBy('row_id','asc');
+        });
+        return $data;
+    }
+
     public function view($id){
         $request_order_diamond_list = DB::table('vw_request_order_diamondlist')
         ->where('row_id',$id)
@@ -56,6 +70,20 @@ class RequestOrderController extends Controller
         $ListDP = DB::table('vw_request_order_dplist')->where('row_id',$id)->where('is_deleted',0)->get();
         return response()->json([
             "data" => $ListDP
+        ]);
+    }
+
+
+    public function requestBySales(){
+        $access = checkPermission('Request_order_bysales');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $menu = listMenu();
+        return inertia("RequestOrder/BySales",[
+            "session" => session()->all(),
+            "menu" => $menu,
+            "access" => $access->menu_access
         ]);
     }
 }

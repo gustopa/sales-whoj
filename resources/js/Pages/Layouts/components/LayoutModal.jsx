@@ -24,9 +24,7 @@ function LayoutModal({iconButton,children,sxButton,closeButton=true,ref, width="
         </Button>
         <Modal open={open}>
             <div>
-                <Button onClick={handleClose} variant="contained" sx={{position:'absolute',right:'12%',background:'#b89474',top:'13%',zIndex:'999', display : closeButton ? 'block' : 'none'}}>
-                    <CloseIcon style={{color:'white'}}/>
-                </Button>
+                
                 <Box
                     className='transition-all duration-300 ease-in-out'
                     sx={{
@@ -45,6 +43,9 @@ function LayoutModal({iconButton,children,sxButton,closeButton=true,ref, width="
                         color : snap.theme == 'dark' ? 'white' : ''
                     }}
                 >
+                    <Button onClick={handleClose} variant="contained" sx={{position:'absolute',right:'-1%',background:'#b89474',top:'-1%',zIndex:'999', display : closeButton ? 'block' : 'none'}}>
+                        <CloseIcon style={{color:'white'}}/>
+                    </Button>
                     {children}
                 </Box>
             </div>

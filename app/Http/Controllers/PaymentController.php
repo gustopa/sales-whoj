@@ -66,7 +66,9 @@ class PaymentController extends Controller
             "is_print"      => 1
         ]);
         $pdf = PDF::loadView('pdf.payment', ['payment' => $data]);
-        return $pdf->stream("invoice-$data->trans_date.pdf");
+        // return view('pdf/payment',['payment' => $data]);
+        return $pdf->stream("invoice-$data->trans_date.pdf",["Attachment" => false]);
+
     } 
 
     public function cancel($id){
