@@ -6,10 +6,37 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 class RequestOrderController extends Controller
 {
+
+    public function index(){
+        $access = checkPermission('request_order');
+        if($access == null || $access == "" ){
+            return abort(403);
+        }
+        $menu = listMenu();
+        return inertia("RequestOrder/RequestOrder",[
+            "session" => session()->all(),
+            "menu" => $menu,
+            "access" => $access->menu_access
+        ]);
+        
+    }
+
+    function getCustomOrder(){
+        $status = request('status');
+        $status = array_map(function($value){
+            return $value === null ? "" : $value;
+        },$status);
+        $data = datatable('vw_request_orderlist',function($query) use ($status){
+            $query->whereIn("status",$status);
+            $query->whereIn('type_order',['CUSTOM', 'Custom (DP PO)', 'Custom (DP Stock)', 'Custom (DP Stock)', 'Nabung Bareng']);
+            $query->orderBy('row_id','desc');
+        });
+        return $data;
+    }
     public function getAll($type){
         $request_order = datatable("vw_request_orderlist",function ($query) use ($type) {
             $query->whereIn('status',['ORDER','ON GOING']);
-            $query->where('type_order',"CUSTOM");
+            $query->where('type_order',$type);
         });
         return $request_order;
     }

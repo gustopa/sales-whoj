@@ -25,7 +25,9 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
 
     // Start Request order
     Route::prefix('/request_order')->group(function(){
+        Route::get('/',[RequestOrderController::class,'index']);
         Route::get('/getAll/{type}',[RequestOrderController::class,'getAll']);
+        Route::get('/getCustomOrder',[RequestOrderController::class,'getCustomOrder']);
         Route::post('/view/{id}',[RequestOrderController::class,'view']);
         Route::post('/getDPList/{id}',[RequestOrderController::class,'getDPList']);
     });
@@ -102,6 +104,7 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         Route::delete('/cancel/{id}',[PaymentController::class,'cancel']);
         Route::get('/form/{id}',[PaymentController::class,'form']);
     });
+
 });
 
 Route::get('/testImport',[HomeController::class,'testImport']);
