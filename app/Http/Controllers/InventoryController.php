@@ -3,9 +3,33 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class InventoryController extends Controller
 {
+
+    public function inventory(){
+        $access = checkPermission('inventory');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $menu = listMenu();
+
+        $totalInventoryList = DB::table("vw_inventorylist")
+        ->select(DB::raw("count(*) as total"), "store_id_txt")
+        ->where('status','READY')
+        ->where('is_deleted',0)
+        ->where('is_submitted',1)
+        ->whereNotNull('store_id_txt')
+        ->groupBy('store_id_txt')
+        ->get();
+        return inertia("Inventory/Inventory",[
+            "session" => session()->all(),
+            "access" => $access->menu_access,
+            "menu"=> $menu,
+            "totalInventoryList" => $totalInventoryList
+        ]);
+    }
     public function getByStore($store_id){
         if($store_id == 0){
             return response()->json([
@@ -21,5 +45,19 @@ class InventoryController extends Controller
             $query->orderby("row_id","desc");
         });
         return $products;
+    }
+
+    public function summary(){
+        $access = checkPermission('inventory_summary');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $menu = listMenu();
+        return inertia("Inventory/Summary",[
+            "session" => session()->all(),
+            "menu" => $menu,
+            "access" => $access->menu_access
+        ]);
+
     }
 }

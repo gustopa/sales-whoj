@@ -78,6 +78,12 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
     });
     // End inventory summary
 
+    // Start inventory
+    Route::prefix('/inventory')->group(function(){
+        Route::get('/',[InventoryController::class,'inventory']);
+    });
+    // End inventory
+
     // End Request order
 
     // Customer
