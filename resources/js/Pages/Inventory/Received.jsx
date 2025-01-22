@@ -5,6 +5,7 @@ import { Link } from '@inertiajs/react'
 import { FaCirclePlus } from 'react-icons/fa6'
 import { Button, Chip } from '@mui/material'
 import { MdCancel, MdEdit, MdPrint } from 'react-icons/md'
+import ModalInventoryOut from './components/ModalInventoryOut'
 function Received() {
     const [columnDefs] = useState([
         {field : "row_id",headerName : "", pinned : "left",filter : false, width : 150,resizable : false,
@@ -36,7 +37,9 @@ function Received() {
                     </div>
                 ),
         },
-        {field : "doc_no",headerName : "Doc no"},
+        {field : "doc_no",headerName : "Doc no",
+            cellRenderer : params => <ModalInventoryOut params={params}/>
+        },
         {field : "trans_date",headerName : "Tanggal"},
         {field : "out_from_txt",headerName : "Dari"},
         {field : "in_to_txt",headerName : "Ke"},

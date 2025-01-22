@@ -255,4 +255,16 @@ class InventoryController extends Controller
             "access" => $access->menu_access
         ]);
     }
+
+    public function getDetail($id){
+        $access = checkPermission('inventory_out');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $data = datatable('vw_inventory_out_detaillist',function($query) use ($id){
+            $query->where('row_id',decrypt_id($id));
+            $query->orderBy('row_id','desc');
+        });
+        return $data;
+    }
 }

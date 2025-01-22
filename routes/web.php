@@ -98,6 +98,7 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
     Route::prefix('/inventory_out')->group(function(){
         Route::get('/',[InventoryController::class,'inventoryOut']);
         Route::get('/getAll',[InventoryOutController::class,'getAll']);
+        Route::get('/getDetail/{id}',[InventoryController::class,'getDetail']);
     });
     // End inventory out
     
