@@ -9,7 +9,6 @@ import { FaCirclePlus } from 'react-icons/fa6';
 import ModalInventory from './components/ModalInventory';
 
 function Inventory({totalInventoryList}) {
-    console.log(totalInventoryList);
     
     const [columnDef] = useState([
         {field : "row_id",headerName : "", width : 211,pinned : "left", filter : false, resizable : false,
@@ -19,7 +18,7 @@ function Inventory({totalInventoryList}) {
                 </Link>
             ),
             cellRenderer : params => (
-                <>
+                <div key={params.value}>
                     <Button sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' color="primary" variant="contained">
                         <MdEdit/>
                     </Button>
@@ -35,7 +34,7 @@ function Inventory({totalInventoryList}) {
                     <Button sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' variant='contained' color='success'>
                         <FaBuilding/>
                     </Button>
-                </>
+                </div>
             )
         },
         {field : "identity_code",headerName : "PLU",

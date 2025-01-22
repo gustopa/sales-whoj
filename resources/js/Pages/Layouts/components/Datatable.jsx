@@ -6,7 +6,13 @@ import state from "../../../store/store";
 import { useMemo, useRef } from "react";
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-const DataTable = ({data,columns, loading,refTable}) => {
+const DataTable = ({
+  data,
+  columns, 
+  loading,
+  refTable,
+  pagination=true
+}) => {
   const defaultColDef = useMemo(() => {
     return {
       filter: "agTextColumnFilter",
@@ -30,7 +36,7 @@ const DataTable = ({data,columns, loading,refTable}) => {
         gridOptions={{suppressHorizontalScroll : false}}
         columnDefs={columns}
         defaultColDef={defaultColDef}
-        pagination={true}
+        pagination={pagination}
         paginationPageSize={10}
         domLayout="autoHeight"
         className="agGridTable"

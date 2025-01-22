@@ -80,11 +80,179 @@ class InventoryController extends Controller
         if($access == null || $access == ""){
             return abort(403);
         }
+
+        $totalDiamond = DB::table('vw_inventory_diamondlist')
+        ->select(DB::raw('SUM(amount) as total_diamond'))
+        ->where('row_id',decrypt_id($id))
+        ->where('is_deleted',0)
+        ->where('company_id',session('company_id'))
+        ->value('total_diamond');
         $data = DB::table('vw_inventory_diamondlist')
+        ->select('*',DB::raw("'$totalDiamond' as total_diamond"))
         ->where('row_id',decrypt_id($id))
         ->where('is_deleted',0)
         ->where('company_id',session('company_id'))
         ->orderBy('line_id','desc')->get();
         return $data;
+    }
+
+    public function inventoryList(){
+        $access = checkPermission('inventory_list');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $menu = listMenu();
+        return inertia('Inventory/InventoryList',[
+            "session" => session()->all(),
+            "menu" => $menu,
+            "access" => $access->menu_access
+        ]);
+
+    }
+
+    public function inventoryOut(){
+        $access = checkPermission('inventory_out');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $menu = listMenu();
+        return inertia('Inventory/InventoryOut',[
+            "session" => session()->all(),
+            "menu" => $menu,
+            "access" => $access->menu_access
+        ]);
+    }
+
+    public function movement(){
+        $access = checkPermission('inventory_movement');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $menu = listMenu();
+        return inertia('Inventory/Movement',[
+            "session" => session()->all(),
+            "menu" => $menu,
+            "access" => $access->menu_access
+        ]);
+    }
+
+    public function getAllMovement(){
+        $access = checkPermission('inventory_movement');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $data = datatable("vw_inventory_movementlist",function($query){
+            $query->orderBy('row_id','desc');
+        });
+        return $data;
+    }
+
+    public function photo(){
+        $access = checkPermission('photo_inventory');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $menu = listMenu();
+        return inertia('Inventory/Photo',[
+            "session" => session()->all(),
+            "menu" => $menu,
+            "access" => $access->menu_access
+        ]);
+    }
+    
+    public function getAllPhoto(){
+        $access = checkPermission('photo_inventory');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $data = datatable("vw_photo_inventorylist",function($query){
+            $query->orderBy('row_id','desc');
+        });
+        return $data;
+    }
+
+    public function miscellaneous(){
+        $access = checkPermission('miscellaneous');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $menu = listMenu();
+        return inertia('Inventory/Miscellaneous',[
+            "session" => session()->all(),
+            "menu" => $menu,
+            "access" => $access->menu_access
+        ]);
+    }
+
+    public function getAllMiscellaneous(){
+        $access = checkPermission('miscellaneous');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $data = datatable("vw_miscellaneouslist",function($query){
+            $query->orderBy('row_id','desc');
+        });
+        return $data;
+    }
+
+    public function priceCalculation(){
+        $access = checkPermission('inventory_price_calculation');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $menu = listMenu();
+        return inertia('Inventory/PriceCalculation',[
+            "session" => session()->all(),
+            "menu" => $menu,
+            "access" => $access->menu_access
+        ]);
+    }
+
+    public function getAllPriceCalculation(){
+        $access = checkPermission('inventory_price_calculation');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $data = datatable("vw_inventory_price_calculationlist",function($query){
+            $query->orderBy('row_id','desc');
+        });
+        return $data;
+    }
+
+    public function dailyStock(){
+        $access = checkPermission('daily_stock');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $menu = listMenu();
+        return inertia('Inventory/DailyStock',[
+            "session" => session()->all(),
+            "menu" => $menu,
+            "access" => $access->menu_access
+        ]);
+    }
+
+    public function getAllDailyStock(){
+        $access = checkPermission('daily_stock');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $data = datatable('vw_daily_stocklist',function($query){
+            $query->orderBy('row_id','desc');
+        });
+        return $data;
+    }
+
+    public function stockOpname(){
+        $access = checkPermission('stock_opname');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $menu = listMenu();
+        return inertia('Inventory/StockOpname',[
+            "session" => session()->all(),
+            "menu" => $menu,
+            "access" => $access->menu_access
+        ]);
     }
 }

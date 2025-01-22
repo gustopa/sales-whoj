@@ -15,47 +15,33 @@ function ModalInventory({params}) {
   const snap = useSnapshot(state)
   const [open,setOpen] = useState(false)
   const [loading,setLoading] = useState(true)
+  const tableRef = useRef(null) 
   const [totalDiamond,setTotalDiamond] = useState(0)
-  const tableRef = useRef(null)
-
   const getItem = async () => {
     const response = await axios.get(`/inventory/getDiamond/${encrypt(params.data?.row_id)}`)
     const data = await response.data
+    setTotalDiamond(data[0].total_diamond);
     setdiamond(data)
     setLoaded(true)
     setLoading(false)
   }
-
+  
 
   const handleModal = () => {
     if(!loaded){
       getItem()
-      calculateTotalDiamond()
     }
     setOpen(true)
   }
   const handleClose = () => {
     setOpen(false)
   }
-
-  const calculateTotalDiamond = () => {
-    if (tableRef.current) {
-      const nodes = tableRef.current?.api?.getRenderedNodes();
-      console.log(tableRef.current.api);
-      
-      const sum = nodes?.reduce((acc, node) => acc + (node.data.amount || 0), 0);
-      setTotalDiamond(sum);
-    //   console.log(sum);
-      
-    }
-  };
-  
   const isMobile = useIsMobile()
   const [columnItem] = useState([
-    {field : "grain",headerName : "PLU",},
-    {field : "grade",headerName : "Invoice",},
+    {field : "grain",headerName : "Butir",},
+    {field : "grade",headerName : "Karat",},
     {field : "diamond_type",headerName : "Tipe"},
-    {field : "row_id",headerName : "Description", autoHeight : true,
+    {field : "row_id",headerName : "Description", autoHeight : true, flex : 1,minWidth : 200,
         cellRenderer : params => (
             <>
                 <h2><b>Tipe : </b><span> {params.data?.diamond_type}</span></h2>
@@ -76,7 +62,8 @@ function ModalInventory({params}) {
     },
     {field : "amount",headerName : "Total",
         cellRenderer : params => {
-            return (Intl.NumberFormat('id-ID').format(params.value))
+            
+            return (Intl.NumberFormat('en-US').format(params.value))
         }
     },
   ])
@@ -195,15 +182,74 @@ function ModalInventory({params}) {
 
                     <Grid size={12}>
                         <h2>BERLIAN</h2>
-                        <DataTable refTable={tableRef} columns={columnItem} data={diamond}/>
-                        <Table>
+                        <DataTable refTable={tableRef} columns={columnItem} pagination={false} data={diamond}/>
+                        <Table className='mt-3'>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell><b>Total berlian : </b></TableCell>
-                                    <TableCell></TableCell>
+                                    <TableCell style={{background : "#b89474",color : "white"}}><b>Total berlian : </b></TableCell>
+                                    <TableCell colSpan={2} className='dark:text-white'>{Intl.NumberFormat('en-US').format(totalDiamond)}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell style={{background : "#b89474",color : "white"}}><b>Biaya Lainnya : </b></TableCell>
+                                    <TableCell colSpan={2} className='dark:text-white'>{item?.other_expense}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell style={{background : "#b89474",color : "white"}}><b>Harga emas/gr (USD) : </b></TableCell>
+                                    <TableCell className='dark:text-white'>
+                                        {item?.gold_weight == null ? 0 : item?.gold_weight} gr * {parseFloat(item?.gold_price).toFixed(2)} <br /> 
+                                        = {(parseFloat(item?.gold_weight == null ? 0 : item?.gold_weight) * parseFloat(item?.gold_price).toFixed(2)).toFixed(2)}
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell style={{background : "#b89474",color : "white"}}><b>HPP (USD) : </b></TableCell>
+                                    <TableCell className='dark:text-white'>{Intl.NumberFormat('en-US').format(item?.basic_price_usd)}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell style={{background : "#b89474",color : "white"}}><b>HPP (IDR) : </b></TableCell>
+                                    <TableCell className='dark:text-white'>
+                                        Rate jual (IDR) : {Intl.NumberFormat('id-ID').format(item?.sold_rate)} <br />
+                                        HPP : {Intl.NumberFormat('id-ID').format(item?.basic_price_usd * item?.sold_rate)}
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell style={{background : "#b89474",color : "white"}}><b>Margin (IDR) : </b></TableCell>
+                                    <TableCell colSpan={2} className='dark:text-white'>
+                                        Margin (%) : {item?.profit_margin} <br />
+                                        Margin : {Intl.NumberFormat('id-ID').format((item?.basic_price_usd * item?.sold_rate) * (item?.profit_margin / 100))}
+                                    </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell style={{background : "#b89474",color : "white"}}><b>Harga Kalkulasi : </b></TableCell>
+                                    <TableCell colSpan={2} className='dark:text-white'>{Intl.NumberFormat('id-ID').format(item?.calc_price)}</TableCell>
+                                </TableRow>
+                                <TableRow>
+                                    <TableCell style={{background : "#b89474",color : "white"}}><b>Harga Jual : </b></TableCell>
+                                    <TableCell colSpan={2} className='dark:text-white'>{Intl.NumberFormat('id-ID').format(item?.sell_price)}</TableCell>
                                 </TableRow>
                             </TableHead>
                         </Table>
+                    </Grid>
+
+                    <Grid size={12}>
+                        <h2 className='my-3 font-bold dark:text-[#b89474]'>RIWAYAT DATA</h2>
+                        <Grid container spacing={2}>
+                            <Grid size={{md : 3, xs: 6}}>
+                                <label className='text-[#999]' style={{fontSize:'10px'}}>CREATED DATE</label><br />
+                                <span>{item?.created_date == "" ? "-" : formatDate(item?.created_date)}</span>
+                            </Grid>
+                            <Grid size={{md : 3, xs: 6}}>
+                                <label className='text-[#999]' style={{fontSize:'10px'}}>CREATED BY</label><br />
+                                <span>{item?.created_by == "" ? "-" : item?.created_by}</span>
+                            </Grid>
+                            <Grid size={{md : 3, xs: 6}}>
+                                <label className='text-[#999]' style={{fontSize:'10px'}}>MODIFIED DATE</label><br />
+                                <span>{item?.modified_date == "" ? "-" : formatDate(item?.modified_date)}</span>
+                            </Grid>
+                            <Grid size={{md : 3, xs: 6}}>
+                                <label className='text-[#999]' style={{fontSize:'10px'}}>MODIFIED BY</label><br />
+                                <span>{item?.modified_by == "" ? "-" : item?.modified_by}</span>
+                            </Grid>
+                        </Grid>
                     </Grid>
                   </Grid>
               </Box>

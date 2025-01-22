@@ -3,7 +3,15 @@ import { AgGridReact } from 'ag-grid-react';
 import axios from 'axios';
 import { useSnapshot } from 'valtio';
 import state from '../../store/store';
-const Table = ({endpoint,columnDefs,rowHeight,ref}) => {
+const Table = ({
+    endpoint,
+    columnDefs,
+    rowHeight,
+    ref,
+    domLayout="autoHeight",
+    height,
+    pagination=true
+}) => {
     const gridRef = useRef(null);
     const snap = useSnapshot(state)
 
@@ -37,6 +45,8 @@ const Table = ({endpoint,columnDefs,rowHeight,ref}) => {
         return {
           filter: "agTextColumnFilter",
           floatingFilter: true,
+          flex : 1,
+          minWidth : 200,
           filterParams: {
             maxNumConditions : 1
         },
@@ -63,15 +73,15 @@ const Table = ({endpoint,columnDefs,rowHeight,ref}) => {
     
     return (
 
-        <div className={`${snap.theme == 'dark' ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'}`} style={{border:'none' }}>
+        <div className={`${snap.theme == 'dark' ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'}`} style={{border:'none', height : height != undefined ? height : undefined }}>
             <AgGridReact
             ref={gridRef}
             rowModelType="infinite"
             columnDefs={columnDefs}
             defaultColDef={defaultColDef}
             cacheBlockSize={20}
-            domLayout="autoHeight"
-            pagination={true}
+            domLayout={domLayout}
+            pagination={pagination}
             paginationPageSize={10}
             rowHeight={rowHeight}
             paginationPageSizeSelector={[10,20,50]}

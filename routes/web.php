@@ -15,6 +15,8 @@ use App\Http\Controllers\ReparasiController;
 use App\Http\Controllers\RefundController;
 use App\Http\Controllers\TandaTerimaController;
 use App\Http\Controllers\ExrateController;
+use App\Http\Controllers\DiamondPricingController;
+use App\Http\Controllers\InventoryOutController;
 
 use App\Http\Middleware\IsAuthenticated;
 use App\Http\Middleware\NotLogin;
@@ -85,6 +87,75 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         Route::get('/getDiamond/{id}',[InventoryController::class,'getDiamond']);
     });
     // End inventory
+
+    // Start inventory list
+    Route::prefix('/inventory_list')->group(function(){
+        Route::get('/',[InventoryController::class,'inventoryList']);
+    });
+    // End inventory list
+
+    // Start inventory out
+    Route::prefix('/inventory_out')->group(function(){
+        Route::get('/',[InventoryController::class,'inventoryOut']);
+        Route::get('/getAll',[InventoryOutController::class,'getAll']);
+    });
+    // End inventory out
+    
+    // Start inventory out
+    Route::prefix('/inventory_out_received')->group(function(){
+        Route::get('/',[InventoryOutController::class,'received']);
+    });
+    // End inventory out
+
+    // Start inventory out
+    Route::prefix('/inventory_movement')->group(function(){
+        Route::get('/',[InventoryController::class,'movement']);
+        Route::get('/getAll',[InventoryController::class,'getAllMovement']);
+    });
+    // End inventory out
+
+    // Start inventory out
+    Route::prefix('/photo_inventory')->group(function(){
+        Route::get('/',[InventoryController::class,'photo']);
+        Route::get('/getAll',[InventoryController::class,'getAllPhoto']);
+    });
+    // End inventory out
+
+    // Start stock opname
+    Route::prefix('/stock_opname')->group(function(){
+        Route::get('/',[InventoryController::class,'stockOpname']);
+    });
+    // End stock opname
+
+    // Start miscellaneous
+    Route::prefix('/miscellaneous')->group(function(){
+        Route::get('/',[InventoryController::class,'miscellaneous']);
+        Route::get('/getAll',[InventoryController::class,'getAllMiscellaneous']);
+    });
+    // End miscellaneous
+
+    // Start inventory price calculation
+    Route::prefix('/inventory_price_calculation')->group(function(){
+        Route::get('/',[InventoryController::class,'priceCalculation']);
+        Route::get('/getAll',[InventoryController::class,'getAllPriceCalculation']);
+    });
+    // End inventory price calculation
+
+    // Start daily stock
+    Route::prefix('/daily_stock')->group(function(){
+        Route::get('/',[InventoryController::class,'dailyStock']);
+        Route::get('/getAll',[InventoryController::class,'getAllDailyStock']);
+    });
+    // End daily stock
+
+    // Start diamond pricing
+    Route::prefix('/diamond_pricing')->group(function(){
+        Route::get('/',[DiamondPricingController::class,'diamondPricing']);
+        Route::get('/getAll',[DiamondPricingController::class,'getAll']);
+    });
+    // End diamond pricing
+
+
 
     // End Request order
 
