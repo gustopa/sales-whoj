@@ -6,6 +6,7 @@ import { FaCirclePlus } from 'react-icons/fa6'
 import { Button } from '@mui/material'
 import { MdDelete, MdDone, MdEdit } from 'react-icons/md'
 import {formatDate} from '../../helper'
+import ModalMiscellaneous from './components/ModalMiscellaneous'
 function Miscellaneous({access}) {
     const [rowHeight,setRowHeight] = useState(45)
     const [columnDefs] = useState([
@@ -32,7 +33,9 @@ function Miscellaneous({access}) {
                     </div>
                 ),
         },
-        {field : "nama",headerName : "Nama",},
+        {field : "nama",headerName : "Nama",
+            cellRenderer : params => <ModalMiscellaneous params={params}/>
+        },
         {field : "item",headerName : "Item",},
         {field : "foto",headerName : "Photo",
             cellRenderer : params => (
