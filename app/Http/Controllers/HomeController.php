@@ -16,12 +16,6 @@ class HomeController extends Controller
         ]);
     }
 
-    public function getAllInventory(Request $request)
-    {
-        $data = datatable('vw_inventorylist');
-        return $data;
-    }
-
     public function getById($id){
         $data = DB::table('vw_paymentlist')->where('row_id',$id)->first();
         return response()->json([

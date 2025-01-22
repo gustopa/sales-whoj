@@ -81,6 +81,8 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
     // Start inventory
     Route::prefix('/inventory')->group(function(){
         Route::get('/',[InventoryController::class,'inventory']);
+        Route::get('/getAll',[InventoryController::class,'getAll']);
+        Route::get('/getDiamond/{id}',[InventoryController::class,'getDiamond']);
     });
     // End inventory
 
@@ -143,7 +145,7 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
     });
     // End shipping
 
-    Route::get('/inventory/getAll',[HomeController::class,'getAllInventory']);
+    
     Route::get('/inventory/getByStore/{store_id}',[InventoryController::class,'getByStore']);
     Route::get('/invoice/getById/{id}',[HomeController::class,'getById']);
     Route::get('/payment/getByCustomer/{id}',[HomeController::class,'getByCustomer']);

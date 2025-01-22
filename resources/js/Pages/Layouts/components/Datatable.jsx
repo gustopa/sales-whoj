@@ -6,7 +6,7 @@ import state from "../../../store/store";
 import { useMemo, useRef } from "react";
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-const DataTable = ({data,columns, loading}) => {
+const DataTable = ({data,columns, loading,refTable}) => {
   const defaultColDef = useMemo(() => {
     return {
       filter: "agTextColumnFilter",
@@ -20,7 +20,6 @@ const DataTable = ({data,columns, loading}) => {
         noRowsToShow: "Tidak ada data untuk ditampilkan",
     }
     const snap = useSnapshot(state)
-    const refTable = useRef(null)
   return (
     <div className={`${snap.theme == 'dark' ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'}`} style={{border:'none', width: '100%' }}>
       <AgGridReact

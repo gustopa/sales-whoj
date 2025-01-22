@@ -60,4 +60,31 @@ class InventoryController extends Controller
         ]);
 
     }
+
+    public function getAll(Request $request)
+    {
+        $access = checkPermission('inventory');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $data = datatable('vw_inventorylist',function($query){
+            $query->where("is_deleted",0);
+            $query->where('company_id',session('company_id'));
+            $query->orderBy("row_id","desc");
+        });
+        return $data;
+    }
+
+    public function getDiamond($id){
+        $access = checkPermission('inventory');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $data = DB::table('vw_inventory_diamondlist')
+        ->where('row_id',decrypt_id($id))
+        ->where('is_deleted',0)
+        ->where('company_id',session('company_id'))
+        ->orderBy('line_id','desc')->get();
+        return $data;
+    }
 }
