@@ -7,7 +7,7 @@ import { Button } from '@mui/material'
 import { MdDelete, MdDone, MdEdit } from 'react-icons/md'
 function Photo({access}) {
     const [columnDefs] = useState([
-        {field : "row_id",headerName : "",width : 150,resizable : false, filter : false, hide : access == "Read only" ? true : false,pinned : "left",
+        {field : "row_id",headerName : "",width : 150,minWidth : 150,resizable : false, filter : false, hide : access == "Read only" ? true : false,pinned : "left",
             headerComponent : params => (
                 <Link className='flex justify-center' href='/refund/create' method="post" style={{background: "#b89474",padding : "10px",borderRadius : "10px",width : "80%",textAlign : "center"}}>
                     <FaCirclePlus className='text-white'/>
@@ -32,7 +32,7 @@ function Photo({access}) {
                     </div>
                 ),
         },
-        {field : "photo",headerName : "File photo",
+        {field : "photo",headerName : "File photo", width : 150, minWidth : 150, flex : 0,
             cellRenderer : params => (
                 <img src={`https://system-mahakarya.com/assets/uploaded/${params.value}`} />
             )

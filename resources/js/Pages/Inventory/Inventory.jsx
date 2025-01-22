@@ -8,32 +8,44 @@ import { Link } from '@inertiajs/react';
 import { FaCirclePlus } from 'react-icons/fa6';
 import ModalInventory from './components/ModalInventory';
 
-function Inventory({totalInventoryList}) {
+function Inventory({totalInventoryList,access}) {
     
     const [columnDef] = useState([
-        {field : "row_id",headerName : "", width : 211,pinned : "left", filter : false, resizable : false,
+        {field : "row_id",headerName : "", width : access == "Full control" ? 211 : 80,pinned : "left", filter : false, resizable : false, minWidth : access == "Read only" ? 80 : undefined,
             headerComponent : params => (
-                <Link key={params.value} className='flex justify-center' href='/inventory/create' method="post" style={{background: "#b89474",padding : "10px",borderRadius : "10px",width : "80%",textAlign : "center"}}>
-                    <FaCirclePlus className='text-white'/>
-                </Link>
+                <>
+                    {access == "Full control" &&
+                        <Link key={params.value} className='flex justify-center' href='/inventory/create' method="post" style={{background: "#b89474",padding : "10px",borderRadius : "10px",width : "80%",textAlign : "center"}}>
+                            <FaCirclePlus className='text-white'/>
+                        </Link>
+                    }
+                </>
             ),
             cellRenderer : params => (
                 <div key={params.value}>
-                    <Button sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' color="primary" variant="contained">
-                        <MdEdit/>
-                    </Button>
-                    <Button sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' variant='contained' color='error'>
-                        <MdDelete/>
-                    </Button>
+                    {access == "Full control" &&
+                        <Button sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' color="primary" variant="contained">
+                            <MdEdit/>
+                        </Button>
+                    }
+                    {access == "Full control" &&
+                        <Button sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' variant='contained' color='error'>
+                            <MdDelete/>
+                        </Button>
+                    }
                     <Button sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' variant='contained' color="inherit">
                         <FaPrint style={{color: "black"}}/>
                     </Button>
-                    <Button sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' variant='contained' color='secondary'>
-                        <MdFileUpload/>
-                    </Button>
-                    <Button sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' variant='contained' color='success'>
-                        <FaBuilding/>
-                    </Button>
+                    {access == "Full control" &&
+                        <Button sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' variant='contained' color='secondary'>
+                            <MdFileUpload/>
+                        </Button>
+                    }
+                    {access == "Full control" &&
+                        <Button sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' variant='contained' color='success'>
+                            <FaBuilding/>
+                        </Button>
+                    }
                 </div>
             )
         },

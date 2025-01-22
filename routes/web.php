@@ -139,6 +139,7 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
     Route::prefix('/inventory_price_calculation')->group(function(){
         Route::get('/',[InventoryController::class,'priceCalculation']);
         Route::get('/getAll',[InventoryController::class,'getAllPriceCalculation']);
+        Route::get('/getDiamond/{id}',[InventoryController::class,'getAllDiamondPriceCalculation']);
     });
     // End inventory price calculation
 

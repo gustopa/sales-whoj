@@ -16,7 +16,7 @@ class RefundController extends Controller
         return inertia('Refund/Refund',[
             "session" => session()->all(),
             "menu" => $menu,
-            "access" => $access
+            "access" => $access->menu_access
         ]);
     }
     public function getAll(){

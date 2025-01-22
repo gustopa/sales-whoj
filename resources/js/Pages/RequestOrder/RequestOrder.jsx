@@ -29,9 +29,9 @@ function statusColor(status){
 }
 
 
-function RequestOrder() {
+function RequestOrder({access}) {
     const [columnDef,setColumnDef] = useState([
-        {field : "row_id", headerName : "", pinned : "left", resizable : false,filter : false, width : 137,
+        {field : "row_id", headerName : "", pinned : "left", resizable : false,filter : false, width : 137, minWidth : 137,hide : access == "Read only" ? true : false,
             headerComponent : params => (
                 <Link className='flex justify-center' href='/request_order/create' method="post" style={{background: "#b89474",padding : "10px",borderRadius : "10px",width : "80%",textAlign : "center"}}>
                     <FaCirclePlus className='text-white'/>

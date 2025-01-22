@@ -42,7 +42,7 @@ function CustomerVisit({access}) {
     const refModalTambah = useRef()
     const refModalEdit = useRef()
     const [columnDefs, setColumnDefs] = useState([
-        {field : "row_id", headerName : "" , pinned : "left", filter : false,resizable: false, width : 180,
+        {field : "row_id", headerName : "" , pinned : "left", filter : false,resizable: false, width : 180, minWidth : 180,
             headerComponent : props => (
                 <LayoutModal ref={refModalTambah} closeButton={false} variant="contained" sxButton={{backgroundColor : "#b89474"}} iconButton={<FaCirclePlus/>}>
                     <FormCustomerVisit onSuccess={refresh} action="tambah" refModal={refModalTambah}/>

@@ -5,9 +5,9 @@ import { Link } from '@inertiajs/react'
 import { Button } from '@mui/material'
 import { MdDelete, MdEdit } from 'react-icons/md'
 import { FaCirclePlus } from 'react-icons/fa6'
-function DiamondPricing() {
+function DiamondPricing({access}) {
     const [columnDefs] = useState([
-        {field : "row_id",headerName : "", filter : false, resizable : false,sortable : false,pinned : "left", width : 110,
+        {field : "row_id",headerName : "", filter : false, resizable : false,sortable : false,pinned : "left", width : 110, minWidth : 110, hide : access == "Read only" ? true : false,
             headerComponent : params => (
                 <Link className='flex justify-center' href='/refund/create' method="post" style={{background: "#b89474",padding : "10px",borderRadius : "10px",width : "80%",textAlign : "center"}}>
                     <FaCirclePlus className='text-white'/>

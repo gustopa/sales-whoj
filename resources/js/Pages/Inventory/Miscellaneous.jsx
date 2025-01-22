@@ -10,7 +10,7 @@ import ModalMiscellaneous from './components/ModalMiscellaneous'
 function Miscellaneous({access}) {
     const [rowHeight,setRowHeight] = useState(45)
     const [columnDefs] = useState([
-        {field : "row_id",headerName : "",width : 150,resizable : false, filter : false, hide : access == "Read only" ? true : false,pinned : "left",
+        {field : "row_id",headerName : "",width : 150, minWidth : 150,resizable : false, filter : false, hide : access == "Read only" ? true : false,pinned : "left",
             headerComponent : params => (
                 <Link className='flex justify-center' href='/miscellaneous/create' method="post" style={{background: "#b89474",padding : "10px",borderRadius : "10px",width : "80%",textAlign : "center"}}>
                     <FaCirclePlus className='text-white'/>

@@ -45,7 +45,7 @@ function Payment({access}) {
         
     }
     const [columnDefs] = useState([
-        {field : "row_id",headerName : "", width : 136,resizable: false, filter : false,
+        {field : "row_id",headerName : "", minWidth : 136, width : 136,resizable: false, filter : false,
             hide : access == "Read only" ? true : false,
             pinned : "left",
             headerComponent : params => (

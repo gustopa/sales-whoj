@@ -33,7 +33,7 @@ function BySales() {
     const session = usePage().props.session
     
     const [columnPaid] = useState([
-        {field : "doc_no", headerName : "Doc No", cellRenderer : params => <ModalComponent params={params}/>},
+        {field : "doc_no", headerName : "Doc No", cellRenderer : params => <ModalComponent params={params}/>, minWidth : 100, width : 100, pinned : "left"},
         {field : "customer_id_txt", headerName : "Pelanggan"},
         {field : "trans_date", headerName : "Tanggal", cellRenderer : params => params.value == "0000-00-00" ? "-" : formatDate(params.value)},
         {field : "estimated_date", headerName : "Perkiraan delivery time",cellRenderer : params => params.value == "0000-00-00" ? "-" : formatDate(params.value)},

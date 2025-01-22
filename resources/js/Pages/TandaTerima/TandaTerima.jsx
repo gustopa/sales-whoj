@@ -7,9 +7,9 @@ import { MdDelete, MdEdit } from 'react-icons/md'
 import { FaCirclePlus } from 'react-icons/fa6'
 import { formatDate } from '../../helper'
 import ModalTandaTerima from './components/ModalTandaTerima'
-function TandaTerima() {
+function TandaTerima({access}) {
     const [columnDef] = useState([
-        {field : "row_id", headerName: "",filter : false, resizable : false, width : 100,pinned : "left",
+        {field : "row_id", headerName: "",filter : false, resizable : false, width : 100,minWidth : 100,pinned : "left", hide : access == "Read only" ? true : false,
             headerComponent : params => (
                 <Link className='flex justify-center' href='/refund/create' method="post" style={{background: "#b89474",padding : "10px",borderRadius : "10px",width : "80%",textAlign : "center"}}>
                     <FaCirclePlus className='text-white'/>

@@ -24,9 +24,9 @@ function statusColor(status){
 }
 
 
-function Refund() {
+function Refund({access}) {
     const [columnDef] = useState([
-        {field : "row_id", headerName : "", pinned : "left", resizable : false,filter : false, width : 105,
+        {field : "row_id", headerName : "", pinned : "left", resizable : false,filter : false, width : 105, minWidth : 105, hide : access == "Read only" ? true : false,
             headerComponent : params => (
                 <Link className='flex justify-center' href='/refund/create' method="post" style={{background: "#b89474",padding : "10px",borderRadius : "10px",width : "80%",textAlign : "center"}}>
                     <FaCirclePlus className='text-white'/>
@@ -35,7 +35,7 @@ function Refund() {
             cellRenderer : params => 
                 (
                     <div key={params.value}>
-                        {params.data?.status != "PAID" && 
+                        {params.data?.status != "PAID" && params.data?.status != "CANCELLED" && 
                             <Link>
                                 <Button sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="primary">
                                     <MdEdit/>

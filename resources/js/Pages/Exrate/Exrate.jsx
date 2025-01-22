@@ -4,9 +4,9 @@ import Table from '../Components/Table'
 import { Link } from '@inertiajs/react'
 import { Button } from '@mui/material'
 import { MdEdit } from 'react-icons/md'
-function Exrate() {
+function Exrate({access}) {
     const [columnDefs, setColumnDefs] = useState([
-        {field : "row_id",headerName : "", filter : false,resizable : false, width : 60,
+        {field : "row_id",headerName : "", filter : false,resizable : false, width : 80, minWidth : 80, pinned : "left", hide : access == "Read only" ? true : false,
             cellRenderer : params => (
                 <Link>
                     <Button sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="primary">

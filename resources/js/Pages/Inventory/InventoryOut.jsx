@@ -6,18 +6,22 @@ import { FaCirclePlus } from 'react-icons/fa6'
 import { Button, Chip } from '@mui/material'
 import { MdCancel, MdEdit, MdPrint } from 'react-icons/md'
 import ModalInventoryOut from './components/ModalInventoryOut'
-function InventoryOut() {
+function InventoryOut({access}) {
     const [columnDefs] = useState([
-        {field : "row_id",headerName : "", pinned : "left",filter : false, width : 160,resizable : false,
+        {field : "row_id",headerName : "", pinned : "left",filter : false, width : 160,minWidth : 160,resizable : false,
             headerComponent : params => (
-                <Link className='flex justify-center' href='/refund/create' method="post" style={{background: "#b89474",padding : "10px",borderRadius : "10px",width : "80%",textAlign : "center"}}>
-                    <FaCirclePlus className='text-white'/>
-                </Link>
+                <>
+                    {access == "Full control" &&
+                        <Link className='flex justify-center' href='/refund/create' method="post" style={{background: "#b89474",padding : "10px",borderRadius : "10px",width : "80%",textAlign : "center"}}>
+                            <FaCirclePlus className='text-white'/>
+                        </Link>
+                    }
+                </>
             ),
             cellRenderer : params => 
                 (
                     <div key={params.value}>
-                        {params.data?.status != "RECEIVED" && params.data?.status != "SEND" && params.data?.status != "CANCELLED" && 
+                        {params.data?.status != "RECEIVED" && params.data?.status != "SEND" && params.data?.status != "CANCELLED" && access == "Full control" && 
                             <Link>
                                 <Button sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="primary">
                                     <MdEdit/>
@@ -29,7 +33,7 @@ function InventoryOut() {
                                 <MdPrint style={{color : "black"}}/>
                             </Button>
                         }
-                        {params.data?.status == "SEND" &&
+                        {params.data?.status == "SEND" && access == "Full control" &&
                             <Button sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="error">
                                 <MdCancel/>
                             </Button>

@@ -218,6 +218,25 @@ class InventoryController extends Controller
         });
         return $data;
     }
+    public function getAllDiamondPriceCalculation($id){
+        $access = checkPermission('inventory_price_calculation');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $totalDiamond = DB::table('vw_inventory_price_calculation_diamondlist')
+        ->select(DB::raw('SUM(amount) as total_diamond'))
+        ->where('row_id',decrypt_id($id))
+        ->where('is_deleted',0)
+        ->where('company_id',session('company_id'))
+        ->value('total_diamond');
+        $data = DB::table('vw_inventory_price_calculation_diamondlist')
+        ->select('*',DB::raw("'$totalDiamond' as total_diamond"))
+        ->where('row_id',decrypt_id($id))
+        ->where('is_deleted',0)
+        ->where('company_id',session('company_id'))
+        ->orderBy('line_id','desc')->get();
+        return $data;
+    }
 
     public function dailyStock(){
         $access = checkPermission('daily_stock');

@@ -15,7 +15,7 @@ class ReparasiController extends Controller
         return inertia("Reparasi/Reparasi",[
             "session" => session()->all(),
             "menu" => $menu,
-            "access" => $access
+            "access" => $access->menu_access
         ]);
     }
 

@@ -6,7 +6,6 @@ import { useIsMobile } from '../../../hooks/IsMobile';
 import FileOpenIcon from '@mui/icons-material/FileOpen';
 function ModalMiscellaneous({params}) {
     const isMobile = useIsMobile()
-    console.log(params.data);
     
   return (
     <LayoutModal height={isMobile ? "80%" : "50%"} sxButton={{color : "#b89474", textDecoration : "underline"}} iconButton={params.value}>

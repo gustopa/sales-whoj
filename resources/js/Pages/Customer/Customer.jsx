@@ -46,7 +46,7 @@ function Customer({permission}) {
   }
 
   const [column, setColumn] = useState([
-    { field : 'row_id', headerName : "", filter: false,resizable: false, sortable: false, width : 164, pinned : "left",
+    { field : 'row_id', headerName : "", filter: false,resizable: false, sortable: false, minWidth : 164, width : 164, pinned : "left",
       hide : menu_access != "Full control",
       headerComponent : props => (
         <Link href='/customer/create'>
