@@ -32,7 +32,7 @@ function InventoryList() {
                 <Chip label={params.value} color={params.value == "SOLD" ? "error" : "success"} />
             )
         },
-        {field : "row_id",headerName : "Detail", width : 400, filter : false,
+        {field : "row_id",headerName : "Detail", width : 400, minWidth : 400, filter : false,
             cellRenderer : params => (
                 <Card className='dark:bg-navy-800 mt-3'>
                     <TableMUI sx={{width : "300px"}}>

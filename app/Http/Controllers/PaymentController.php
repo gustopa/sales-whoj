@@ -144,4 +144,27 @@ class PaymentController extends Controller
             "edc" => $edc
         ]);
     }
+
+
+    public function getAllType(){
+        $access = checkPermission('payment_type');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $data = datatable('vw_payment_typelist',function($query){
+            $query->orderBy('row_id','desc');
+        });
+        return $data;
+    }
+
+    public function getAllEdc(){
+        $access = checkPermission('edc');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $data = datatable('vw_edclist',function($query){
+            $query->orderBy('row_id','desc');
+        });
+        return $data;
+    }
 }

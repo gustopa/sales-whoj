@@ -14,7 +14,6 @@ const Table = ({
 }) => {
     const gridRef = useRef(null);
     const snap = useSnapshot(state)
-
     const fetchServerData = async (params) => {
         const request = {
             startRow: params.startRow,

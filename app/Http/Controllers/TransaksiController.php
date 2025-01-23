@@ -18,4 +18,15 @@ class TransaksiController extends Controller
             'menu' => $menu
         ]);
     }
+
+    public function getAllType(){
+        $access = checkPermission('trans_type');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $data = datatable('vw_trans_typelist',function($query){
+            $query->orderBy('row_id','desc');
+        });
+        return $data;
+    }
 }

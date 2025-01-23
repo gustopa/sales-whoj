@@ -1,6 +1,6 @@
 <?php
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Schema;
 if (!function_exists('datatable')) {
     function datatable($table, $queryModifier = null) {
         $request = request();
@@ -57,10 +57,16 @@ if (!function_exists('datatable')) {
         }
 
         // Tambahkan kondisi default
-        $query->where([
-            ["is_deleted", "=", 0],
-            ["company_id", "=", session('company_id')]
-        ]);
+        if (Schema::hasColumn($table, 'is_deleted')) {
+            $query->where('is_deleted', '=', 0);
+        }
+        if (Schema::hasColumn($table, 'company_id')) {
+            $query->where('company_id', '=', session('company_id'));
+        }
+        // $query->where([
+        //     ["is_deleted", "=", 0],
+        //     ["company_id", "=", session('company_id')]
+        // ]);
 
         // Terapkan modifikasi query melalui callback (jika ada)
         if (is_callable($queryModifier)) {

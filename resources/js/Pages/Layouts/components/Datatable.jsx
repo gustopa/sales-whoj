@@ -18,6 +18,8 @@ const DataTable = ({
       filter: "agTextColumnFilter",
       floatingFilter: true,
       headerClass : "header-table",
+      flex : 1,
+      minWidth : 200,
     };
   }, []);
     const localeText = {

@@ -34,14 +34,14 @@ const Dropdown = ({primary, isOpen, onToggle,subMenu,icon,color}) => {
       <Collapse in={isOpen} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           {subMenu.map((menu,index) => 
-            <ListItem className="listItem" key={index} sx={{ pl: 4}}>
-                <ListItemIcon>
-                  <ShortcutIcon className="listIcon" style={{color: pathname == menu.link.toLowerCase() ? "#b89474" : "#a3aed0",transform: 'rotate(180deg) scaleX(-1)'}}/>
-                </ListItemIcon>
-                <Link href={`/${menu.link.toLowerCase()}`} underline="none" className="-ml-6 ">
-                  <ListItemText className="listText" style={{color: pathname == menu.link.toLowerCase() ? "#b89474" : "#a3aed0"}} primary={menu.name} />
+                <Link href={`/${menu.link.toLowerCase()}`} key={index} style={{cursor : "pointer"}} underline="none" className="">
+                  <ListItem className="listItem" sx={{ pl: 4}}>
+                      <ListItemIcon>
+                        <ShortcutIcon className="listIcon" style={{color: pathname == menu.link.toLowerCase() ? "#b89474" : "#a3aed0",transform: 'rotate(180deg) scaleX(-1)'}}/>
+                      </ListItemIcon>
+                        <ListItemText className="listText" style={{color: pathname == menu.link.toLowerCase() ? "#b89474" : "#a3aed0"}} primary={menu.name} />
+                  </ListItem>
                 </Link>
-            </ListItem>
           )}
         </List>
       </Collapse>

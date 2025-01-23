@@ -17,6 +17,21 @@ use App\Http\Controllers\TandaTerimaController;
 use App\Http\Controllers\ExrateController;
 use App\Http\Controllers\DiamondPricingController;
 use App\Http\Controllers\InventoryOutController;
+use App\Http\Controllers\MasterController;
+use App\Http\Controllers\ItemController;
+use App\Http\Controllers\StoreController;
+use App\Http\Controllers\LocationController;
+use App\Http\Controllers\PositionController;
+use App\Http\Controllers\GroupingOrderController;
+use App\Http\Controllers\SalesController;
+use App\Http\Controllers\CraftsmanController;
+use App\Http\Controllers\CityController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\KonfigurasiController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\MenuController;
+use App\Http\Controllers\RoleController;
 
 use App\Http\Middleware\IsAuthenticated;
 use App\Http\Middleware\NotLogin;
@@ -38,6 +53,7 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         Route::post('/view/{id}',[RequestOrderController::class,'view']);
         Route::post('/getDPList/{id}',[RequestOrderController::class,'getDPList']);
     });
+    // End Request order
 
     // Start Request Order By Sales
     Route::prefix('/request_order_bysales')->group(function(){
@@ -157,12 +173,179 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
     });
     // End diamond pricing
 
+    // Start item
+    Route::prefix('/item')->group(function(){
+        Route::get('/',[MasterController::class,'item']);
+        Route::get('/getAll',[ItemController::class,'getAll']);
+    });
+    // End item
+
+    // Start jenis
+    Route::prefix('/item_type')->group(function(){
+        Route::get('/',[MasterController::class,'itemType']);
+        Route::get('/getAll',[ItemController::class,'getAllType']);
+    });
+    // End jenis
+
+    // Start jenis
+    Route::prefix('/model')->group(function(){
+        Route::get('/',[MasterController::class,'model']);
+        Route::get('/getAll',[ItemController::class,'getAllModel']);
+    });
+    // End jenis
+
+    // Start store
+    Route::prefix('/store')->group(function(){
+        Route::get('/',[MasterController::class,'store']);
+        Route::get('/getAll',[storeController::class,'getAll']);
+    });
+    // End store
+
+    // Start trans type
+    Route::prefix('/trans_type')->group(function(){
+        Route::get('/',[MasterController::class,'transType']);
+        Route::get('/getAll',[TransaksiController::class,'getAllType']);
+    });
+    // End trans type
+
+    // Start trans type
+    Route::prefix('/payment_type')->group(function(){
+        Route::get('/',[MasterController::class,'paymentType']);
+        Route::get('/getAll',[PaymentController::class,'getAllType']);
+    });
+    // End trans type
+    
+    // Start EDC
+    Route::prefix('/edc')->group(function(){
+        Route::get('/',[MasterController::class,'edc']);
+        Route::get('/getAll',[PaymentController::class,'getAllEdc']);
+    });
+    // End EDC
+
+    // Start EDC
+    Route::prefix('/location')->group(function(){
+        Route::get('/',[MasterController::class,'location']);
+        Route::get('/getAll',[LocationController::class,'getAll']);
+    });
+    // End EDC
+
+    // Start labour price
+    Route::prefix('/labour_price')->group(function(){
+        Route::get('/',[MasterController::class,'labourPrice']);
+        Route::get('/getAll',[ItemController::class,'getAllLabour']);
+    });
+    // End labour price
+    
+
+    // Start position
+    Route::prefix('/position')->group(function(){
+        Route::get('/',[MasterController::class,'position']);
+        Route::get('/getAll',[PositionController::class,'getAll']);
+    });
+    // End position
+
+    // Start grouping order
+    Route::prefix('/grouping_order')->group(function(){
+        Route::get('/',[MasterController::class,'groupingOrder']);
+        Route::get('/getAll',[GroupingOrderController::class,'getAll']);
+        Route::get('/getDetailDiamond/{id}',[GroupingOrderController::class,'getDetailDiamond']);
+    });
+    // End grouping order
+
+    // Start sales
+    Route::prefix('/sales')->group(function(){
+        Route::get('/',[MasterController::class,'sales']);
+        Route::get('/getAll',[SalesController::class,'getAll']);
+    });
+    // End sales
+
+    // Start craftsman
+    Route::prefix('/craftsman')->group(function(){
+        Route::get('/',[MasterController::class,'craftsman']);
+        Route::get('/getAll',[CraftsmanController::class,'getAll']);
+    });
+    // End craftsman
+
+    // Start city
+    Route::prefix('/city')->group(function(){
+        Route::get('/',[MasterController::class,'city']);
+        Route::get('/getAll',[CityController::class,'getAll']);
+    });
+    // End city
+
+    // Start productname
+    Route::prefix('/productname')->group(function(){
+        Route::get('/',[MasterController::class,'productname']);
+        Route::get('/getAll',[ProductController::class,'getAll']);
+    });
+    // End productname
 
 
-    // End Request order
+    // Start Laporan
+    Route::name('laporan')->group(function(){
+        Route::prefix('/report_sellout')->group(function(){
+            Route::get('/',[LaporanController::class,'penjualan'])->name('penjualan');
+        });
+        Route::prefix('/report_stock')->group(function(){
+            Route::get('/',[LaporanController::class,'stockOpName'])->name('stock');
+        });
+        Route::prefix('/report_inventory')->group(function(){
+            Route::get('/',[LaporanController::class,'inventory'])->name('inventory');
+        });
+        Route::prefix('/report_request_order')->group(function(){
+            Route::get('/',[LaporanController::class,'requestOrder'])->name('pesanan');
+        });
+        Route::prefix('/report_nota_penjualan')->group(function(){
+            Route::get('/',[LaporanController::class,'notaPenjualan'])->name('nota_penjualan');
+        });
+        Route::prefix('/request_order_summary')->group(function(){
+            Route::get('/',[LaporanController::class,'requestOrderSummary'])->name('outstanding_pesanan');
+        });
+        Route::prefix('/payment_summary')->group(function(){
+            Route::get('/',[LaporanController::class,'paymentSummary'])->name('payment_summary');
+        });
+        Route::prefix('/report_craftsman')->group(function(){
+            Route::get('/',[LaporanController::class,'craftsman'])->name('craftsman');
+        });
+    });
+    // End Laporan
+
+    // Start konfigurasi
+    Route::name('konfigurasi')->group(function(){
+        Route::prefix('/syscompany')->group(function(){
+            Route::get('/',[KonfigurasiController::class,'syscompany']);
+        });
+        Route::prefix('/syswebinfo')->group(function(){
+            Route::get('/',[KonfigurasiController::class,'syswebinfo']);
+        });
+        Route::prefix('/sysuser')->group(function(){
+            Route::get('/',[KonfigurasiController::class,'sysuser']);
+            Route::get('/getAll',[UserController::class,'getAll']);
+        });
+        Route::prefix('/sysfoldermenu')->group(function(){
+            Route::get('/',[KonfigurasiController::class,'sysfoldermenu']);
+            Route::get('/getAll',[MenuController::class,'getAllFolder']);
+        });
+        Route::prefix('/sysmenu')->group(function(){
+            Route::get('/',[KonfigurasiController::class,'sysmenu']);
+            Route::get('/getAll',[MenuController::class,'getAllMenu']);
+        });
+        Route::prefix('/sysrole')->group(function(){
+            Route::get('/',[KonfigurasiController::class,'sysrole']);
+            Route::get('/getAll',[RoleController::class,'getAll']);
+        });
+        Route::prefix('/sysaccess')->group(function(){
+            Route::get('/',[KonfigurasiController::class,'sysaccess']);
+            Route::get('/getAll',[RoleController::class,'getAllAccess']);
+            Route::get('/getListAccess/{id}',[RoleController::class,'getListAccess']);
+        });
+    });
+    // End konfigurasi
+
 
     // Customer
     Route::prefix('/customer')->group(function(){
+
         // Stat crud Customer
         Route::get('/',[CustomerController::class,'index']);
         Route::get('/create',[CustomerController::class,'create']);
