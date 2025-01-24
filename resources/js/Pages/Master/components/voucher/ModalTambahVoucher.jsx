@@ -33,21 +33,26 @@ function ModalTambahVoucher() {
     const handleChange = (e) => {
         if (e.target.value !== "") {
             const value = parseInt(e.target.value, 10);
-            let lastGeneratedCode = "WGC-0000000-0000000";
-    
-            // Generate initial code
-            const code = generateUniqueCode(value, lastGeneratedCode);
-    
-            // Extract prefix from the code
             const prefix = `WGC-${String(Math.floor(value / 1000)).padStart(6, '0')}`;
-    
-            // Set the generated voucher code
-            setCodeVoucher(code);
+            axios.get(`/voucher/getLastCode/${prefix}`).then(response => {
+                // console.log(Object.keys(response.data).length);
+                let lastGeneratedCode
+                if(Object.keys(response.data).length == 0){
+                    lastGeneratedCode = `${prefix}-0000000`;
+                }else{
+                    lastGeneratedCode = response.data.unique_code
+                }
+                const code = generateUniqueCode(value, lastGeneratedCode);
+                setCodeVoucher(code);
+            })
         }
-    
-        // Update the amount state
         setAmount(e.target.value);
     };
+
+    const getLastCode = async (prefix) => {
+        const response = await axios.get(`/voucher/getLastCode/${code}`)
+        const data = await response.data
+    }
   return (
     <LayoutModal ref={modalRef} closeButton={false} height='auto' width={isMobile ? "80%" : "50%"} sxButton={{background : "#b89474"}} iconButton={<FaCirclePlus color='white'/>}>
         <Grid className='mt-3' container spacing={2}>

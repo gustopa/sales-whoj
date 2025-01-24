@@ -32,7 +32,7 @@ class VoucherController extends Controller
     }
 
     public function getLastCode($code){
-        $lastVoucher = DB::table('voucher')->where('unique_code', 'like', "{$code}-%")->get(); 
+        $lastVoucher = DB::table('voucher')->where('unique_code', 'like', "{$code}-%")->orderBy('row_id','desc')->first(); 
         return response()->json($lastVoucher);
     }
 }
