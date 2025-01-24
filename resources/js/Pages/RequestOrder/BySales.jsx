@@ -71,7 +71,7 @@ function BySales() {
             <h2 className='text-2xl dark:text-white font-bold mb-2'>WAITING</h2>
             <Table columnDefs={columnDefs} endpoint={`/request_order/getBySales/${session.user_id}?status[]=ORDER&status[]=ON GOING&status[]=READY&status[]=`}/>
         </Card>
-        <Card className='dark:bg-navy-800 p-4'>
+        <Card className='dark:bg-navy-800 p-4 mt-3'>
             <h2 className='text-2xl dark:text-white font-bold mb-2'>COMPLETED</h2>
             <Table columnDefs={columnPaid} endpoint={`/request_order/getBySales/${session.user_id}?status[]=PAID`}/>
         </Card>

@@ -190,4 +190,17 @@ class MasterController extends Controller
             "access" => $access->menu_access
         ]);
     }
+
+    public function voucher(){
+        $access = checkPermission('voucher');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $menu = listMenu();
+        return inertia('Master/Voucher',[
+            "session" => session()->all(),
+            "menu" => $menu,
+            "access" => $access->menu_access
+        ]);
+    }
 }

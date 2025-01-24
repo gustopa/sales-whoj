@@ -122,10 +122,12 @@ class LaporanController extends Controller
             return abort(403);
         }
         $menu = listMenu();
+        $craftsman = DB::table('vw_craftsmanlist')->where('is_deleted',0)->get();
         return inertia('Laporan/Craftsman',[
             "session" => session()->all(),
             "menu" => $menu,
-            "access" => $access->menu_access
+            "access" => $access->menu_access,
+            "craftsman" => $craftsman
         ]);
     }
 }

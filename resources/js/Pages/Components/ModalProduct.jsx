@@ -8,7 +8,6 @@ import { useIsMobile } from '../../hooks/IsMobile'
 const ButtonSelect = ({setItem,setIdItem,params,refModal,setPrice}) => {
     const handleClick = () => {
         const item = params.data
-        console.log(item);
         if(setPrice) setPrice(item.sell_price)
         setIdItem(item.row_id)
         setItem(item.item_id_txt)

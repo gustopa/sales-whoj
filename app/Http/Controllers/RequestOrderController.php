@@ -33,12 +33,31 @@ class RequestOrderController extends Controller
         });
         return $data;
     }
+
+    function getAllCustom($status){
+        $data = datatable('vw_request_orderlist',function($query) use ($status){
+            $query->where("status",$status);
+            $query->where('type_order','CUSTOM');
+            $query->orderBy('row_id','desc');
+        });
+        return $data;
+    }
+
     public function getAll($type){
         $request_order = datatable("vw_request_orderlist",function ($query) use ($type) {
             $query->whereIn('status',['ORDER','ON GOING']);
             $query->where('type_order',$type);
         });
         return $request_order;
+    }
+
+    public function getByCustomer($id){
+        $data = datatable('vw_request_orderlist',function($query) use ($id){
+            $query->where('customer_id',decrypt_id($id));
+            $query->where('status','READY');
+        });
+
+        return $data;
     }
 
     public function getBySales($id){

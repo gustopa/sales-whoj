@@ -58,10 +58,10 @@ if (!function_exists('datatable')) {
 
         // Tambahkan kondisi default
         if (Schema::hasColumn($table, 'is_deleted')) {
-            $query->where('is_deleted', '=', 0);
+            $query->where($table.'.is_deleted', '=', 0);
         }
         if (Schema::hasColumn($table, 'company_id')) {
-            $query->where('company_id', '=', session('company_id'));
+            $query->where($table.'.company_id', '=', session('company_id'));
         }
         // $query->where([
         //     ["is_deleted", "=", 0],

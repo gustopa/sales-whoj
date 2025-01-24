@@ -27,6 +27,7 @@ function LayoutModal({iconButton,children,sxButton,closeButton=true,ref, width="
                 className='transition-all duration-300 ease-in-out'
                 sx={{
                     position: "absolute",
+                    overflowX : "hidden",
                     top: "50%",
                     left: "50%",
                     transform: "translate(-50%, -50%)",

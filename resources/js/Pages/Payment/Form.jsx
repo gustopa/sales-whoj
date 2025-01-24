@@ -6,6 +6,7 @@ import state from '../../store/store'
 import { Link, useForm } from '@inertiajs/react'
 import ModalProduct from '../Components/ModalProduct'
 import ModalCustomer from '../Components/ModalCustomer'
+import ModalPesanan from '../Components/ModalPesanan'
 function Form({stores,payment,sales,payment_types,edc}) {
     const snap = useSnapshot(state)
     const sxInputField = {
@@ -63,14 +64,19 @@ function Form({stores,payment,sales,payment_types,edc}) {
         payment_type : "",
         edc : "",
       })
+
+
       const [customer,setCustomer] = useState(payment.customer_id_txt == null ? "" : payment.customer_id_txt)
-      const [idCustomer,setIdCustomer] = useState(payment.customer_id)
+      const [idCustomer,setIdCustomer] = useState(payment.customer_id == 0 ? -1 : payment.customer)
+      console.log(payment.inventory_id_txt);
+      
       const [item,setItem] = useState(payment.inventory_id_txt == null ? "" : payment.inventory_id_txt)
       const [idItem,setIdItem] = useState(payment.inventory_id)
       const [price, setPrice] = useState("0.00")
       const [disc, setDisc] = useState(0)
       const [selisih,setSelisih] = useState(0)
       const [sellPrice,setSellPrice] = useState(0)
+      const [amountRequestOrder,setAmountRequestOrder] = useState(0)
 
 
       const handleInput = (e) => {
@@ -196,7 +202,8 @@ function Form({stores,payment,sales,payment_types,edc}) {
                                 }}
                                 name='harga' sx={sxInputField} value={Intl.NumberFormat("id-ID").format(price)} fullWidth variant="outlined" label="Harga Barang"/>
                         </Grid>
-                        <Grid size={{xs :12, md:6}}>
+
+                        {/* <Grid size={{xs :12, md:6}}>
                           <TextField 
                                 InputLabelProps={{ shrink: true, }}
                                 inputProps={{
@@ -210,12 +217,14 @@ function Form({stores,payment,sales,payment_types,edc}) {
                                 }                              
                                 onChange={handleDisc}
                                 name='disc' focused value={disc} sx={sxInputField} type='number' fullWidth variant="outlined" label="Disc (%)"/>
-                        </Grid>
-                        <Grid size={{xs :12, md:6}}>
+                        </Grid> */}
+                        {/* <Grid size={{xs :12, md:6}}>
                           <TextField 
                                 InputLabelProps={{ shrink: true, }}
                                 name='selisih' sx={sxInputField} value={selisih} fullWidth variant="outlined" label="Selisih (%)"/>
-                        </Grid>
+                        </Grid> */}
+
+
                         <Grid size={{xs : 12, md : 6}}>
                           <TextField 
                               InputLabelProps={{ shrink: true, }}
@@ -227,11 +236,12 @@ function Form({stores,payment,sales,payment_types,edc}) {
                               InputProps={{
                               endAdornment: (
                                   <InputAdornment position="end">
-                                      <ModalProduct />
+                                      <ModalPesanan id={idCustomer} onSelect={setAmountRequestOrder}/>
                                   </InputAdornment>
                               ),
                                   readOnly : true
                               }}
+                              value={Intl.NumberFormat('id-ID').format(amountRequestOrder)}
                               InputLabelProps={{
                                   shrink: true,
                               }}

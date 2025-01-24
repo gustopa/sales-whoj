@@ -32,6 +32,7 @@ use App\Http\Controllers\KonfigurasiController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\VoucherController;
 
 use App\Http\Middleware\IsAuthenticated;
 use App\Http\Middleware\NotLogin;
@@ -48,6 +49,8 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
     Route::prefix('/request_order')->group(function(){
         Route::get('/',[RequestOrderController::class,'index']);
         Route::get('/getAll/{type}',[RequestOrderController::class,'getAll']);
+        Route::get('/getByCustomer/{id}',[RequestOrderController::class,'getByCustomer']);
+        Route::get('/getAllCustomOrder/{status}',[RequestOrderController::class,'getAllCustom']);
         Route::get('/getBySales/{id}',[RequestOrderController::class,'getBySales']);
         Route::get('/getCustomOrder',[RequestOrderController::class,'getCustomOrder']);
         Route::post('/view/{id}',[RequestOrderController::class,'view']);
@@ -173,33 +176,34 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
     });
     // End diamond pricing
 
-    // Start item
-    Route::prefix('/item')->group(function(){
-        Route::get('/',[MasterController::class,'item']);
-        Route::get('/getAll',[ItemController::class,'getAll']);
-    });
-    // End item
+    Route::name('Master')->group(function(){
+        Route::prefix('/voucher')->group(function(){
+            Route::get('/',[MasterController::class,'voucher']);
+            Route::get('/getAll',[VoucherController::class,'getAll']);
+            Route::get('/getLastCode/{code}',[VoucherController::class,'getLastCode']);
+        });
 
-    // Start jenis
-    Route::prefix('/item_type')->group(function(){
-        Route::get('/',[MasterController::class,'itemType']);
-        Route::get('/getAll',[ItemController::class,'getAllType']);
-    });
-    // End jenis
+        Route::prefix('/item')->group(function(){
+            Route::get('/',[MasterController::class,'item']);
+            Route::get('/getAll',[ItemController::class,'getAll']);
+        });
 
-    // Start jenis
-    Route::prefix('/model')->group(function(){
-        Route::get('/',[MasterController::class,'model']);
-        Route::get('/getAll',[ItemController::class,'getAllModel']);
-    });
-    // End jenis
+        Route::prefix('/item_type')->group(function(){
+            Route::get('/',[MasterController::class,'itemType']);
+            Route::get('/getAll',[ItemController::class,'getAllType']);
+        });
 
-    // Start store
-    Route::prefix('/store')->group(function(){
-        Route::get('/',[MasterController::class,'store']);
-        Route::get('/getAll',[storeController::class,'getAll']);
+        Route::prefix('/model')->group(function(){
+            Route::get('/',[MasterController::class,'model']);
+            Route::get('/getAll',[ItemController::class,'getAllModel']);
+        });
+
+        Route::prefix('/store')->group(function(){
+            Route::get('/',[MasterController::class,'store']);
+            Route::get('/getAll',[storeController::class,'getAll']);
+        });
     });
-    // End store
+
 
     // Start trans type
     Route::prefix('/trans_type')->group(function(){
