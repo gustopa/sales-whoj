@@ -5,7 +5,7 @@ import Input from '../../../Layouts/components/Input'
 import { FaCirclePlus } from 'react-icons/fa6'
 import { useIsMobile } from '../../../../hooks/IsMobile'
 import axios from 'axios'
-
+import { formatNumber, unformatNumber } from '../../../../helper'
 function generateUniqueCode(amount, lastGeneratedCode) {
     // const response = await axios.get(`/voucher/getLastCode/${code}`)
     // const data = await response.data
@@ -29,35 +29,40 @@ function ModalTambahVoucher() {
     const modalRef = useRef(null)
     const isMobile = useIsMobile()
     const [amount,setAmount] = useState(0)
+    const [displayAmount, setDisplayAmount] = useState('')
     const [codeVocher, setCodeVoucher] = useState("WGC-")
-    const handleChange = (e) => {
+    const cache = useRef({});
+    const handleChange = async (e) => {
+        const value = e.target.value;
+        const sanitizedValue = value.replace(/[^0-9,]/g, '');
+        const rawValue = unformatNumber(sanitizedValue);
         if (e.target.value !== "") {
-            const value = parseInt(e.target.value, 10);
+            const value = parseInt(Number(rawValue), 10);
             const prefix = `WGC-${String(Math.floor(value / 1000)).padStart(6, '0')}`;
-            axios.get(`/voucher/getLastCode/${prefix}`).then(response => {
-                // console.log(Object.keys(response.data).length);
-                let lastGeneratedCode
-                if(Object.keys(response.data).length == 0){
-                    lastGeneratedCode = `${prefix}-0000000`;
-                }else{
-                    lastGeneratedCode = response.data.unique_code
-                }
-                const code = generateUniqueCode(value, lastGeneratedCode);
-                setCodeVoucher(code);
-            })
-        }
-        setAmount(e.target.value);
-    };
 
-    const getLastCode = async (prefix) => {
-        const response = await axios.get(`/voucher/getLastCode/${code}`)
-        const data = await response.data
-    }
+            if (cache.current[prefix]) {
+                setCodeVoucher(generateUniqueCode(value, cache.current[prefix]));
+            } else {
+                try {
+                    const response = await axios.get(`/voucher/getLastCode/${prefix}`);
+                    const lastCode = response.data.unique_code || `${prefix}-0000000`;
+                    cache.current[prefix] = lastCode;
+                    setCodeVoucher(generateUniqueCode(value, lastCode));
+                } catch (error) {
+                    console.error('Error fetching last code:', error);
+                }
+            }
+        }
+        console.log(Number(rawValue));
+        
+        setAmount(Number(rawValue));
+        setDisplayAmount(formatNumber(rawValue));
+    };
   return (
     <LayoutModal ref={modalRef} closeButton={false} height='auto' width={isMobile ? "80%" : "50%"} sxButton={{background : "#b89474"}} iconButton={<FaCirclePlus color='white'/>}>
         <Grid className='mt-3' container spacing={2}>
             <Grid size={6}>
-                <Input fullWidth label="Amount" type="number" value={amount} onChange={handleChange} />
+                <Input fullWidth label="Amount" type="text" value={displayAmount} onChange={handleChange} />
             </Grid>
             <Grid size={6}>
                 <Input disabled fullWidth value={codeVocher} label="Kode voucher" />

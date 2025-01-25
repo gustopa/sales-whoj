@@ -17,8 +17,22 @@ const encrypt = (data) => {
     return btoa(output);
 }
 
+const formatNumber = (num) => {
+    // Format number with commas as thousand separators
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
+
+const unformatNumber = (str) => {
+    // Remove commas from string
+    return str.replace(/,/g, '');
+};
 
 
 
 
-export {formatDate,encrypt}
+export {
+    formatDate,
+    encrypt, 
+    formatNumber,
+    unformatNumber
+}

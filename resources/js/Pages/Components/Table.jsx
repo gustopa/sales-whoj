@@ -1,12 +1,13 @@
-import React, { useImperativeHandle, useMemo, useRef, useState } from 'react';
+import React, { useImperativeHandle, useMemo, useRef } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import axios from 'axios';
 import { useSnapshot } from 'valtio';
 import state from '../../store/store';
+import { themeBalham } from 'ag-grid-community';
 const Table = ({
     endpoint,
     columnDefs,
-    rowHeight,
+    rowHeight=40,
     ref,
     domLayout="autoHeight",
     height,
@@ -42,13 +43,13 @@ const Table = ({
 
     const defaultColDef = useMemo(() => {
         return {
-          filter: "agTextColumnFilter",
-          floatingFilter: true,
-          flex : 1,
-          minWidth : 200,
-          filterParams: {
-            maxNumConditions : 1
-        },
+            filter: "agTextColumnFilter",
+            floatingFilter: true,
+            flex : 1,
+            minWidth : 170,
+            filterParams: {
+                maxNumConditions : 1
+            },
         };
       }, []);
 
@@ -88,7 +89,17 @@ const Table = ({
             datasource={{
                 getRows: fetchServerData,
             }}
+            // theme={themeBalham}
             overlayNoRowsTemplate={<NoRowsOverlay />}
+            onGridReady={(e) => {
+                const inputs = document.querySelectorAll('.ag-input-field-input')
+                
+                console.log(console.log(inputs[0].parentNode));
+                inputs.forEach((input) => {
+                    input.setAttribute('placeholder', 'Search...');
+                  });
+                
+            }}
             />
       </div>
     );

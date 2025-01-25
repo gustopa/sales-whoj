@@ -40,12 +40,12 @@ function BySales() {
         {field : "item_id_txt", headerName : "Tipe item"},
         {field : "type_order", headerName : "Tipe order"},
         {field : "outsource_intern", headerName : "Outsource"},
-        {field : "status", headerName : "Status",cellRenderer : params => <Chip color={statusColor(params.value)} label={params.value == "" ? "DRAFT" : params.value} />},
-        {field : "last_process", headerName : "Proses", cellRenderer : params => params.value == null ? "-" : params.value}
+        {field : "status", headerName : "Status", cellRenderer : params => <Chip color={statusColor(params.value)} label={params.value == "" ? "DRAFT" : params.value} />},
+        {field : "last_process", headerName : "Proses", minWidth: 150, width : 150, cellRenderer : params => params.value == null ? "-" : params.value}
     ])
 
     const [columnDefs] = useState([
-        {field : "row_id", headerName : "", filter : false, resizable : false, width : 70, pinned : "left",
+        {field : "row_id", headerName : "", filter : false, resizable : false, width : 70, minWidth : 70, pinned : "left",
             cellRenderer : params => 
                 (
                     <Link>
@@ -55,15 +55,15 @@ function BySales() {
                     </Link>
                 )
         },
-        {field : "doc_no", headerName : "Doc No", cellRenderer : params => <ModalComponent params={params}/>},
+        {field : "doc_no", headerName : "Doc No", minWidth: 100, width : 100, cellRenderer : params => <ModalComponent params={params}/>},
         {field : "customer_id_txt", headerName : "Pelanggan"},
         {field : "trans_date", headerName : "Tanggal", cellRenderer : params => params.value == "0000-00-00" ? "-" : formatDate(params.value)},
         {field : "estimated_date", headerName : "Perkiraan delivery time",cellRenderer : params => params.value == "0000-00-00" ? "-" : formatDate(params.value)},
         {field : "item_id_txt", headerName : "Tipe item"},
         {field : "type_order", headerName : "Tipe order"},
         {field : "outsource_intern", headerName : "Outsource"},
-        {field : "status", headerName : "Status",cellRenderer : params => <Chip color={statusColor(params.value)} label={params.value == "" ? "DRAFT" : params.value} />},
-        {field : "last_process", headerName : "Proses", cellRenderer : params => params.value == null ? "-" : params.value}
+        {field : "status", headerName : "Status", minWidth: 150, width : 150, flex : 0,cellRenderer : params => <Chip color={statusColor(params.value)} label={params.value == "" ? "DRAFT" : params.value} />},
+        {field : "last_process", headerName : "Proses", minWidth: 150, width : 150, cellRenderer : params => params.value == null ? "-" : params.value}
     ])
   return (
     <Layout title="Pesanan" page="Pesanan">

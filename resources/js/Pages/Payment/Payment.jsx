@@ -9,7 +9,7 @@ import { Link } from '@inertiajs/react'
 import { MdCancel, MdDelete, MdEdit, MdPrint } from 'react-icons/md'
 import { IoMdDocument } from "react-icons/io";
 
-import { encrypt } from '../../helper'
+import { encrypt, formatDate } from '../../helper'
 import Swal from 'sweetalert2'
 function Payment({access}) {
 
@@ -110,7 +110,7 @@ function Payment({access}) {
         {field : "doc_no",headerName : "Invoice No",
             cellRenderer : params => <ModalInvoice key={params.value} row_id={params.data?.row_id} params={params}/>
         },
-        {field : "trans_date",headerName : "Tanggal"},
+        {field : "trans_date",headerName : "Tanggal", cellRenderer : params => formatDate(params.value)},
         {field : "sales_id_txt",headerName : "Sales"},
         {field : "customer_id_txt",headerName : "Customer",
             cellRenderer : params => <ModalViewCustomer key={params.value} id_customer={params.data?.customer_id} params={params}/>
@@ -118,6 +118,7 @@ function Payment({access}) {
         {field : "notes",headerName : "Catatan"},
         {field : "identity_code",headerName : "PLU"},
         {field : "amount",headerName : "Pembayaran",
+            filter: 'agNumberColumnFilter',
             cellRenderer : params => "Rp."+Intl.NumberFormat("id-ID").format(params.value)
         },
         {field : "status",headerName : "Status",

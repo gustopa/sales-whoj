@@ -53,9 +53,9 @@ function ModalInvoice({row_id,params}) {
         <Button onClick={handleOpen}>
             <span style={{color:"#b89474",textDecoration : "underline"}}>{params.value}</span>
         </Button>
-        <Modal open={open}>
+        <Modal open={open} onClose={handleClose}>
             <div>
-                <Button onClick={handleClose} variant="contained" sx={{position:'absolute',right:'12%',background:'#b89474',top:'13%',zIndex:'999'}}>
+                <Button onClick={handleClose} variant="contained" sx={{position:'absolute',right:'14%',background:'#b89474',top:'8%',zIndex:'999'}}>
                     <CloseIcon style={{color:'white'}}/>
                 </Button>
                 <Box
@@ -65,7 +65,7 @@ function ModalInvoice({row_id,params}) {
                     left: "50%",
                     transform: "translate(-50%, -50%)",
                     width: "70%",
-                    height : "70%",
+                    // height : "70%",
                     bgcolor: "background.paper",
                     overflowY : 'auto',
                     boxShadow: 24,

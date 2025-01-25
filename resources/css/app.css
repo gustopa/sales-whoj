@@ -11,6 +11,35 @@
         display: none;
     }
 }
+/* .ag-horizontal-left-spacer{
+    overflow-x: hidden;
+} */
+.ag-body-horizontal-scroll-viewport::-webkit-scrollbar, .MuiBox-root::-webkit-scrollbar {
+    width: 5px;
+    height: 10px;
+}
+
+.ag-body-horizontal-scroll-viewport::-webkit-scrollbar-thumb, .MuiBox-root::-webkit-scrollbar {
+    background-color: rgba(0, 0, 0, 0.3); 
+    border-radius: 10px;
+}
+
+.ag-body-horizontal-scroll-viewport::-webkit-scrollbar-track, .MuiBox-root::-webkit-scrollbar {
+    background-color: transparent; 
+}
+
+.ag-body-horizontal-scroll-viewport::-webkit-scrollbar-corner, .MuiBox-root::-webkit-scrollbar {
+    background-color: transparent;
+}
+
+.ag-input-field-input {
+  border: 1px solid #b89474 !important; 
+  border-radius: 7px; 
+  padding: 5px 10px; 
+  font-size: 14px; 
+  font-weight: 400;
+  /* color: #333;  */
+}
 
 .listItem:hover .listText{
     color: #b89474 !important;

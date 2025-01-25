@@ -45,6 +45,8 @@ const DataTable = ({tipe_order}) => {
     return {
       filter: "agTextColumnFilter",
       floatingFilter: true,
+      flex : 1,
+      minWidth : 150,
     };
   }, []);
   const localeText = {
@@ -79,6 +81,7 @@ const DataTable = ({tipe_order}) => {
         paginationPageSize={10}
         paginationPageSizeSelector={[10, 25, 50]}
         localeText={localeText}
+        
       />
     </div>
   );

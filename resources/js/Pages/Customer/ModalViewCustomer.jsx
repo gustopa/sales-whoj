@@ -7,6 +7,7 @@ import { formatDate } from '../../helper';
 import axios from 'axios';
 import DataTable from '../Layouts/components/Datatable'
 import '../../../css/datatable.css'
+import { useIsMobile } from '../../hooks/IsMobile';
 function ModalViewCustomer({params,id_customer}) {
     const [open,setOpen] = useState(false)
     const [costumerSize, setCostumerSize] = useState([])
@@ -18,6 +19,7 @@ function ModalViewCustomer({params,id_customer}) {
     const [isLoaded,setIsLoaded] = useState(false)
     const [dataCustomer,setDataCustomer] = useState([]);
     const snap = useSnapshot(state)
+    const isMobile = useIsMobile()
     const handleModal = () => {
         setOpen(true)
         if(!isLoaded){
@@ -80,13 +82,13 @@ function ModalViewCustomer({params,id_customer}) {
 
     // Customer Payment
     const columnDefsPembayaran = [
-        {field : "doc_no", headerName : "Invoice No"},
-        {field : "created_date", headerName : "Tanggal", cellRenderer : params => formatDate(params.value)},
+        {field : "doc_no", headerName : "Invoice No", width : 130, minWidth : 130},
+        {field : "created_date", headerName : "Tanggal", cellRenderer : params => formatDate(params.value), width : 130, minWidth : 130},
         {field : "identity_code", headerName : "PLU"},
         {field : "model_id_txt", headerName : "Model"},
         {field : "inventory_id_txt", headerName : "Barang"},
         {field : "inventory_price", headerName : "Harga Jual", cellRenderer : params => "Rp." + Intl.NumberFormat("id-ID").format(params.value)},
-        {field : "status", headerName : "Status", cellRenderer : params => <Chip label={params.value} color="success"/>}
+        {field : "status", headerName : "Status",width : 130, minWidth : 130, cellRenderer : params => <Chip label={params.value} color="success"/>}
     ]
     const [loadingPayment,setLoadingPayment] = useState(true) 
 
@@ -137,9 +139,9 @@ function ModalViewCustomer({params,id_customer}) {
         <Button onClick={handleModal} variant="text" style={{color:'#b89474', textDecoration : 'underline',textTransform: "capitalize"}}>
             {params.value}
         </Button>
-        <Modal open={open}>
+        <Modal open={open} onClose={handleClose}>
             <div>
-                <Button onClick={handleClose} variant="contained" sx={{position:'absolute',right:'8%',background:'#b89474',top:'8%',zIndex:'999'}}>
+                <Button onClick={handleClose} variant="contained" sx={{position:'absolute',right: isMobile ? "8%" : "14%",background:'#b89474',top:'8%',zIndex:'999'}}>
                     <CloseIcon style={{color:'white'}}/>
                 </Button>
                 <Box
@@ -148,7 +150,7 @@ function ModalViewCustomer({params,id_customer}) {
                         top: "50%",
                         left: "50%",
                         transform: "translate(-50%, -50%)",
-                        width: "80%",
+                        width: isMobile ? "80%" : "70%",
                         height : "80%",
                         bgcolor: "background.paper",
                         overflowY : 'auto',

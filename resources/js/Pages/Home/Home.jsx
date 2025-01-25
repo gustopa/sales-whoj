@@ -16,8 +16,8 @@ function Home({session}) {
             cellRenderer : params => params.data ? <ModalComponent params={params} /> : ""
         },
         { field: "customer_id_txt", headerName: "Customer" },
-        { field: "created_date", headerName: "Tanggal", cellRenderer : params => formatDate(params.value) },
-        { field: "estimated_date", headerName: "Perkiraan Delivery", cellRenderer : params => formatDate(params.value) },
+        { field: "trans_date", headerName: "Tanggal", cellRenderer : params => formatDate(params.value) },
+        { field: "estimated_date", headerName: "Perkiraan Delivery", cellRenderer : params => params.value == "0000-00-00" ? "-" : formatDate(params.value) },
         { field: "item_id_txt", headerName: "Tipe Item" },
         { field: "name", headerName: "Nama Item"},
         { field: "estimated_price", headerName: "Harga Perkiraan",

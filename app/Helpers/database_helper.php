@@ -44,7 +44,35 @@ if (!function_exists('datatable')) {
                             break;
                     }
                 } elseif ($filter['filterType'] === 'number') {
-                    $query->where($field, $filter['type'], $filter['filter']);
+                    switch($filter['type']){
+                        case 'equals':
+                            $query->where($field, "=", $filter['filter']);
+                            break;
+                        case 'notEqual':
+                            $query->where($field, '<>', $filter['filter']);
+                            break;
+                        case 'greaterThan':
+                            $query->where($field, '>', $filter['filter']);
+                            break;
+                        case 'greaterThanOrEqual':
+                            $query->where($field, '>=', $filter['filter']);
+                            break;
+                        case 'lessThan':
+                            $query->where($field, '<', $filter['filter']);
+                            break;
+                        case 'lessThanOrEqual':
+                            $query->where($field, '<=', $filter['filter']);
+                            break;
+                        case 'inRange':
+                            $query->whereBetween($field, [$filter['filter'], $filter['filterTo']]);
+                            break;
+                        case 'blank':
+                            $query->whereNull($field)->orWhere($field, '=', '');
+                            break;
+                        case 'notBlank':
+                            $query->where($field, '<>', '');
+                            break;
+                    }
                 }
             }
         }
