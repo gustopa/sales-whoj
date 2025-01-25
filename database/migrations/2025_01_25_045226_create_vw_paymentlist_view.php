@@ -1,0 +1,23 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        DB::statement("CREATE VIEW `vw_paymentlist` AS select `" . env('DB_DATABASE') . "`.`payment`.`row_id` AS `row_id`,`" . env('DB_DATABASE') . "`.`payment`.`company_id` AS `company_id`,`" . env('DB_DATABASE') . "`.`payment`.`doc_no` AS `doc_no`,`" . env('DB_DATABASE') . "`.`payment`.`sales_id` AS `sales_id`,`" . env('DB_DATABASE') . "`.`sysuser`.`name` AS `sales_id_txt`,`" . env('DB_DATABASE') . "`.`payment`.`store_id` AS `store_id`,`" . env('DB_DATABASE') . "`.`store`.`name` AS `store_id_txt`,`" . env('DB_DATABASE') . "`.`payment`.`customer_id` AS `customer_id`,`" . env('DB_DATABASE') . "`.`customer`.`name` AS `customer_id_txt`,`" . env('DB_DATABASE') . "`.`payment`.`trans_type_id` AS `trans_type_id`,`" . env('DB_DATABASE') . "`.`trans_type`.`name` AS `trans_type_id_txt`,`" . env('DB_DATABASE') . "`.`payment`.`notes` AS `notes`,`" . env('DB_DATABASE') . "`.`payment`.`payment_type_id` AS `payment_type_id`,`" . env('DB_DATABASE') . "`.`payment_type`.`name` AS `payment_type_id_txt`,`" . env('DB_DATABASE') . "`.`payment`.`edc_id` AS `edc_id`,`" . env('DB_DATABASE') . "`.`edc`.`name` AS `edc_id_txt`,`" . env('DB_DATABASE') . "`.`payment`.`trans_date` AS `trans_date`,`" . env('DB_DATABASE') . "`.`payment`.`inventory_id` AS `inventory_id`,`inventory`.`item_id_txt` AS `inventory_id_txt`,`inventory`.`identity_code` AS `identity_code`,`inventory`.`gold_weight` AS `gold_weight`,`inventory`.`item_type_id_txt` AS `item_type_id_txt`,`inventory`.`model_id_txt` AS `model_id_txt`,`inventory`.`file_certificate` AS `file_certificate`,`inventory`.`production_cost` AS `production_cost`,`inventory`.`basic_price_usd` AS `basic_price_usd`,`" . env('DB_DATABASE') . "`.`payment`.`payment_order_id` AS `payment_order_id`,`" . env('DB_DATABASE') . "`.`request_order`.`name` AS `payment_order_id_txt`,`" . env('DB_DATABASE') . "`.`request_order`.`down_payment` AS `down_payment`,case when ifnull(`" . env('DB_DATABASE') . "`.`request_order`.`online_offline`,'') = '' then '' else `" . env('DB_DATABASE') . "`.`request_order`.`online_offline` end AS `online_offline`,`" . env('DB_DATABASE') . "`.`payment`.`inventory_price` AS `inventory_price`,`" . env('DB_DATABASE') . "`.`payment`.`percent_disc` AS `percent_disc`,`" . env('DB_DATABASE') . "`.`payment`.`selling_price` AS `selling_price`,`" . env('DB_DATABASE') . "`.`payment`.`diff_percent` AS `diff_percent`,`" . env('DB_DATABASE') . "`.`payment`.`amount` AS `amount`,`" . env('DB_DATABASE') . "`.`payment`.`status` AS `status`,`" . env('DB_DATABASE') . "`.`payment`.`is_print` AS `is_print`,`" . env('DB_DATABASE') . "`.`payment`.`is_submitted` AS `is_submitted`,`" . env('DB_DATABASE') . "`.`payment`.`is_deleted` AS `is_deleted`,`" . env('DB_DATABASE') . "`.`payment`.`created_date` AS `created_date`,`" . env('DB_DATABASE') . "`.`payment`.`created_by` AS `created_by`,`" . env('DB_DATABASE') . "`.`payment`.`modified_date` AS `modified_date`,`" . env('DB_DATABASE') . "`.`payment`.`modified_by` AS `modified_by` from ((((((((`" . env('DB_DATABASE') . "`.`payment` left join `" . env('DB_DATABASE') . "`.`sysuser` on(`" . env('DB_DATABASE') . "`.`payment`.`sales_id` = `" . env('DB_DATABASE') . "`.`sysuser`.`row_id`)) left join `" . env('DB_DATABASE') . "`.`store` on(`" . env('DB_DATABASE') . "`.`payment`.`store_id` = `" . env('DB_DATABASE') . "`.`store`.`row_id`)) left join `" . env('DB_DATABASE') . "`.`customer` on(`" . env('DB_DATABASE') . "`.`payment`.`customer_id` = `" . env('DB_DATABASE') . "`.`customer`.`row_id`)) left join `" . env('DB_DATABASE') . "`.`trans_type` on(`" . env('DB_DATABASE') . "`.`payment`.`trans_type_id` = `" . env('DB_DATABASE') . "`.`trans_type`.`row_id`)) left join `" . env('DB_DATABASE') . "`.`vw_inventorylist` `inventory` on(`" . env('DB_DATABASE') . "`.`payment`.`inventory_id` = `inventory`.`row_id`)) left join `" . env('DB_DATABASE') . "`.`payment_type` on(`" . env('DB_DATABASE') . "`.`payment`.`payment_type_id` = `" . env('DB_DATABASE') . "`.`payment_type`.`row_id`)) left join `" . env('DB_DATABASE') . "`.`edc` on(`" . env('DB_DATABASE') . "`.`payment`.`edc_id` = `" . env('DB_DATABASE') . "`.`edc`.`row_id`)) left join `" . env('DB_DATABASE') . "`.`request_order` on(`" . env('DB_DATABASE') . "`.`payment`.`payment_order_id` = `" . env('DB_DATABASE') . "`.`request_order`.`row_id`))");
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        DB::statement("DROP VIEW IF EXISTS `vw_paymentlist`");
+    }
+};

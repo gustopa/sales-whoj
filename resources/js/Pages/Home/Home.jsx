@@ -5,6 +5,7 @@ import logo from '../../../assets/logo2.jpg'
 import Card from '$/components/card'
 import Table from '../Components/Table'
 import ModalComponent from '../Components/Modal'
+import {formatDate} from '../../helper'
 function Home({session}) {
     const options = { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric'};
     const now = new Date();
@@ -15,8 +16,8 @@ function Home({session}) {
             cellRenderer : params => params.data ? <ModalComponent params={params} /> : ""
         },
         { field: "customer_id_txt", headerName: "Customer" },
-        { field: "created_date", headerName: "Tanggal" },
-        { field: "estimated_date", headerName: "Perkiraan Delivery" },
+        { field: "created_date", headerName: "Tanggal", cellRenderer : params => formatDate(params.value) },
+        { field: "estimated_date", headerName: "Perkiraan Delivery", cellRenderer : params => formatDate(params.value) },
         { field: "item_id_txt", headerName: "Tipe Item" },
         { field: "name", headerName: "Nama Item"},
         { field: "estimated_price", headerName: "Harga Perkiraan",
@@ -26,7 +27,7 @@ function Home({session}) {
             cellRenderer :  (params) => {
                 return (
                     <div className="dark:text-white">
-                        <Chip className={`dark:text-white ${params.value == "ON GOING" ? 'bg-navy-700' : ''}`} label={params.value} variant="filled" />
+                        <Chip className={`dark:text-white`} color={params.value == "ON GOING" ? 'warning' : 'primary'} label={params.value} variant="filled" />
                     </div>
                 )
             }

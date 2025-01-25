@@ -47,6 +47,7 @@ class RequestOrderController extends Controller
         $request_order = datatable("vw_request_orderlist",function ($query) use ($type) {
             $query->whereIn('status',['ORDER','ON GOING']);
             $query->where('type_order',$type);
+            $query->orderBy('row_id','desc');
         });
         return $request_order;
     }
