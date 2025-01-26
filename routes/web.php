@@ -181,6 +181,9 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
             Route::get('/',[MasterController::class,'voucher']);
             Route::get('/getAll',[VoucherController::class,'getAll']);
             Route::get('/getLastCode/{code}',[VoucherController::class,'getLastCode']);
+            Route::post('/add',[VoucherController::class,'create']);
+            Route::post('/edit/{id}',[VoucherController::class,'edit']);
+            Route::delete('/delete/{id}',[VoucherController::class,'delete']);
         });
 
         Route::prefix('/item')->group(function(){

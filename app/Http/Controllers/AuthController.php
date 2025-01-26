@@ -9,39 +9,6 @@ use PragmaRX\Google2FALaravel\Support\Google2FA;
 class AuthController extends Controller
 {
     public function login(Request $request){
-
-        // $user =  DB::table('sysuser')->select(
-        //     'sysuser.row_id',
-        //     'syscompany.name as company_name',
-        //     'syscompany.row_id as company_id',
-        //     'syscompany.is_active as is_active_company',
-        //     'sysuser.role_id',
-        //     'sysrole.name as role_name',
-        //     'store.row_id as id_store',
-        //     'store.name as store_name',
-        //     'sysuser.name',
-        //     'sysuser.email',
-        //     'sysuser.user_id',
-        //     'sysuser.pswrd as password',
-        //     'sysuser.encrypt_user_id',
-        //     'sysuser.google_token',
-        //     'sysuser.is_login',
-        //     'sysuser.is_active',
-        //     'sysuser.is_submitted',
-        //     'sysuser.created_date',
-        //     'sysuser.created_by',
-        //     'sysuser.modified_date',
-        //     'syscompany.color',
-        //     'sysuser.modified_by')
-        //     ->Leftjoin('syscompany','sysuser.company_id','=','syscompany.row_id')
-        //     ->Leftjoin('sysrole','sysuser.role_id','=','sysrole.row_id')
-        //     ->Leftjoin('store','sysuser.store_id','=','store.row_id')
-        //     ->where([
-        //         ['sysuser.user_id','=',$request['userid']],
-        //         ['sysuser.is_deleted','=','0']
-        //     ])
-        //     ->first();
-
         $user = DB::table("vw_sysuserlist")
         ->where([
             ["is_active","=",1],
@@ -49,7 +16,6 @@ class AuthController extends Controller
             ['is_deleted','=',0]
         ])
         ->first();
-        // dd($user);
         if($user && md5($request['password']) == $user->pswrd){
             $request->session()->put($this->session_data($user));
             return redirect()->route('dashboard');

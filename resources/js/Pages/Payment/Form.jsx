@@ -77,6 +77,7 @@ function Form({stores,payment,sales,payment_types,edc}) {
       const [selisih,setSelisih] = useState(0)
       const [sellPrice,setSellPrice] = useState(0)
       const [amountRequestOrder,setAmountRequestOrder] = useState(0)
+      const [sisaPembayaran,setSisaPembayaran] = useState(0)
 
 
       const handleInput = (e) => {
@@ -231,6 +232,7 @@ function Form({stores,payment,sales,payment_types,edc}) {
                               onChange={handleInput}
                               name='price' sx={sxInputField} value={sellPrice} type='number' fullWidth variant="outlined" label="Harga Jual"/>
                         </Grid>
+                        
                         <Grid size={{xs : 12, md:6}}>
                           <TextField variant="outlined" sx={sxInputField} label="Pesanan (DP)" fullWidth
                               InputProps={{
@@ -247,6 +249,19 @@ function Form({stores,payment,sales,payment_types,edc}) {
                               }}
                           />
                         </Grid>
+                        
+                        <Grid size={{xs:12,md :6}}>
+                          <TextField variant="outlined" sx={sxInputField} label="Sisa pembayaran" fullWidth
+                              InputProps={{
+                                  readOnly : true
+                              }}
+                              value={Intl.NumberFormat('id-ID').format(sisaPembayaran)}
+                              InputLabelProps={{
+                                  shrink: true,
+                              }}
+                          />
+                        </Grid>
+
                         <Grid size={{xs:12,md : 6}}>
                           <FormControl fullWidth sx={sxInputField}>
                               <InputLabel shrink id="payment_type" style={{color:"#b89474"}}><span>Tipe Pembayaran</span></InputLabel>

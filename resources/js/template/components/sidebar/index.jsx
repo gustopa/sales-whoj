@@ -101,7 +101,7 @@ const Sidebar = ({ open, onClose, miniSidebar, setMiniSidebar }) => {
   return (
     <div
       className={`sm:none duration-175 linear fixed !z-50 flex min-h-full flex-col bg-white pb-10 shadow-2xl shadow-white/5 transition-all dark:!bg-navy-800 dark:text-white md:!z-50 lg:!z-50 xl:!z-0 
-        ${open ? "translate-x-0" : "-translate-x-96"}`} style={{width : miniSidebar ? "3.5%" : ""}}
+        ${open ? "translate-x-0" : "-translate-x-96"}`} style={{width : miniSidebar ? "50px" : ""}}
     >
       <span
         className="absolute top-4 right-4 block z-999 cursor-pointer xl:hidden"
@@ -133,7 +133,7 @@ const Sidebar = ({ open, onClose, miniSidebar, setMiniSidebar }) => {
       <div className={`${miniSidebar ? 'mt-[20px]' :'mt-[58px]'} mb-1 h-px bg-[#b89474]`} />
       {/* Nav item */}
 
-      <div className="" style={{overflowY:'auto',height : '100vh'}}>
+      <div className="sidebar-item" style={{overflowY:'auto',height : '100vh'}}>
           <Link href="/">
             <List className={`m-0 ${activeRoute('/') ? 'text-[#b89474]' : 'text-gray-600'} dropdownParent`} style={{padding:'0'}}>
               <ListItem>

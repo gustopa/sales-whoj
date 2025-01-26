@@ -19,7 +19,7 @@ function LayoutModal({iconButton,children,sxButton,closeButton=true,ref, width="
     }
   return (
     <>
-        <Button size={size} onClick={handleModal} sx={sxButton} variant={variant} type="button" aria-label="search">
+        <Button size={size} onClick={handleModal} style={sxButton} variant={variant} type="button">
             {iconButton}
         </Button>
         <Modal open={open} onClose={handleClose}>
@@ -36,7 +36,7 @@ function LayoutModal({iconButton,children,sxButton,closeButton=true,ref, width="
                     bgcolor: "background.paper",
                     overflowY : 'auto',
                     boxShadow: 24,
-                    p: 4,
+                    p: 3,
                     zIndex:9,
                     background : snap.theme == 'dark' ? '#111c44' : '',
                     color : snap.theme == 'dark' ? 'white' : ''

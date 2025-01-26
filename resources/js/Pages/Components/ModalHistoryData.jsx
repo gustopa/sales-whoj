@@ -11,7 +11,8 @@ function ModalHistoryData({
     makeRequest=false,
     endpoint="",
     setData,
-    height=undefined
+    height=undefined,
+    width="70%"
 }) {
     const [open, setOpen] = useState(false)
     const data = params.data
@@ -44,7 +45,7 @@ function ModalHistoryData({
         <Button onClick={handleOpen}>
             <span style={{color:"#b89474",textDecoration : "underline"}}>{params.value}</span>
         </Button>
-        <Modal open={open}>
+        <Modal open={open} onClose={handleClose}>
             <div>
                 
                 <Box
@@ -53,7 +54,7 @@ function ModalHistoryData({
                     top: "50%",
                     left: "50%",
                     transform: "translate(-50%, -50%)",
-                    width: "70%",
+                    width: width,
                     bgcolor: "background.paper",
                     overflowY : 'auto',
                     height : height,

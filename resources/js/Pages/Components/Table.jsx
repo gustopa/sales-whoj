@@ -93,8 +93,6 @@ const Table = ({
             overlayNoRowsTemplate={<NoRowsOverlay />}
             onGridReady={(e) => {
                 const inputs = document.querySelectorAll('.ag-input-field-input')
-                
-                console.log(console.log(inputs[0].parentNode));
                 inputs.forEach((input) => {
                     input.setAttribute('placeholder', 'Search...');
                   });

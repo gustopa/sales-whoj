@@ -1,3 +1,5 @@
+import Swal from "sweetalert2";
+
 const formatDate = (dateString) => {
     const date = new Date(dateString);
     
@@ -18,14 +20,20 @@ const encrypt = (data) => {
 }
 
 const formatNumber = (num) => {
-    // Format number with commas as thousand separators
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
 
 const unformatNumber = (str) => {
-    // Remove commas from string
     return str.replace(/,/g, '');
 };
+
+const showAlert = (title, text, icon) => {
+    Swal.fire({
+        title : title,
+        text : text,
+        icon : icon
+    })
+}
 
 
 
@@ -34,5 +42,6 @@ export {
     formatDate,
     encrypt, 
     formatNumber,
-    unformatNumber
+    unformatNumber,
+    showAlert
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\VoucherModel;
 class VoucherController extends Controller
 {
     public function getAll(){
@@ -35,4 +36,58 @@ class VoucherController extends Controller
         $lastVoucher = DB::table('voucher')->where('unique_code', 'like', "{$code}-%")->orderBy('row_id','desc')->first(); 
         return response()->json($lastVoucher);
     }
+
+    public function create(Request $request){
+        $access = checkPermission('voucher');
+        if($access == "" || $access == null || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        VoucherModel::insert([
+            "amount" => $request['amount'],
+            "unique_code" => $request['unique_code'],
+            "is_deleted" => 0,
+            "is_used" => 0,
+            "company_id" => session('company_id'),
+            "created_date" => date("Y-m-d H:i:s"),
+            "created_by" => session('username'),
+            "modified_date" => date("Y-m-d H:i:s"),
+            "modified_by" => session('username')
+        ]);
+        return response()->json([
+            "data" => "berhasil"
+        ]);
+    }
+
+    public function edit($id){
+        $access = checkPermission('voucher');
+        if($access == "" || $access == null || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        VoucherModel::where('row_id',encrypt_id($id))->update([
+            "amount" => request("amount"),
+            "unique_code" => request("unique_code"),
+            "modified_date" => date("Y-m-d H:i:s"),
+            "modified_by" => session('username')
+        ]);
+        return response()->json([
+            "data" => "berhasil"
+        ]);
+    }
+
+    public function delete($id){
+        $access = checkPermission('voucher');
+        if($access == "" || $access == null || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        VoucherModel::where('row_id',decrypt_id($id))->update([
+            "is_deleted" => 1,
+            "modified_date" => date("Y-m-d H:i:s"),
+            "modified_by" => session('username')
+        ]);
+        return response()->json([
+            "data" => "berhasil"
+        ]);
+    }
+
+
 }

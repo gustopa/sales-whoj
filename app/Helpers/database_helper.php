@@ -43,7 +43,7 @@ if (!function_exists('datatable')) {
                             $query->where($field, '<>', '');
                             break;
                     }
-                } elseif ($filter['filterType'] === 'number') {
+                } else if ($filter['filterType'] === 'number') {
                     switch($filter['type']){
                         case 'equals':
                             $query->where($field, "=", $filter['filter']);
@@ -65,6 +65,30 @@ if (!function_exists('datatable')) {
                             break;
                         case 'inRange':
                             $query->whereBetween($field, [$filter['filter'], $filter['filterTo']]);
+                            break;
+                        case 'blank':
+                            $query->whereNull($field)->orWhere($field, '=', '');
+                            break;
+                        case 'notBlank':
+                            $query->where($field, '<>', '');
+                            break;
+                    }
+                }else if($filter['filterType'] === "date"){
+                    switch($filter['type']){
+                        case 'equals' :
+                            $query->whereDate($field, $filter['dateFrom']);
+                            break;
+                        case 'notEqual' :
+                            $query->whereDate($field,'<>', $filter['dateFrom']);
+                            break;
+                        case 'lessThan' :
+                            $query->whereDate($field,'<', $filter['dateFrom']);
+                            break;
+                        case 'greaterThan' :
+                            $query->whereDate($field,'>', $filter['dateFrom']);
+                            break;
+                        case 'inRange' :
+                            $query->whereBetween($field, [$filter['dateFrom'], $filter['dateTo']]);
                             break;
                         case 'blank':
                             $query->whereNull($field)->orWhere($field, '=', '');

@@ -11,25 +11,32 @@
         display: none;
     }
 }
-/* .ag-horizontal-left-spacer{
+.ag-horizontal-left-spacer{
     overflow-x: hidden;
-} */
-.ag-body-horizontal-scroll-viewport::-webkit-scrollbar, .MuiBox-root::-webkit-scrollbar {
-    width: 5px;
-    height: 10px;
 }
 
-.ag-body-horizontal-scroll-viewport::-webkit-scrollbar-thumb, .MuiBox-root::-webkit-scrollbar {
+.ag-body-horizontal-scroll-viewport::-webkit-scrollbar, .MuiBox-root::-webkit-scrollbar, .sidebar-item::-webkit-scrollbar {
+    width: 5px;
+    /* height: 10px; */
+}
+.MuiModal-root{
+    z-index : 888 !important;
+}
+
+.ag-body-horizontal-scroll-viewport::-webkit-scrollbar-thumb, .MuiBox-root::-webkit-scrollbar, .sidebar-item::-webkit-scrollbar {
     background-color: rgba(0, 0, 0, 0.3); 
     border-radius: 10px;
 }
 
-.ag-body-horizontal-scroll-viewport::-webkit-scrollbar-track, .MuiBox-root::-webkit-scrollbar {
+.ag-body-horizontal-scroll-viewport::-webkit-scrollbar-track, .MuiBox-root::-webkit-scrollbar, .sidebar-item::-webkit-scrollbar {
     background-color: transparent; 
 }
 
-.ag-body-horizontal-scroll-viewport::-webkit-scrollbar-corner, .MuiBox-root::-webkit-scrollbar {
+.ag-body-horizontal-scroll-viewport::-webkit-scrollbar-corner, .MuiBox-root::-webkit-scrollbar, .sidebar-item::-webkit-scrollbar {
     background-color: transparent;
+}
+.ag-input-wrapper::before{
+    content : none;
 }
 
 .ag-input-field-input {
