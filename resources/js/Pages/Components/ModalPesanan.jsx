@@ -6,8 +6,9 @@ import Table from './Table'
 import { useIsMobile } from '../../hooks/IsMobile'
 import { encrypt } from '../../helper';
 
-const ButtonSelect = ({onSelect,data, refModal}) => {
+const ButtonSelect = ({onSelect,data, refModal,setIdOrder}) => {
     const handleClick = () => {
+        setIdOrder(data?.row_id)
         onSelect(data?.down_payment)
         refModal.current.close()
     }
@@ -16,13 +17,13 @@ const ButtonSelect = ({onSelect,data, refModal}) => {
     )
 }
 
-function ModalPesanan({id,onSelect}) {
+function ModalPesanan({id,onSelect,setIdOrder}) {
     const refModal = useRef()
     const isMobile = useIsMobile()
     const [columnDefs] = useState([
         { field: 'row_id', headerName : "", sortable: false, resizable : false, filter: false, pinned : "left", width : 120, minWidth : 120,
             cellRenderer : params => (
-                <ButtonSelect refModal={refModal} onSelect={onSelect} data={params.data} />
+                <ButtonSelect setIdOrder={setIdOrder} refModal={refModal} onSelect={onSelect} data={params.data} />
             )
         },
         { field: 'customer_id_txt', headerName : "Customer", sortable: true, filter: true },

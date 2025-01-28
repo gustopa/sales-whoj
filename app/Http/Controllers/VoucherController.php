@@ -95,6 +95,7 @@ class VoucherController extends Controller
         return response()->json([
             "amount" => $voucher ? $voucher->amount : 0,
             "status" => $voucher ? $voucher->is_used : -1,
+            "row_id" => $voucher ? $voucher->row_id : 0
         ]);
     }
 

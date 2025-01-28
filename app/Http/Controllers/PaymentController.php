@@ -9,6 +9,8 @@ use App\Models\PaymentModel;
 use App\Models\InventoryModel;
 use App\Models\RequestOrderModel;
 use App\Models\StoreModel;
+use App\Models\PaymentDetailsModel;
+use App\Models\VoucherModel;
 class PaymentController extends Controller
 {
     public function index(){
@@ -41,21 +43,84 @@ class PaymentController extends Controller
             $last_doc = PaymentModel::latest('row_id')->first()->doc_no;
             $current_doc = incrementID($last_doc);
             $data = [
-                "company_id" => session('company_id'),
-                "created_date" => date("Y-m-d H:i:s"),
-                "created_by" => session('username'),
+                "company_id"    => session('company_id'),
+                "created_date"  => date("Y-m-d H:i:s"),
+                "created_by"    => session('username'),
                 "modified_date" => date("Y-m-d H:i:s"),
-                "modified_by" => session('username'),
-                "is_deleted" => 0,
-                "is_submitted" => 0,
-                "doc_no" => $current_doc,
-                "trans_date" => date("Y-m-d H:i:s"),
+                "modified_by"   => session('username'),
+                "is_deleted"    => 0,
+                "is_submitted"  => 0,
+                "doc_no"        => $current_doc,
+                "trans_date"    => date("Y-m-d H:i:s"),
             ];
             updateLastId('payment_id');
             return PaymentModel::create($data);
         });
         return redirect("/payment/form/".encrypt_id($newPayment->id));
 
+    }
+
+    public function save(Request $request){
+        $access = checkPermission("payment");
+        if($access == null || $access == "" || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        // dd($request['payment_details']);
+        DB::transaction(function() use ($request){
+            PaymentModel::where('row_id',$request['row_id'])
+            ->update([
+                "sales_id"            => $request['sales_id'],
+                "store_id"            => $request['store_id'],
+                "customer_id"         => $request['customer_id'],
+                "trans_date"          => $request['trans_date'],
+                "notes"               => $request['notes'],
+                "payment_type_id"     => $request['payment_type_id'],
+                "edc_id"              => $request['edc_id'],
+                "payment_order_id"    => $request['payment_order_id'],
+                "inventory_id"        => $request['inventory_id'],
+                "selling_price"       => $request['selling_price'],
+                "diff_percent"        => $request['diff_percent'],
+                "amount"              => $request['amount'],
+                "unpaid_amount"       => $request['unpaid_amount'],
+                "status"              => $request['unpaid_amount'] > 0 ? "UNPAID" : "PAID",
+                "is_print"            => 0,
+                "is_submitted"        => 1,
+                "modified_date"       => date("Y-m-d H:i:s"),
+                "modified_by"         => session('username')
+            ]);
+            foreach ($request['payment_details'] as $payment) {
+                // dd($payment['id_voucher']);
+                PaymentDetailsModel::insert([
+                    "row_id"          => $request['row_id'],
+                    "trans_date"      => $payment['tanggal'],
+                    "payment_type_id" => $payment['payment_type'],
+                    "edc_id"          => $payment['edc'],
+                    "amount"          => $payment['amount'],
+                    "voucher_id"      => $payment['id_voucher'],
+                    "created_date"    => date("Y-m-d H:i:s"),
+                    "created_by"      => session('username'),
+                    "modified_date"   => date("Y-m-d H:i:s"),
+                    "modified_by"     => session('username')
+                ]);
+                VoucherModel::where('row_id',$payment['id_voucher'])
+                ->update([
+                    "is_used"        => 1,
+                    "date_used"      => date("Y-m-d H:i:s"),
+                    "modified_date"  => date("Y-m-d H:i:s"),
+                    "modified_by"    => session('username')
+                ]);
+            }
+            InventoryModel::where('row_id',$request['inventory_id'])->update([
+                "status" => "SOLD",
+                "store_id" => $request['store_id'],
+                "modified_date" => date("Y-m-d H:i:s"),
+                "modified_by" => session('username')
+            ]);
+
+        });
+        return response()->json([
+            "message" => "Berhasil"
+        ]);
     }
 
     public function print($id){

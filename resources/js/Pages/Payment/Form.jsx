@@ -9,8 +9,9 @@ import ModalCustomer from '../Components/ModalCustomer'
 import ModalPesanan from '../Components/ModalPesanan'
 import { formatNumber, getTodayDate, sanitizedNumber, showAlert, unformatNumber } from '../../helper'
 import { FaPlus } from 'react-icons/fa6'
-import { MdCancel, MdCheck, MdDelete, MdSearch } from 'react-icons/md'
+import { MdCancel } from 'react-icons/md'
 import { FaSearch } from 'react-icons/fa'
+import { router } from '@inertiajs/react'
 import axios from 'axios'
 function Form({stores,payment,sales,payment_types,edc}) {
     const snap = useSnapshot(state)
@@ -74,6 +75,7 @@ function Form({stores,payment,sales,payment_types,edc}) {
       const [customer,setCustomer] = useState(payment.customer_id_txt == null ? "" : payment.customer_id_txt)
       const [idCustomer,setIdCustomer] = useState(payment.customer_id == 0 ? -1 : payment.customer)
       const [item,setItem] = useState(payment.inventory_id_txt == null ? "" : payment.inventory_id_txt)
+      const [idOrder,setIdOrder] = useState(0)
       const [idItem,setIdItem] = useState(payment.inventory_id)
       const [price, setPrice] = useState("0.00")
       const [disc, setDisc] = useState(0)
@@ -82,12 +84,14 @@ function Form({stores,payment,sales,payment_types,edc}) {
       const [sisaPembayaran,setSisaPembayaran] = useState(0)
       const [sellPrice, setSellPrice] = useState(0)
       const [displaySellPrice, setDisplaySellPrice] = useState("0")
+
       const defaultPayment = {
         payment_type: 0,
         edc: 0,
         tanggal: getTodayDate(),
         amount: 0,
         displayAmount : "0",
+        id_voucher : 0,
         voucher : ""
       };
 
@@ -111,7 +115,7 @@ function Form({stores,payment,sales,payment_types,edc}) {
         setPayments((prevPayments) =>
             prevPayments.map((payment, i) =>
                 // i === index ? defaultPayment : payment
-              i === index ? { ...payment, amount: 0, edc: 0, displayAmount : "0", voucher : "", tanggal: getTodayDate() } : payment
+              i === index ? { ...payment, amount: 0, edc: 0, displayAmount : "0", voucher : "", id_voucher: 0, tanggal: getTodayDate() } : payment
             )
         );
 
@@ -119,8 +123,6 @@ function Form({stores,payment,sales,payment_types,edc}) {
 
       const handleInput = (e) => {
         const {name, value} = e.target
-        console.log(value);
-        
         setData((prev) => ({
           ...prev,
           [name]: value,
@@ -148,6 +150,11 @@ function Form({stores,payment,sales,payment_types,edc}) {
           console.log(isVoucherUsed);
           
           if(data.status == -1){
+            setPayments((prevPayments) =>
+              prevPayments.map((payment, i) =>
+                i === index ? { ...payment, amount : 0, displayAmount : formatNumber(0) } : payment
+              )
+            );
             return showAlert("Gagal!","Voucher tidak ditemukan","error")
           }
 
@@ -157,7 +164,7 @@ function Form({stores,payment,sales,payment_types,edc}) {
             data.amount = 0
             setPayments((prevPayments) =>
               prevPayments.map((payment, i) =>
-                i === index ? { ...payment, amount : data.amount, displayAmount : formatNumber(data.amount), voucher : "" } : payment
+                i === index ? { ...payment, amount : data.amount, displayAmount : formatNumber(data.amount), voucher : "", id_voucher : 0} : payment
               )
             );
 
@@ -166,7 +173,7 @@ function Form({stores,payment,sales,payment_types,edc}) {
           }
           setPayments((prevPayments) =>
             prevPayments.map((payment, i) =>
-              i === index ? { ...payment, amount : data.amount, displayAmount : formatNumber(data.amount) } : payment
+              i === index ? { ...payment, amount : data.amount, displayAmount : formatNumber(data.amount), id_voucher : data.row_id } : payment
             )
           );
         }catch(err){
@@ -184,17 +191,52 @@ function Form({stores,payment,sales,payment_types,edc}) {
         setSisaPembayaran(sellPrice - Number(amountRequestOrder) - totalAmountPayments)
       }
       
+      const handleSubmit = async () => {
+        const formData = {
+          row_id : payment.row_id,
+          doc_no : data.invoice_no,
+          store_id : data.store,
+          sales_id : data.sales,
+          customer_id : idCustomer,
+          trans_date : data.tanggal,
+          notes : data.notes,
+          payment_type_id : payments[0].payment_type,
+          edc_id : payments[0].edc,
+          payment_order_id : idOrder,
+          inventory_id : idItem,
+          inventory_price : price,
+          percent_disc : disc,
+          selling_price : sellPrice,
+          diff_percent : selisih,
+          amount : payments[0].amount,
+          unpaid_amount : sisaPembayaran,
+          status : sisaPembayaran > 0 ? "UNPAID" : "PAID",
+          payment_details : payments
+        }
+
+        try{
+          const response = await axios.post("/payment/save",formData)
+          const data = await response.data
+          console.log(data);
+          showAlert("Success!","Pembayaran berhasil disubmit","success")
+          router.visit('/payment')
+        }catch(err){
+          showAlert("Error!","Terjadi kesalahan silahkan coba lagi","error")
+        }
+        console.log(formData);
+        
+      }
       
 
-      function handleDisc(e){
-        let hargaDisc = (price * e.target.value) / 100
-        let hargaAkhir = price - hargaDisc
-        let selisihHarga = price - hargaAkhir
-        let percentSelisih = (selisihHarga / price) * 100
-        setSelisih(- Math.round(percentSelisih))
-        setSellPrice(hargaAkhir)
-        setDisc(e.target.value)
-      }
+      // function handleDisc(e){
+      //   let hargaDisc = (price * e.target.value) / 100
+      //   let hargaAkhir = price - hargaDisc
+      //   let selisihHarga = price - hargaAkhir
+      //   let percentSelisih = (selisihHarga / price) * 100
+      //   setSelisih(- Math.round(percentSelisih))
+      //   setSellPrice(hargaAkhir)
+      //   setDisc(e.target.value)
+      // }
   return (
     <Layout title="Form Pembayaran" page="Form Pembayaran">
         <Grid container spacing={2}>
@@ -335,7 +377,7 @@ function Form({stores,payment,sales,payment_types,edc}) {
                               InputProps={{
                               endAdornment: (
                                   <InputAdornment position="end">
-                                      <ModalPesanan id={idCustomer} onSelect={setAmountRequestOrder}/>
+                                      <ModalPesanan setIdOrder={setIdOrder} id={idCustomer} onSelect={setAmountRequestOrder}/>
                                   </InputAdornment>
                               ),
                                   readOnly : true
@@ -476,7 +518,7 @@ function Form({stores,payment,sales,payment_types,edc}) {
                           <Link href='/payment'>
                               <Button style={{background : "#b89474",color : "white", marginRight : "6px"}}>Kembali</Button>
                           </Link>
-                          <Button style={{background : "#b89474",color : "white"}}>Submit</Button>
+                          <Button onClick={handleSubmit} style={{background : "#b89474",color : "white"}}>Submit</Button>
                         </Grid>
 
                         

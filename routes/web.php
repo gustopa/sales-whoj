@@ -418,6 +418,7 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
     Route::prefix('/payment')->group(function(){
         Route::get('/',[PaymentController::class,'index']);
         Route::post('/create',[PaymentController::class,'create']);
+        Route::post('/save',[PaymentController::class,'save']);
         Route::get('/getAll',[PaymentController::class,'getAll']);
         Route::get('/print/{id}',[PaymentController::class,'print']);
         Route::delete('/cancel/{id}',[PaymentController::class,'cancel']);

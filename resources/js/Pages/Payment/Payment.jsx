@@ -57,7 +57,7 @@ function Payment({access}) {
                 <div key={params.value}>
                     {params.data && 
                         <>
-                            {params.data?.status == null && params.data?.is_print == 0 && 
+                            {params.data?.status != "CANCELLED" && params.data?.is_print == 0   && 
                                 <Link style={{ width: "30px", display: 'inline-block', marginLeft : "5px" }} href={`/payment/form/${encrypt(params?.value)}`}>
                                     <Button sx={{ width: "30px", minWidth: "30px" }} size="small" variant='contained' color="primary">
                                         <MdEdit />
@@ -77,7 +77,7 @@ function Payment({access}) {
                             </Button>
                         </a>
                     }
-                    {params.data?.status == "PAID" || params.data?.status == null &&
+                    {params.data?.status != "CANCELLED" &&
                         <>
                             {params.data?.is_print == 0 && 
                                 <a
