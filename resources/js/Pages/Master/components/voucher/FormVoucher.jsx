@@ -32,6 +32,7 @@ function FormVoucher({tableRef, sxButton, iconButton, size, label,data, mode}) {
     const [codeVocher, setCodeVoucher] = useState(data === undefined ? "WGC-" : data.unique_code)
     const [loadingButton, setLoadingButton] = useState(false) 
     const cache = useRef({});
+
     const handleChange = async (e) => {
         const value = e.target.value;
         const sanitizedValue = value.replace(/[^0-9,]/g, '');
@@ -42,9 +43,9 @@ function FormVoucher({tableRef, sxButton, iconButton, size, label,data, mode}) {
         const val = parseInt(Number(rawValue), 10);
         const prefix = `WGC-${String(Math.floor(val / 1000)).padStart(7, '0')}`;
         
-        if (cache.current[prefix]) {
-            setCodeVoucher(generateUniqueCode(val, cache.current[prefix]));
-        } else {
+        // if (cache.current[prefix]) {
+        //     setCodeVoucher(generateUniqueCode(val, cache.current[prefix]));
+        // } else {
             try {
                 const response = await axios.get(`/voucher/getLastCode/${prefix}`);
                 const lastCode = response.data.unique_code || `${prefix}-0000000`;
@@ -53,7 +54,7 @@ function FormVoucher({tableRef, sxButton, iconButton, size, label,data, mode}) {
             } catch (error) {
                 showAlert("Error","Terjadi kesalahan saat generate code","error")
             }
-        }
+        // }
     };
 
     const handleSubmit = async () => {

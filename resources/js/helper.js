@@ -35,7 +35,17 @@ const showAlert = (title, text, icon) => {
     })
 }
 
+const sanitizedNumber = (value) => {
+    return value.replace(/[^0-9,]/g, '');
+}
 
+const getTodayDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Bulan dimulai dari 0, jadi ditambah 1
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
 
 
 export {
@@ -43,5 +53,7 @@ export {
     encrypt, 
     formatNumber,
     unformatNumber,
-    showAlert
+    showAlert,
+    sanitizedNumber,
+    getTodayDate
 }

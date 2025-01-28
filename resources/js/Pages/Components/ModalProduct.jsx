@@ -5,19 +5,20 @@ import { Button } from '@mui/material';
 import Table from './Table'
 import { useIsMobile } from '../../hooks/IsMobile'
 
-const ButtonSelect = ({setItem,setIdItem,params,refModal,setPrice}) => {
+const ButtonSelect = ({setItem,setIdItem,params,refModal,setPrice,setSellPrice}) => {
     const handleClick = () => {
         const item = params.data
         if(setPrice) setPrice(item.sell_price)
         setIdItem(item.row_id)
         setItem(item.item_id_txt)
+        if(setSellPrice) setSellPrice(item.sell_price)
         refModal.current.close()
     }
     return (
         <Button onClick={handleClick}>SELECT</Button>
     )
 }
-function ModalProduct({setItem,setIdItem,store_id,setPrice}) {
+function ModalProduct({setItem,setIdItem,store_id,setPrice, setSellPrice}) {
     const endpoint = store_id == null ? "/inventory/getAll" : `/inventory/getByStore/${store_id}`
     const refModal = useRef()
     const isMobile = useIsMobile()
@@ -25,7 +26,7 @@ function ModalProduct({setItem,setIdItem,store_id,setPrice}) {
     const [columnDefs] = useState([
         { field: 'row_id', headerName : "", sortable: false, filter: false,
             cellRenderer : params => (
-                <ButtonSelect setPrice={setPrice} params={params} refModal={refModal} setItem={setItem} setIdItem={setIdItem} />
+                <ButtonSelect setSellPrice={setSellPrice} setPrice={setPrice} params={params} refModal={refModal} setItem={setItem} setIdItem={setIdItem} />
             )
         },
         { field: 'identity_code', headerName : "PLU", sortable: true, filter: true,flex : isMobile ? undefined : 1, },

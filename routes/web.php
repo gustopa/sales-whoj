@@ -184,6 +184,7 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
             Route::post('/add',[VoucherController::class,'create']);
             Route::post('/edit/{id}',[VoucherController::class,'edit']);
             Route::delete('/delete/{id}',[VoucherController::class,'delete']);
+            Route::post('/checkVoucher',[VoucherController::class,'checkVoucher']);
         });
 
         Route::prefix('/item')->group(function(){

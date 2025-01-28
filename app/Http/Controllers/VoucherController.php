@@ -89,5 +89,13 @@ class VoucherController extends Controller
         ]);
     }
 
+    public function checkVoucher(Request $request){
+        $kode_voucher = $request['voucher'];
+        $voucher = VoucherModel::where('unique_code',$kode_voucher)->first();
+        return response()->json([
+            "amount" => $voucher ? $voucher->amount : 0,
+            "status" => $voucher ? $voucher->is_used : -1,
+        ]);
+    }
 
 }
