@@ -13,7 +13,7 @@ import { MdCancel } from 'react-icons/md'
 import { FaSearch } from 'react-icons/fa'
 import { router } from '@inertiajs/react'
 import axios from 'axios'
-function Form({stores,payment,sales,payment_types,edc}) {
+function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
     const snap = useSnapshot(state)
     // const sxInputField = {}
     const sxInputField = {
@@ -71,34 +71,60 @@ function Form({stores,payment,sales,payment_types,edc}) {
         payment_type : "",
         edc : "",
       })
-
+      
       const [customer,setCustomer] = useState(payment.customer_id_txt == null ? "" : payment.customer_id_txt)
-      const [idCustomer,setIdCustomer] = useState(payment.customer_id == 0 ? -1 : payment.customer)
+      const [idCustomer,setIdCustomer] = useState(payment.customer_id == 0 ? -1 : payment.customer_id)
       const [item,setItem] = useState(payment.inventory_id_txt == null ? "" : payment.inventory_id_txt)
-      const [idOrder,setIdOrder] = useState(0)
+      const [idOrder,setIdOrder] = useState(payment.payment_order_id)
       const [idItem,setIdItem] = useState(payment.inventory_id)
-      const [price, setPrice] = useState("0.00")
+      const [price, setPrice] = useState(payment.inventory_price)
       const [disc, setDisc] = useState(0)
-      const [selisih,setSelisih] = useState(0)
-      const [amountRequestOrder,setAmountRequestOrder] = useState(0)
+      const [selisih,setSelisih] = useState(payment.diff_percent)
+      const [amountRequestOrder,setAmountRequestOrder] = useState(payment.down_payment)
       const [sisaPembayaran,setSisaPembayaran] = useState(0)
-      const [sellPrice, setSellPrice] = useState(0)
-      const [displaySellPrice, setDisplaySellPrice] = useState("0")
+      const [sellPrice, setSellPrice] = useState(payment.selling_price)
+      const [displaySellPrice, setDisplaySellPrice] = useState(formatNumber(Number(payment.selling_price)))
 
-      const defaultPayment = {
-        payment_type: 0,
-        edc: 0,
-        tanggal: getTodayDate(),
-        amount: 0,
-        displayAmount : "0",
-        id_voucher : 0,
-        voucher : ""
-      };
-
-      const [payments, setPayments] = useState([defaultPayment])
+      
+      let defaultPayment
+      if(paymentDetails.length == 0){
+        defaultPayment = [{
+          payment_type: 0,
+          edc: 0,
+          tanggal: getTodayDate(),
+          amount: 0,
+          displayAmount : "0",
+          id_voucher : 0,
+          voucher : ""
+        }];
+      }else{
+        defaultPayment = paymentDetails.map(p => {
+          
+          return {
+            payment_type: p.payment_type_id,
+            edc: p.edc_id,
+            tanggal: p.trans_date.split(" ")[0],
+            amount: p.amount,
+            displayAmount : formatNumber(Number(p.amount)),
+            id_voucher : p.voucher_id,
+            voucher : p.kode_voucher
+          }
+        })
+      }
+      
+      
+      const [payments, setPayments] = useState(defaultPayment)
 
       const handleAddPayment = () => {
-        setPayments([...payments, defaultPayment]);
+        setPayments([...payments, {
+          payment_type: 0,
+          edc: 0,
+          tanggal: getTodayDate(),
+          amount: 0,
+          displayAmount : "0",
+          id_voucher : 0,
+          voucher : ""
+        }]);
       };
 
       const handleDeletePayment = (index) => {

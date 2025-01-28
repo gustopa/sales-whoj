@@ -78,6 +78,7 @@ class PaymentController extends Controller
                 "edc_id"              => $request['edc_id'],
                 "payment_order_id"    => $request['payment_order_id'],
                 "inventory_id"        => $request['inventory_id'],
+                "inventory_price"     => $request['inventory_price'],
                 "selling_price"       => $request['selling_price'],
                 "diff_percent"        => $request['diff_percent'],
                 "amount"              => $request['amount'],
@@ -137,28 +138,43 @@ class PaymentController extends Controller
     } 
 
     public function cancel($id){
+        $access = checkPermission("payment");
+        if($access == null || $access == "" || $access->menu_access == "Read only"){
+            return abort(403);
+        }
         DB::transaction(function() use ($id){
             PaymentModel::where("row_id",$id)->update([
-                "status" => "CANCELLED",
-                "modified_date" => date("Y-m-d H:i:s"),
-                "modified_by" => session("username")
+                "status"            => "CANCELLED",
+                "modified_date"     => date("Y-m-d H:i:s"),
+                "modified_by"       => session("username")
             ]);
             $payment = DB::table('vw_paymentlist')->where('row_id',$id)->first();
 
             $inventory = $payment->inventory_id;
             InventoryModel::where('row_id',$inventory)->update([
-                "status" => "READY",
-                "store_id" => 2,
-                "modified_date" => date("Y-m-d H:i:s"),
-                "modified_by" => session('username')
+                "status"            => "READY",
+                "store_id"          => 2,
+                "modified_date"     => date("Y-m-d H:i:s"),
+                "modified_by"       => session('username')
             ]);
 
             $payment_order_id = $payment->payment_order_id;
             RequestOrderModel::where('row_id',$payment_order_id)->update([
-                "status" => "READY",
-                "modified_date" => date("Y-m-d H:i:s"),
-                "modified_by" => session('username')
+                "status"            => "READY",
+                "modified_date"     => date("Y-m-d H:i:s"),
+                "modified_by"       => session('username')
             ]);
+
+            $paymentDetails = PaymentDetailsModel::where('row_id',$id)->get();
+            foreach($paymentDetails as $payment){
+                VoucherModel::where('row_id',$payment->voucher_id)->update([
+                    "is_used"       => 0,
+                    "date_used"     => null,
+                    "modified_date" => date("Y-m-d H:i:s"),
+                    "modified_by"   => session('username')
+                ]);
+            }
+
         });
 
         return response()->json([
@@ -197,8 +213,10 @@ class PaymentController extends Controller
             ['is_deleted','=',0],
             ['company_id','=',session('company_id')],
         ])->get();
-
-
+        
+        $paymentDetails = PaymentDetailsModel::where('payment_detail.row_id',decrypt_id($id))
+        ->select('payment_detail.*','voucher.unique_code as kode_voucher')
+        ->leftJoin("voucher",'payment_detail.voucher_id','=','voucher.row_id')->get();
         return inertia('Payment/Form',[
             "session" => session()->all(),
             "menu" => $menu,
@@ -206,7 +224,8 @@ class PaymentController extends Controller
             "payment" => $data,
             "sales" => $sales ,
             "payment_types" => $paymentType,
-            "edc" => $edc
+            "edc" => $edc,
+            "paymentDetails" => $paymentDetails
         ]);
     }
 
