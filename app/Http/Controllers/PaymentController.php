@@ -90,19 +90,29 @@ class PaymentController extends Controller
                 "modified_by"         => session('username')
             ]);
             foreach ($request['payment_details'] as $payment) {
-                // dd($payment['id_voucher']);
-                PaymentDetailsModel::insert([
-                    "row_id"          => $request['row_id'],
-                    "trans_date"      => $payment['tanggal'],
-                    "payment_type_id" => $payment['payment_type'],
-                    "edc_id"          => $payment['edc'],
-                    "amount"          => $payment['amount'],
-                    "voucher_id"      => $payment['id_voucher'],
-                    "created_date"    => date("Y-m-d H:i:s"),
-                    "created_by"      => session('username'),
-                    "modified_date"   => date("Y-m-d H:i:s"),
-                    "modified_by"     => session('username')
-                ]);
+                if (isset($payment['is_deleted']) && $payment['is_deleted']) {
+                    PaymentDetailsModel::where('id', $payment['id'])->update(['is_deleted' => 1]);
+                }else{
+                    PaymentDetailsModel::updateOrCreate(
+                        [
+                            "row_id"          => $request['row_id'],
+                            "sequence"        => $payment['sequence']
+                        ],
+                        [
+                            "row_id"          => $request['row_id'],
+                            "trans_date"      => $payment['tanggal'],
+                            "sequence"        => $payment['sequence'],
+                            "payment_type_id" => $payment['payment_type'],
+                            "edc_id"          => $payment['edc'],
+                            "amount"          => $payment['amount'],
+                            "voucher_id"      => $payment['id_voucher'],
+                            "created_date"    => date("Y-m-d H:i:s"),
+                            "created_by"      => session('username'),
+                            "modified_date"   => date("Y-m-d H:i:s"),
+                            "modified_by"     => session('username')
+                        ]
+                    );
+                }
                 VoucherModel::where('row_id',$payment['id_voucher'])
                 ->update([
                     "is_used"        => 1,
@@ -215,6 +225,7 @@ class PaymentController extends Controller
         ])->get();
         
         $paymentDetails = PaymentDetailsModel::where('payment_detail.row_id',decrypt_id($id))
+        ->where('payment_detail.is_deleted',0)
         ->select('payment_detail.*','voucher.unique_code as kode_voucher')
         ->leftJoin("voucher",'payment_detail.voucher_id','=','voucher.row_id')->get();
         return inertia('Payment/Form',[

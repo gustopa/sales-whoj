@@ -77,9 +77,9 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
       const [item,setItem] = useState(payment.inventory_id_txt == null ? "" : payment.inventory_id_txt)
       const [idOrder,setIdOrder] = useState(payment.payment_order_id)
       const [idItem,setIdItem] = useState(payment.inventory_id)
-      const [price, setPrice] = useState(payment.inventory_price)
+      const [price, setPrice] = useState(payment.inventory_price == null ? 0 : payment.inventory_price)
       const [disc, setDisc] = useState(0)
-      const [selisih,setSelisih] = useState(payment.diff_percent)
+      const [selisih,setSelisih] = useState(payment.diff_percent == null ? 0 : payment.diff_percent)
       const [amountRequestOrder,setAmountRequestOrder] = useState(payment.down_payment)
       const [sisaPembayaran,setSisaPembayaran] = useState(0)
       const [sellPrice, setSellPrice] = useState(payment.selling_price)
@@ -89,6 +89,8 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
       let defaultPayment
       if(paymentDetails.length == 0){
         defaultPayment = [{
+          id : null,
+          sequence : 1,
           payment_type: 0,
           edc: 0,
           tanggal: getTodayDate(),
@@ -98,9 +100,11 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
           voucher : ""
         }];
       }else{
-        defaultPayment = paymentDetails.map(p => {
+        defaultPayment = paymentDetails.map((p,i) => {
           
           return {
+            id : p.id,
+            sequence : i+1,
             payment_type: p.payment_type_id,
             edc: p.edc_id,
             tanggal: p.trans_date.split(" ")[0],
@@ -116,20 +120,43 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
       const [payments, setPayments] = useState(defaultPayment)
 
       const handleAddPayment = () => {
-        setPayments([...payments, {
-          payment_type: 0,
-          edc: 0,
-          tanggal: getTodayDate(),
-          amount: 0,
-          displayAmount : "0",
-          id_voucher : 0,
-          voucher : ""
-        }]);
+        setPayments((prev) => 
+          [...payments, 
+          {
+            id : null,
+            sequence : prev.length + 1,
+            payment_type: 0,
+            edc: 0,
+            tanggal: getTodayDate(),
+            amount: 0,
+            displayAmount : "0",
+            id_voucher : 0,
+            voucher : ""
+          }
+      ]);
       };
-
+      console.log(payments);
+      
+      // const handleDeletePayment = (index) => {
+      //   setPayments((prev) =>
+      //     prev
+      //       .filter((_, i) => i !== index) // Hapus elemen berdasarkan index
+      //       .map((payment, i) => ({
+      //         ...payment,
+      //         sequence: i + 1, // Perbarui sequence agar berurutan
+      //       }))
+      //   );
+      // }
       const handleDeletePayment = (index) => {
-        setPayments(payments.filter((_, i) => i !== index));
-      }
+        setPayments((prev) =>
+          prev.map((payment, i) =>
+            i === index
+              ? payment.id !== null ? { ...payment, is_deleted: true } : null // Hapus dari list jika belum ada di database
+              : payment
+          ).filter((payment) => payment !== null) // Hapus data yang bernilai null
+        );
+      };
+      
 
       const handlePaymentChange = (index, field, value) => {
         const updatedPayments = [...payments];
@@ -213,11 +240,18 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
       },[sellPrice,amountRequestOrder,price,payments]);
 
       const calculateSisaBayar = () => {
-        const totalAmountPayments = payments.reduce((total, payment) => total + payment.amount, 0);
+        const totalAmountPayments = payments
+        .filter((payment) => !payment.is_deleted)
+        .reduce((total, payment) => total + payment.amount, 0);
         setSisaPembayaran(sellPrice - Number(amountRequestOrder) - totalAmountPayments)
       }
       
       const handleSubmit = async () => {
+        payments.forEach((payment,index) => {
+          if( payment.payment_type_id == 0 || payment.amount == 0 ){
+
+          }
+        });
         const formData = {
           row_id : payment.row_id,
           doc_no : data.invoice_no,
@@ -280,7 +314,7 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
                         name='invoice_no' value={data.invoice_no} sx={sxInputField} fullWidth variant="outlined" label="Invoice No"/>
                     </div>
                     <div className='mt-5'>
-                        <TextField InputLabelProps={{ shrink: true, }} value={data.tanggal} onClick={handleInput} name='tanggal' type='date' sx={sxInputField} fullWidth variant="outlined" label="Tanggal"/>
+                        <TextField InputLabelProps={{ shrink: true, }} value={data.tanggal} onChange={handleInput} name='tanggal' type='date' sx={sxInputField} fullWidth variant="outlined" label="Tanggal"/>
                     </div>
                     <div className='mt-5'>
                         <FormControl fullWidth sx={sxInputField}>
@@ -430,111 +464,116 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
                         {/* <Grid size={12}>
                               
                         </Grid> */}
-                        
-                        {payments.map((payment, index) => (
-                          // <Card className='p-3' style={{width: "100%"}}>
-                            <Grid key={index} container size={12} spacing={2}> 
-                              <Grid size={12}>
-                                <h2 className='font-bold dark:text-white'>
-                                  Pembayaran ke {index + 1} 
-                                  {index != 0 &&
-                                    <Button onClick={() => handleDeletePayment(index)} color="error" size='small' variant="contained" style={{minWidth : "30px",marginLeft : "5px"}} >
-                                      <MdCancel/>
-                                    </Button>
-                                  }
-                                </h2>
-                              </Grid>
-                              <Grid size={{xs:12,md : 6}}>
-                                <FormControl fullWidth sx={sxInputField}>
-                                    <InputLabel shrink id="payment_type" style={{color:"#b89474"}}><span>Tipe Pembayaran :</span></InputLabel>
-                                    <Select
-                                        displayEmpty
-                                        name='payment_type'
-                                        labelId="payment_type"
-                                        id="payment-type-select"
-                                        value={payment.payment_type}
-                                        label="Tipe Pembayaran :"
-                                        onChange={(e) => {
-                                          handlePaymentChange(index, "payment_type", e.target.value)
-                                          resetPayment(index)
-                                        }}
-                                    >
-                                          <MenuItem key={0} value={0}> </MenuItem>
-                                        {payment_types.map(a => 
-                                            <MenuItem key={a.row_id} value={a.row_id}>{a.name}</MenuItem>
-                                        )}
-                                    </Select>
-                                </FormControl>
-                              </Grid>
-                              {payment.payment_type != 16 && payment.payment_type != 1 && payment.payment_type != 11 ? (
+                        {/* <Card className='p-3' style={{height:"280px",overflowY : "auto"}}> */}
+                          {payments.map((payment, index) => (
+                            // <Card className='p-3' style={{width: "100%"}}>
+                            <div key={index}>
+                              {!payment.is_deleted &&
+                                <Grid  container size={12} spacing={2}> 
+                                  <Grid size={12}>
+                                    <h2 className='font-bold dark:text-white'>
+                                      Pembayaran ke {index + 1} 
+                                      {index != 0 &&
+                                        <Button onClick={() => handleDeletePayment(index)} color="error" size='small' variant="contained" style={{minWidth : "30px",marginLeft : "5px"}} >
+                                          <MdCancel/>
+                                        </Button>
+                                      }
+                                    </h2>
+                                  </Grid>
                                   <Grid size={{xs:12,md : 6}}>
                                     <FormControl fullWidth sx={sxInputField}>
-                                        <InputLabel shrink id="edc" style={{color:"#b89474"}}><span>EDC :</span></InputLabel>
+                                        <InputLabel shrink id="payment_type" style={{color:"#b89474"}}><span>Tipe Pembayaran :</span></InputLabel>
                                         <Select
                                             displayEmpty
-                                            name='edc'
-                                            labelId="edc"
-                                            id="edc-select"
-                                            value={payment.edc}
-                                            label="EDC :"
-                                            onChange={(e) =>
-                                              handlePaymentChange(index, "edc", e.target.value)
-                                            }
+                                            name='payment_type'
+                                            labelId="payment_type"
+                                            id="payment-type-select"
+                                            value={payment.payment_type}
+                                            label="Tipe Pembayaran :"
+                                            onChange={(e) => {
+                                              handlePaymentChange(index, "payment_type", e.target.value)
+                                              resetPayment(index)
+                                            }}
                                         >
                                               <MenuItem key={0} value={0}> </MenuItem>
-                                            {edc.map(a => 
+                                            {payment_types.map(a => 
                                                 <MenuItem key={a.row_id} value={a.row_id}>{a.name}</MenuItem>
                                             )}
                                         </Select>
                                     </FormControl>
                                   </Grid>
-                              ) : (
-                                <>
-                                {payment.payment_type == 16 &&
+                                  {payment.payment_type != 16 && payment.payment_type != 1 && payment.payment_type != 11 ? (
+                                      <Grid size={{xs:12,md : 6}}>
+                                        <FormControl fullWidth sx={sxInputField}>
+                                            <InputLabel shrink id="edc" style={{color:"#b89474"}}><span>EDC :</span></InputLabel>
+                                            <Select
+                                                displayEmpty
+                                                name='edc'
+                                                labelId="edc"
+                                                id="edc-select"
+                                                value={payment.edc}
+                                                label="EDC :"
+                                                onChange={(e) =>
+                                                  handlePaymentChange(index, "edc", e.target.value)
+                                                }
+                                            >
+                                                  <MenuItem key={0} value={0}> </MenuItem>
+                                                {edc.map(a => 
+                                                    <MenuItem key={a.row_id} value={a.row_id}>{a.name}</MenuItem>
+                                                )}
+                                            </Select>
+                                        </FormControl>
+                                      </Grid>
+                                  ) : (
+                                    <>
+                                    {payment.payment_type == 16 &&
+                                      <Grid size={{xs:12, md: 6}}>
+                                        <TextField 
+                                        InputLabelProps={{ shrink: true, }} 
+                                        InputProps={{
+                                          endAdornment: (
+                                              <InputAdornment position="end">
+                                                  <Button onClick={()=> checkVoucher(`WGC-${payment.voucher}`,index)} size="large" variant="contained"><FaSearch/></Button>
+                                              </InputAdornment>
+                                          ),
+                                          startAdornment : (
+                                            <InputAdornment position="start">
+                                                  WGC-
+                                            </InputAdornment>
+                                          )
+              
+                                        }}
+                                        value={payment.voucher}
+                                        onChange={e => handlePaymentChange(index, "voucher", e.target.value)} type='text' sx={sxInputField} fullWidth variant="outlined" label="Masukan kode voucher :"/>
+                                      </Grid>
+                                    }
+                                    </>
+                                  )
+                                  }
                                   <Grid size={{xs:12, md: 6}}>
-                                    <TextField 
-                                    InputLabelProps={{ shrink: true, }} 
-                                    InputProps={{
-                                      endAdornment: (
-                                          <InputAdornment position="end">
-                                              <Button onClick={()=> checkVoucher(`WGC-${payment.voucher}`,index)} size="large" variant="contained"><FaSearch/></Button>
-                                          </InputAdornment>
-                                      ),
-                                      startAdornment : (
-                                        <InputAdornment position="start">
-                                              WGC-
-                                        </InputAdornment>
-                                      )
-          
-                                    }}
-                                    value={payment.voucher}
-                                    onChange={e => handlePaymentChange(index, "voucher", e.target.value)} type='text' sx={sxInputField} fullWidth variant="outlined" label="Masukan kode voucher :"/>
+                                    <TextField InputLabelProps={{ shrink: true, }} value={payment.tanggal} onChange={e => handlePaymentChange(index, "tanggal", e.target.value)} type='date' sx={sxInputField} fullWidth variant="outlined" label="Tanggal :"/>
                                   </Grid>
-                                }
-                                </>
-                              )
+                                  <Grid size={{xs:12, md: 6}}>
+                                    <TextField InputLabelProps={{ shrink: true, }} value={payment.displayAmount} 
+                                      onChange={e => {
+                                        const value = sanitizedNumber(e.target.value)
+                                        const rawValue = unformatNumber(value)
+                                        handlePaymentChange(index, "amount", Number(rawValue))
+                                        handlePaymentChange(index,"displayAmount", formatNumber(rawValue))
+                                      }}
+                                      slotProps={{
+                                        input: {
+                                          readOnly: payment.payment_type == 16 ? true : false,
+                                        }, 
+                                      }}
+                                    type='text' sx={sxInputField} fullWidth variant="outlined" label="Amount :"/>
+                                  </Grid>
+                                </Grid>
                               }
-                              <Grid size={{xs:12, md: 6}}>
-                                <TextField InputLabelProps={{ shrink: true, }} value={payment.tanggal} onChange={e => handlePaymentChange(index, "tanggal", e.target.value)} type='date' sx={sxInputField} fullWidth variant="outlined" label="Tanggal :"/>
-                              </Grid>
-                              <Grid size={{xs:12, md: 6}}>
-                                <TextField InputLabelProps={{ shrink: true, }} value={payment.displayAmount} 
-                                  onChange={e => {
-                                    const value = sanitizedNumber(e.target.value)
-                                    const rawValue = unformatNumber(value)
-                                    handlePaymentChange(index, "amount", Number(rawValue))
-                                    handlePaymentChange(index,"displayAmount", formatNumber(rawValue))
-                                  }}
-                                  slotProps={{
-                                    input: {
-                                      readOnly: payment.payment_type == 16 ? true : false,
-                                    }, 
-                                  }}
-                                type='text' sx={sxInputField} fullWidth variant="outlined" label="Amount :"/>
-                              </Grid>
-                            </Grid>
-                          // </Card>
-                        ))}
+                            </div>
+                            // </Card>
+                          ))}
+                        {/* </Card> */}
 
                         <Grid>
                           <Button onClick={handleAddPayment} variant='contained' style={{marginRight : "6px"}}>
