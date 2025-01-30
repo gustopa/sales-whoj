@@ -106,6 +106,7 @@ class PaymentController extends Controller
                             "edc_id"          => $payment['edc'],
                             "amount"          => $payment['amount'],
                             "voucher_id"      => $payment['id_voucher'],
+                            "is_deleted"      => 0,
                             "created_date"    => date("Y-m-d H:i:s"),
                             "created_by"      => session('username'),
                             "modified_date"   => date("Y-m-d H:i:s"),
@@ -228,7 +229,7 @@ class PaymentController extends Controller
         ->where('payment_detail.is_deleted',0)
         ->select('payment_detail.*','voucher.unique_code as kode_voucher')
         ->leftJoin("voucher",'payment_detail.voucher_id','=','voucher.row_id')->get();
-        return inertia('Payment/Form',[
+        return inertia('Payment/Form2',[
             "session" => session()->all(),
             "menu" => $menu,
             "stores" => $stores,
