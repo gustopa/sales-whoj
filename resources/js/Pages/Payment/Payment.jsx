@@ -45,7 +45,7 @@ function Payment({access}) {
         
     }
     const [columnDefs] = useState([
-        {field : "row_id",headerName : "", minWidth : 136, width : 136,resizable: false, filter : false,
+        {field : "row_id",headerName : "", minWidth : 180, width : 180,resizable: false, filter : false,
             hide : access == "Read only" ? true : false,
             pinned : "left",
             headerComponent : params => (
@@ -107,16 +107,16 @@ function Payment({access}) {
                 </div>
             )
         },
-        {field : "doc_no",headerName : "Invoice No",
+        {field : "doc_no",headerName : "Invoice No", minWidth : 130, width : 130,
             cellRenderer : params => <ModalInvoice key={params.value} row_id={params.data?.row_id} params={params}/>
         },
         {field : "trans_date",headerName : "Tanggal", cellRenderer : params => formatDate(params.value), filter: 'agDateColumnFilter'},
-        {field : "sales_id_txt",headerName : "Sales"},
-        {field : "customer_id_txt",headerName : "Customer",
+        {field : "sales_id_txt",headerName : "Sales", minWidth : 120, width : 120},
+        {field : "customer_id_txt",headerName : "Customer", minWidth : 160, width : 160,
             cellRenderer : params => <ModalViewCustomer key={params.value} id_customer={params.data?.customer_id} params={params}/>
         },
         {field : "notes",headerName : "Catatan"},
-        {field : "identity_code",headerName : "PLU"},
+        {field : "identity_code",headerName : "PLU", minWidth : 100, width : 100},
         {field : "amount",headerName : "Pembayaran",
             filter: 'agNumberColumnFilter',
             cellRenderer : params => "Rp."+Intl.NumberFormat("id-ID").format(params.value)

@@ -423,6 +423,7 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         Route::get('/print/{id}',[PaymentController::class,'print']);
         Route::delete('/cancel/{id}',[PaymentController::class,'cancel']);
         Route::get('/form/{id}',[PaymentController::class,'form']);
+        Route::get('/getDetail/{id}',[PaymentController::class,'getDetail']);
     });
 
 });

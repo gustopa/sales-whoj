@@ -91,8 +91,27 @@ class PaymentController extends Controller
             ]);
             foreach ($request['payment_details'] as $payment) {
                 if (isset($payment['is_deleted']) && $payment['is_deleted']) {
+                    if($payment['id_voucher'] != 0){
+                        VoucherModel::where('row_id',$payment['id_voucher'])->update([
+                            "is_used" => 0,
+                            "date_used" => null,
+                            "modified_date" => date("Y-m-d H:i:s"),
+                            "modified_by" => session('username')
+                        ]);
+                    }
                     PaymentDetailsModel::where('id', $payment['id'])->update(['is_deleted' => 1]);
                 }else{
+                    if($payment['id'] != null){
+                        $voucher = PaymentDetailsModel::where('id',$payment['id'])->first()->voucher_id;
+                        if($voucher != 0){
+                            VoucherModel::where('row_id',$voucher)->update([
+                                "is_used" => 0,
+                                "date_used" => null,
+                                "modified_date" => date("Y-m-d H:i:s"),
+                                "modified_by" => session('username')
+                            ]);
+                        }
+                    }
                     PaymentDetailsModel::updateOrCreate(
                         [
                             "row_id"          => $request['row_id'],
@@ -113,15 +132,15 @@ class PaymentController extends Controller
                             "modified_by"     => session('username')
                         ]
                     );
+                    VoucherModel::where('row_id',$payment['id_voucher'])
+                    ->update([
+                        "is_used"        => 1,
+                        "date_used"      => date("Y-m-d H:i:s"),
+                        "modified_date"  => date("Y-m-d H:i:s"),
+                        "modified_by"    => session('username')
+                    ]);
                 }
-                VoucherModel::where('row_id',$payment['id_voucher'])
-                ->update([
-                    "is_used"        => 1,
-                    "date_used"      => date("Y-m-d H:i:s"),
-                    "modified_date"  => date("Y-m-d H:i:s"),
-                    "modified_by"    => session('username')
-                ]);
-            }
+                }
             InventoryModel::where('row_id',$request['inventory_id'])->update([
                 "status" => "SOLD",
                 "store_id" => $request['store_id'],
@@ -229,7 +248,7 @@ class PaymentController extends Controller
         ->where('payment_detail.is_deleted',0)
         ->select('payment_detail.*','voucher.unique_code as kode_voucher')
         ->leftJoin("voucher",'payment_detail.voucher_id','=','voucher.row_id')->get();
-        return inertia('Payment/Form2',[
+        return inertia('Payment/Form',[
             "session" => session()->all(),
             "menu" => $menu,
             "stores" => $stores,
@@ -262,5 +281,16 @@ class PaymentController extends Controller
             $query->orderBy('row_id','desc');
         });
         return $data;
+    }
+
+    public function getDetail($id){
+        $data = PaymentDetailsModel::where('payment_detail.row_id',$id)
+        ->select("payment_detail.*",'payment_type.name as payment_type_id_txt','edc.name as edc_id_txt')
+        ->join('payment_type','payment_detail.payment_type_id','=','payment_type.row_id')
+        ->leftJoin('edc','edc.row_id','=','payment_detail.edc_id')
+        ->where('payment_detail.is_deleted',0)->get();
+        return response()->json([
+            "data" => $data
+        ]);
     }
 }

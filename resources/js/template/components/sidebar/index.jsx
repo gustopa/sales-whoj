@@ -5,11 +5,9 @@ import logo from '../../../../assets/logo.jpg'
 import logo2 from '../../../../assets/favicon.ico'
 import { useState,useEffect } from "react";
 import { Link, usePage } from "@inertiajs/react";
-import { List, ListItem, ListItemText, Collapse, ListItemIcon, Button } from '@mui/material';
+import { List, ListItem, ListItemText, Collapse, ListItemIcon } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import ShortcutIcon from '@mui/icons-material/Shortcut';
-import MemoryIcon from '@mui/icons-material/Memory';
-import {Pelanggan,Transaksi,Inventory,Laporan,Master,Konfigurasi} from "./routes";
 import HomeIcon from '@mui/icons-material/Home';
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { FaExpandAlt } from "react-icons/fa";

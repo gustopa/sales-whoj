@@ -8,7 +8,7 @@ function ModalRefund({params}) {
     const refModal = useRef(null)
     const refundData = params.data
   return (
-    <LayoutModal ref={refModal} iconButton={params.value} height={isMobile ? '80%' : '50%'} width={isMobile ? '80%' : '50%'} sxButton={{color : "#b89474", textDecoration : "underline"}}>
+    <LayoutModal ref={refModal} iconButton={params.value} width={isMobile ? '80%' : '50%'} sxButton={{color : "#b89474", textDecoration : "underline"}}>
         <Grid container spacing={2}>
             <Grid size={{xs:6,md:4}}>
                 <label className='text-[#999]' style={{fontSize:'10px'}}>REFUND NO</label><br />
@@ -40,7 +40,7 @@ function ModalRefund({params}) {
             </Grid>
             <Grid size={{xs:6,md:4}}>
                 <label className='text-[#999]' style={{fontSize:'10px'}}>NOMINAL INVOICE</label><br />
-                <span>{refundData?.amount_invoice == null ? "-" : refundData?.amount_invoice }</span>
+                <span>{refundData?.amount_invoice == null ? "-" : Intl.NumberFormat('en-US').format(refundData?.amount_invoice) }</span>
             </Grid>
             <Grid size={{xs:6,md:4}}>
                 <label className='text-[#999]' style={{fontSize:'10px'}}>POTONGAN</label><br />
@@ -48,7 +48,7 @@ function ModalRefund({params}) {
             </Grid>
             <Grid size={{xs:6,md:4}}>
                 <label className='text-[#999]' style={{fontSize:'10px'}}>REFUND</label><br />
-                <span>{refundData?.amount_refund == null ? "-" : refundData?.amount_refund }</span>
+                <span>{refundData?.amount_refund == null ? "-" : Intl.NumberFormat('en-US').format(refundData?.amount_refund) }</span>
             </Grid>
             <Grid size={{xs:6,md:4}}>
                 <label className='text-[#999]' style={{fontSize:'10px'}}>ALASAN</label><br />

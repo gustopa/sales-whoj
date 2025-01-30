@@ -4,33 +4,50 @@ import React, { useState } from 'react'
 import { useSnapshot } from 'valtio'
 import state from '../../store/store'
 import CloseIcon from '@mui/icons-material/Close';
-import { formatDate } from '../../helper'
+import { formatDate, showAlert } from '../../helper'
+import DataTable from '../Layouts/components/Datatable'
 function ModalInvoice({row_id,params}) {
     const [data, setData] = useState([])
     const [open, setOpen] = useState(false)
     const [loaded, setLoaded] = useState(false)
+    const [detailPayment,setDetailPayment] = useState([])
     const snap = useSnapshot(state)
     const getDataInvoice = async () => {
         try{
-            const response = await axios.get(`invoice/getById/${row_id}`)
+            const response = await axios.get(`/invoice/getById/${row_id}`)
             const data_response = await response.data
             setData(data_response.data)
-            console.log(data_response);
         }catch(err){
             console.log(err);
+        }
+    }
+    const getPaymentDetails = async () => {
+        try{
+            const response = await axios.get(`/payment/getDetail/${row_id}`)
+            const data_response = await response.data
+            setDetailPayment(data_response.data)
+            console.log(data_response.data);
+        }catch(err){
+            showAlert("Error!","Terjadi kesalahan silahkan coba lagi","error")
         }
     }
     const handleOpen = () => {
         setOpen(true)
         if(!loaded){
             getDataInvoice()
+            getPaymentDetails()
             setLoaded(true)
         }
     }
     const handleClose = () => {
         setOpen(false)
     }
-
+    const [columnDefs] = useState([
+        {field : "trans_date", headerName : "Tanggal", cellRenderer : params => formatDate(params.value)},
+        {field : "payment_type_id_txt", headerName : "Metode pembayaran"},
+        {field : "edc_id_txt", headerName : "EDC", cellRenderer : params => params.value == null ? "-" : params.value},
+        {field : "amount", headerName : "Jumlah", cellRenderer : params => "Rp."+Intl.NumberFormat('en-US').format(params.value)},
+    ])
     let color = ""
     switch(data.status){
         case "PAID" : 
@@ -65,7 +82,7 @@ function ModalInvoice({row_id,params}) {
                     left: "50%",
                     transform: "translate(-50%, -50%)",
                     width: "70%",
-                    // height : "70%",
+                    maxHeight : "80%",
                     bgcolor: "background.paper",
                     overflowY : 'auto',
                     boxShadow: 24,
@@ -105,7 +122,7 @@ function ModalInvoice({row_id,params}) {
                             <Chip label={data.status == null || data.status == "" ? "DRAFT" : data.status} color={color}/>
                         </Grid>
                         <Grid size={12}>
-                            <h2 className='font-bold mb-2'>UKURAN</h2>
+                            <h2 className='font-bold mb-2'>BARANG</h2>
                             <Table>
                                 <TableHead>
                                     <TableRow style={{background:'#b89474'}}>
@@ -139,15 +156,23 @@ function ModalInvoice({row_id,params}) {
                                 </TableBody>
                             </Table>
                         </Grid>
-
-                        <Grid size={4}>
-                            <label className='text-[#999]' style={{fontSize:'10px'}}>TIPE PEMBAYARAN</label><br />
-                            <span className='dark:text-white'>{data.payment_type_id_txt == "" || data.payment_type_id_txt == null ? "-" : data.payment_type_id_txt}</span>
-                        </Grid>
-                        <Grid size={4}>
-                            <label className='text-[#999]' style={{fontSize:'10px'}}>EDC</label><br />
-                            <span className='dark:text-white'>{data.edc_id_txt == "" || data.edc_id_txt == null ? "-" : data.edc_id_txt}</span>
-                        </Grid>
+                        {detailPayment.length == 0 ? (
+                            <>
+                                <Grid size={4}>
+                                    <label className='text-[#999]' style={{fontSize:'10px'}}>TIPE PEMBAYARAN</label><br />
+                                    <span className='dark:text-white'>{data.payment_type_id_txt == "" || data.payment_type_id_txt == null ? "-" : data.payment_type_id_txt}</span>
+                                </Grid>
+                                <Grid size={4}>
+                                    <label className='text-[#999]' style={{fontSize:'10px'}}>EDC</label><br />
+                                    <span className='dark:text-white'>{data.edc_id_txt == "" || data.edc_id_txt == null ? "-" : data.edc_id_txt}</span>
+                                </Grid>
+                            </>
+                        ) : (
+                            <Grid size={12}>
+                                <h2 className='font-bold mb-2'>DETAIL PEMBAYARAN</h2>
+                                <DataTable columns={columnDefs} data={detailPayment}/>
+                            </Grid>
+                        )}
                     </Grid>
                     <hr className='mt-[20px]' />
                     <Grid container spacing={1} style={{marginTop : "20px"}}>
