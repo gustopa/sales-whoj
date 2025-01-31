@@ -190,67 +190,86 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         Route::prefix('/item')->group(function(){
             Route::get('/',[MasterController::class,'item']);
             Route::get('/getAll',[ItemController::class,'getAll']);
+            Route::post('/tambah',[ItemController::class,'tambah']);
+            Route::post('/edit/{id}',[ItemController::class,'edit']);
+            Route::delete('/delete/{id}',[ItemController::class,'delete']);
         });
 
         Route::prefix('/item_type')->group(function(){
             Route::get('/',[MasterController::class,'itemType']);
             Route::get('/getAll',[ItemController::class,'getAllType']);
+            Route::post('/tambah',[ItemController::class,'tambahJenis']);
+            Route::post('/edit/{id}',[ItemController::class,'editJenis']);
+            Route::delete('/delete/{id}',[ItemController::class,'deleteJenis']);
         });
 
         Route::prefix('/model')->group(function(){
             Route::get('/',[MasterController::class,'model']);
             Route::get('/getAll',[ItemController::class,'getAllModel']);
+            Route::post('/tambah',[ItemController::class,'tambahModel']);
+            Route::post('/edit/{id}',[ItemController::class,'editModel']);
+            Route::delete('/delete/{id}',[ItemController::class,'deleteModel']);
         });
 
         Route::prefix('/store')->group(function(){
             Route::get('/',[MasterController::class,'store']);
             Route::get('/getAll',[storeController::class,'getAll']);
+            Route::post('/tambah',[storeController::class,'tambah']);
+            Route::post('/edit/{id}',[storeController::class,'edit']);
+            Route::delete('/delete/{id}',[storeController::class,'delete']);
+        });
+
+        Route::prefix('/trans_type')->group(function(){
+            Route::get('/',[MasterController::class,'transType']);
+            Route::get('/getAll',[TransaksiController::class,'getAllType']);
+            Route::post('/tambah',[TransaksiController::class,'tambah']);
+            Route::post('/edit/{id}',[TransaksiController::class,'edit']);
+            Route::delete('/delete/{id}',[TransaksiController::class,'delete']);
+        });
+
+        Route::prefix('/payment_type')->group(function(){
+            Route::get('/',[MasterController::class,'paymentType']);
+            Route::get('/getAll',[PaymentController::class,'getAllType']);
+            Route::post('/tambah',[PaymentController::class,'tambahType']);
+            Route::post('/edit/{id}',[PaymentController::class,'editType']);
+            Route::delete('/delete/{id}',[PaymentController::class,'deleteType']);
+        });
+
+        Route::prefix('/edc')->group(function(){
+            Route::get('/',[MasterController::class,'edc']);
+            Route::get('/getAll',[PaymentController::class,'getAllEdc']);
+            Route::post('/tambah',[PaymentController::class,'tambahEdc']);
+            Route::post('/edit/{id}',[PaymentController::class,'editEdc']);
+            Route::delete('/delete/{id}',[PaymentController::class,'deleteEdc']);
+        });
+
+        Route::prefix('/location')->group(function(){
+            Route::get('/',[MasterController::class,'location']);
+            Route::get('/getAll',[LocationController::class,'getAll']);
+            Route::post('/tambah',[LocationController::class,'tambah']);
+            Route::post('/edit/{id}',[LocationController::class,'edit']);
+            Route::delete('/delete/{id}',[LocationController::class,'delete']);
+        });
+
+        Route::prefix('/labour_price')->group(function(){
+            Route::get('/',[MasterController::class,'labourPrice']);
+            Route::get('/getAll',[ItemController::class,'getAllLabour']);
+            Route::post('/tambah',[ItemController::class,'tambahLabour']);
+            Route::post('/edit/{id}',[ItemController::class,'editLabour']);
+            Route::delete('/delete/{id}',[ItemController::class,'deleteLabour']);
+        });
+
+        Route::prefix('/position')->group(function(){
+            Route::get('/',[MasterController::class,'position']);
+            Route::get('/getAll',[PositionController::class,'getAll']);
+            Route::post('/tambah',[PositionController::class,'tambah']);
+            Route::post('/edit/{id}',[PositionController::class,'edit']);
+            Route::delete('/delete/{id}',[PositionController::class,'delete']);
         });
     });
 
 
-    // Start trans type
-    Route::prefix('/trans_type')->group(function(){
-        Route::get('/',[MasterController::class,'transType']);
-        Route::get('/getAll',[TransaksiController::class,'getAllType']);
-    });
-    // End trans type
-
-    // Start trans type
-    Route::prefix('/payment_type')->group(function(){
-        Route::get('/',[MasterController::class,'paymentType']);
-        Route::get('/getAll',[PaymentController::class,'getAllType']);
-    });
-    // End trans type
     
-    // Start EDC
-    Route::prefix('/edc')->group(function(){
-        Route::get('/',[MasterController::class,'edc']);
-        Route::get('/getAll',[PaymentController::class,'getAllEdc']);
-    });
-    // End EDC
-
-    // Start EDC
-    Route::prefix('/location')->group(function(){
-        Route::get('/',[MasterController::class,'location']);
-        Route::get('/getAll',[LocationController::class,'getAll']);
-    });
-    // End EDC
-
-    // Start labour price
-    Route::prefix('/labour_price')->group(function(){
-        Route::get('/',[MasterController::class,'labourPrice']);
-        Route::get('/getAll',[ItemController::class,'getAllLabour']);
-    });
-    // End labour price
-    
-
-    // Start position
-    Route::prefix('/position')->group(function(){
-        Route::get('/',[MasterController::class,'position']);
-        Route::get('/getAll',[PositionController::class,'getAll']);
-    });
-    // End position
 
     // Start grouping order
     Route::prefix('/grouping_order')->group(function(){

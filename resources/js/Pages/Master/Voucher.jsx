@@ -2,8 +2,8 @@ import React, { useRef, useState } from 'react'
 import Layout from '../Layouts/Layout'
 import Table from '../Components/Table'
 import { Button, Chip} from '@mui/material'
-import { MdDelete, MdEdit } from 'react-icons/md'
-import FormVoucher from './components/voucher/FormVoucher'
+import { MdDelete } from 'react-icons/md'
+import FormVoucher from './components/FormVoucher'
 import { encrypt, formatDate, showAlert } from '../../helper'
 import { FaCirclePlus } from 'react-icons/fa6'
 import ModalHistoryData from '../Components/ModalHistoryData'
@@ -39,7 +39,6 @@ function Voucher() {
             cellRenderer : params => 
                 (
                     <div key={params.value}>
-                        {/* <FormVoucher mode="edit" data={params.data} label="EDIT VOUCHER" size="small" sxButton={{background : "#1976d2", minWidth : "30px", textAlign : "center !important" ,padding : 4 }} iconButton={<MdEdit color='white'/>}/> */}
                         <Button onClick={() => handleDelete(params?.data)} sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="error">
                             <MdDelete/>
                         </Button>

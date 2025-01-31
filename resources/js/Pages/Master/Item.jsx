@@ -1,32 +1,49 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import Layout from '../Layouts/Layout'
 import Table from '../Components/Table'
-import { Link } from '@inertiajs/react'
-import { FaCirclePlus } from 'react-icons/fa6'
-import { MdDelete, MdDone, MdEdit } from 'react-icons/md'
+import { MdDelete, MdEdit } from 'react-icons/md'
 import { Button, Grid2 as Grid } from '@mui/material'
 import ModalHistoryData from '../Components/ModalHistoryData'
+import FormItem from './components/FormItem' 
+import { FaCirclePlus } from 'react-icons/fa6'
+import { showAlert } from '../../helper'
+import Swal from 'sweetalert2'
+
+
 function Item({access}) {
+    const tableRef = useRef(null)
+    const handleDelete = (row_id) => {
+        Swal.fire({
+          title: "Are you sure?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes"
+        }).then( async (result) => {
+          if (result.isConfirmed) {
+            try{
+              await axios.delete(`/item/delete/${row_id}`)
+              showAlert("Berhasil!","Item berhasil dihapus",'success')
+              tableRef.current.refreshData()
+            }catch(err){
+              showAlert("Error!","Terjadi kesalahan silahkan coba lagi","error")
+            }
+          }
+        });
+        
+      }
     const [columnDefs] = useState([
-        {field : "row_id",headerName : "", minWidth : 150, width : 150,pinned : 'left', resizable : false, filter : false,hide : access == 'Read only' ? true : false,
+        {field : "row_id",headerName : "", minWidth : 110, width : 110,pinned : 'left', resizable : false, filter : false,hide : access == 'Read only' ? true : false,
             headerComponent : params => (
-                <Link className='flex justify-center' method="post" style={{background: "#b89474",padding : "10px",borderRadius : "10px",width : "80%",textAlign : "center"}}>
-                    <FaCirclePlus className='text-white'/>
-                </Link>
+                <FormItem table={tableRef} endpoint="/item/tambah" title="TAMBAH" sxButton={{background:"#b89474",py:4}} iconButton={<FaCirclePlus className='text-white'/>} />
             ),
             cellRenderer : params => 
                 (
                     <div key={params.value}>
-                        <Link>
-                            <Button sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="primary">
-                                <MdEdit/>
-                            </Button>
-                        </Link>
-                        <Button sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="error">
+                        <FormItem table={tableRef} nama={params.data?.name} endpoint={`/item/edit/${params.value}`} title="EDIT" sxButton={{minWidth : "30px", background : "#1976d2",padding : 3}} iconButton={<MdEdit/>} />
+                        <Button onClick={()=>handleDelete(params.value)} sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="error">
                             <MdDelete/>
-                        </Button>
-                        <Button size="small" style={{cursor : "default"}}>
-                            <MdDone style={{color : params.data?.is_submitted == 0 ? '#bbb' : '#059c1b',fontWeight : "bold"}}/>
                         </Button>
                     </div>
                 ),
@@ -44,7 +61,7 @@ function Item({access}) {
     ])
   return (
     <Layout title="Item" page="Item">
-        <Table columnDefs={columnDefs} endpoint="/item/getAll"/>
+        <Table ref={tableRef} columnDefs={columnDefs} endpoint="/item/getAll"/>
     </Layout>
   )
 }

@@ -1,10 +1,10 @@
 import React, { useRef, useState } from 'react'
-import LayoutModal from '../../../Layouts/components/LayoutModal'
+import LayoutModal from '../../Layouts/components/LayoutModal'
 import { Button, CircularProgress, Grid2 as Grid } from '@mui/material'
-import Input from '../../../Layouts/components/Input'
-import { useIsMobile } from '../../../../hooks/IsMobile'
+import Input from '../../Layouts/components/Input'
+import { useIsMobile } from '../../../hooks/IsMobile' 
 import axios from 'axios'
-import { encrypt, formatNumber, showAlert, unformatNumber } from '../../../../helper'
+import { encrypt, formatNumber, showAlert, unformatNumber } from '../../../helper'
 function generateUniqueCode(amount, lastGeneratedCode) {
     // const response = await axios.get(`/voucher/getLastCode/${code}`)
     // const data = await response.data

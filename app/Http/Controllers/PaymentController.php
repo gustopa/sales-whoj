@@ -11,6 +11,8 @@ use App\Models\RequestOrderModel;
 use App\Models\StoreModel;
 use App\Models\PaymentDetailsModel;
 use App\Models\VoucherModel;
+use App\Models\PaymentTypeModel;
+use App\Models\EdcModel;
 class PaymentController extends Controller
 {
     public function index(){
@@ -292,5 +294,89 @@ class PaymentController extends Controller
         return response()->json([
             "data" => $data
         ]);
+    }
+
+    public function tambahType(Request $request){
+        $access = checkPermission('payment_type');
+        if($access == "" || $access == null || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        PaymentTypeModel::insert([
+            "company_id" => session('company_id'),
+            "name" => $request['name'],
+            "is_submitted" => 1,
+            "created_date" => date("Y-m-d H:i:s"),
+            "created_by" => session('username'),
+            "modified_date" => date("Y-m-d H:i:s"),
+            "modified_by" => session('username')
+        ]);
+        return response()->json(["message" => "Berhasil"]);
+    }
+    public function editType($id){
+        $access = checkPermission('payment_type');
+        if($access == "" || $access == null || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        PaymentTypeModel::where('row_id',$id)->update([
+            "name" => request('name'),
+            "modified_date" => date("Y-m-d H:i:s"),
+            "modified_by" => session('username')
+        ]);
+        return response()->json(["message" => "Berhasil"]);
+    }
+    public function deleteType($id){
+        $access = checkPermission('payment_type');
+        if($access == "" || $access == null || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        PaymentTypeModel::where('row_id',$id)->update([
+            "is_deleted" => 1,
+            "modified_date" => date("Y-m-d H:i:s"),
+            "modified_by" => session('username')
+        ]);
+        return response()->json(["message" => "Berhasil"]);
+    }
+    public function tambahEdc(Request $request){
+        $access = checkPermission('payment_type');
+        if($access == "" || $access == null || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        EdcModel::insert([
+            "company_id" => session('company_id'),
+            "name" => $request['name'],
+            "txt" => $request['description'],
+            "is_submitted" => 1,
+            "is_deleted" => 0,
+            "created_date" => date("Y-m-d H:i:s"),
+            "created_by" => session('username'),
+            "modified_date" => date("Y-m-d H:i:s"),
+            "modified_by" => session('username')
+        ]);
+        return response()->json(["message" => "Berhasil"]);
+    }
+    public function editEdc($id){
+        $access = checkPermission('payment_type');
+        if($access == "" || $access == null || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        EdcModel::where('row_id',$id)->update([
+            "name" => request('name'),
+            "txt" => request('description'),
+            "modified_date" => date("Y-m-d H:i:s"),
+            "modified_by" => session('username')
+        ]);
+        return response()->json(["message" => "Berhasil"]);
+    }
+    public function deleteEdc($id){
+        $access = checkPermission('payment_type');
+        if($access == "" || $access == null || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        EdcModel::where('row_id',$id)->update([
+            "is_deleted" => 1,
+            "modified_date" => date("Y-m-d H:i:s"),
+            "modified_by" => session('username')
+        ]);
+        return response()->json(["message" => "Berhasil"]);
     }
 }
