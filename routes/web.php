@@ -266,18 +266,21 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
             Route::post('/edit/{id}',[PositionController::class,'edit']);
             Route::delete('/delete/{id}',[PositionController::class,'delete']);
         });
+
+        Route::prefix('/grouping_order')->group(function(){
+            Route::get('/',[MasterController::class,'groupingOrder']);
+            Route::get('/getAll',[GroupingOrderController::class,'getAll']);
+            Route::get('/getDetailDiamond/{id}',[GroupingOrderController::class,'getDetailDiamond']);
+            Route::post('/create',[GroupingOrderController::class,'create']);
+            Route::get('/form/{id}',[GroupingOrderController::class,'form']);
+            Route::delete('/delete/{id}',[GroupingOrderController::class,'delete']);
+        });
     });
 
 
     
 
-    // Start grouping order
-    Route::prefix('/grouping_order')->group(function(){
-        Route::get('/',[MasterController::class,'groupingOrder']);
-        Route::get('/getAll',[GroupingOrderController::class,'getAll']);
-        Route::get('/getDetailDiamond/{id}',[GroupingOrderController::class,'getDetailDiamond']);
-    });
-    // End grouping order
+    
 
     // Start sales
     Route::prefix('/sales')->group(function(){
