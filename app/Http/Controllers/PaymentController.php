@@ -87,7 +87,7 @@ class PaymentController extends Controller
                 "unpaid_amount"       => $request['unpaid_amount'],
                 "status"              => $request['unpaid_amount'] > 0 ? "UNPAID" : "PAID",
                 "is_print"            => 0,
-                "is_submitted"        => 1,
+                "is_submitted"        => $request['mode'] == 'submit' ? 1 : 0,
                 "modified_date"       => date("Y-m-d H:i:s"),
                 "modified_by"         => session('username')
             ]);

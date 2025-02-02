@@ -68,7 +68,7 @@ function ModalInvoice({row_id,params}) {
   return (
     <>
         <Button onClick={handleOpen}>
-            <span style={{color:"#b89474",textDecoration : "underline"}}>{params.value}</span>
+            <span style={{textDecoration : "underline"}} className={`${params.data?.is_submitted == 1 ? 'text-whoj' : 'dark:text-white text-[black]'}`}>{params.value}</span>
         </Button>
         <Modal open={open} onClose={handleClose}>
             <div>

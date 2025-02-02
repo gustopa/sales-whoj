@@ -9,7 +9,7 @@ import ModalCustomer from '../Components/ModalCustomer'
 import ModalPesanan from '../Components/ModalPesanan'
 import { formatNumber, getTodayDate, sanitizedNumber, showAlert, unformatNumber } from '../../helper'
 import { FaPlus } from 'react-icons/fa6'
-import { MdCancel } from 'react-icons/md'
+import { MdCancel, MdSave } from 'react-icons/md'
 import { FaSearch } from 'react-icons/fa'
 import { router } from '@inertiajs/react'
 import axios from 'axios'
@@ -85,7 +85,7 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
       const [sellPrice, setSellPrice] = useState(payment.selling_price)
       const [displaySellPrice, setDisplaySellPrice] = useState(formatNumber(Number(payment.selling_price)))
       const [totalAmount, setTotalAmount] = useState(0)
-      
+      const [submitDisable, setSubmitDisable] = useState(true)
       let defaultPayment
       if(paymentDetails.length == 0){
         defaultPayment = [{
@@ -242,11 +242,12 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
         const totalAmountPayments = payments
         .filter((payment) => !payment.is_deleted)
         .reduce((total, payment) => total + Number(payment.amount), 0);
-        
-        setSisaPembayaran(sellPrice - Number(amountRequestOrder) - totalAmountPayments)
+        const sisaBayar = sellPrice - Number(amountRequestOrder) - totalAmountPayments
+        sisaBayar == 0 ? setSubmitDisable(false) : setSubmitDisable(true)
+        setSisaPembayaran(sisaBayar)
       }
       
-      const handleSubmit = async () => {
+      const handleSubmit = async (mode) => {
         if(data.store == 0){
           return showAlert("Waning!","Store belum dipilih",'warning') 
         }
@@ -290,14 +291,15 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
           amount : totalAmount,
           unpaid_amount : sisaPembayaran,
           status : sisaPembayaran > 0 ? "UNPAID" : "PAID",
-          payment_details : payments
+          payment_details : payments,
+          mode : mode
         }
 
         try{
           const response = await axios.post("/payment/save",formData)
           const data = await response.data
           console.log(data);
-          showAlert("Success!","Pembayaran berhasil disubmit","success")
+          showAlert("Success!",`Pembayaran berhasil di${mode}`,"success")
           router.visit('/payment')
         }catch(err){
           showAlert("Error!","Terjadi kesalahan silahkan coba lagi","error")
@@ -494,7 +496,10 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
               <Button onClick={handleAddPayment} variant='contained' style={{marginRight : "6px"}}>
                 <FaPlus/> <span className='ml-2'>Tambah Pembayaran</span> 
               </Button>
-              <Button onClick={handleSubmit} style={{background : "#b89474",color : "white"}}>Submit</Button>
+              <Button onClick={() => handleSubmit("simpan")} variant='contained' color='secondary' style={{color : "white",marginRight : "6px"}}>
+                <MdSave/> 
+                Simpan</Button>
+              <Button disabled={submitDisable} onClick={() => handleSubmit("submit")} style={{background : submitDisable ? "#e9ecef" : "#b89474",color : "white"}}>Submit</Button>
             </Grid>
             <Grid size={12}>
               <Grid container spacing={2}>
