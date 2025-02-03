@@ -14,7 +14,7 @@ const DataTable = ({
   pagination=true,
   domLayout="autoHeight",
   height=undefined
-}) => {
+},props) => {
   const defaultColDef = useMemo(() => {
     return {
       filter: "agTextColumnFilter",
@@ -35,6 +35,8 @@ const DataTable = ({
       <AgGridReact
         ref={refTable}
         rowData={data}
+        {...props}
+        
         loading={loading}
         key={columns.length}
         gridOptions={{suppressHorizontalScroll : false}}

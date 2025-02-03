@@ -182,7 +182,10 @@ function ModalInventory({params}) {
 
                     <Grid size={12}>
                         <h2>BERLIAN</h2>
-                        <DataTable domLayout='normal' height={500} refTable={tableRef} columns={columnItem} pagination={false} data={diamond}/>
+                        <DataTable getRowStyle={() => ({
+          borderLeft: "2px solid #ccc",
+          borderRight: "2px solid #ccc",
+        })} domLayout='normal' height={500} refTable={tableRef} columns={columnItem} pagination={false} data={diamond}/>
                         <Grid container spacing={2} sx={{mt:2}}>
 
                             <Grid size={{xs:12,md:3}}>
