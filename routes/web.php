@@ -313,10 +313,8 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
             Route::delete('/delete/{id}',[ProductController::class,'delete']);
         });
 
-    });
 
-    
-
+    });    
 
     // Start Laporan
     Route::name('laporan')->group(function(){
@@ -340,6 +338,7 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         });
         Route::prefix('/payment_summary')->group(function(){
             Route::get('/',[LaporanController::class,'paymentSummary'])->name('payment_summary');
+            Route::get('/getData/{tanggal}/{idType}',[LaporanController::class,'getDataPaymentSummary']);
         });
         Route::prefix('/report_craftsman')->group(function(){
             Route::get('/',[LaporanController::class,'craftsman'])->name('craftsman');

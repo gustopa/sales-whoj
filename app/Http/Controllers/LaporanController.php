@@ -130,4 +130,16 @@ class LaporanController extends Controller
             "craftsman" => $craftsman
         ]);
     }
+
+    public function getDataPaymentSummary($tanggal,$idType){
+        $access = checkPermission('payment_summary');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $data = datatable('vw_paymentlist',function($query) use ($tanggal,$idType){
+            $query->where('payment_type_id',$idType);
+            $query->whereDate('trans_date',$tanggal);
+        });
+        return $data;
+    }
 }
