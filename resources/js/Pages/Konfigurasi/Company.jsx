@@ -13,7 +13,7 @@ function Company({access,data}) {
                 </Button>
             )
         },
-        {field : "name", headerName : "Entitas",
+        {field : "name", headerName : "Entitas", width : 250, minWidth : 250,
             cellRenderer : params => (
                 <ModalHistoryData params={params}>
                     <Grid size={{xs : 6, md : 4}}>
@@ -50,7 +50,7 @@ function Company({access,data}) {
         {field : "phone", headerName : "Telepon", cellRenderer : params => params.value == "" ? "-" : params.value},
         {field : "email", headerName : "Email", cellRenderer : params => params.value == "" ? "-" : params.value},
         {field : "pic", headerName : "Nama kontak", cellRenderer : params => params.value == "" ? "-" : params.value},
-        {field : "is_active", headerName : "Aktif"},
+        {field : "is_active", headerName : "Aktif", cellRenderer : params => <Chip color={params.value ? "success" : "error"} label={params.value ? "YES" : "NO" } />, width : 100, minWidth : 100},
     ])
   return (
     <Layout title="Entitas" page="Entitas">

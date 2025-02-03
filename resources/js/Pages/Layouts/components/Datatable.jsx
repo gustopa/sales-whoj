@@ -11,7 +11,9 @@ const DataTable = ({
   columns, 
   loading,
   refTable,
-  pagination=true
+  pagination=true,
+  domLayout="autoHeight",
+  height=undefined
 }) => {
   const defaultColDef = useMemo(() => {
     return {
@@ -29,7 +31,7 @@ const DataTable = ({
     }
     const snap = useSnapshot(state)
   return (
-    <div className={`${snap.theme == 'dark' ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'}`} style={{border:'none', width: '100%' }}>
+    <div className={`${snap.theme == 'dark' ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'}`} style={{border:'none', width: '100%',height : height }}>
       <AgGridReact
         ref={refTable}
         rowData={data}
@@ -40,7 +42,7 @@ const DataTable = ({
         defaultColDef={defaultColDef}
         pagination={pagination}
         paginationPageSize={10}
-        domLayout="autoHeight"
+        domLayout={domLayout}
         className="agGridTable"
         paginationPageSizeSelector={[10, 25, 50]}
         localeText={localeText}

@@ -41,7 +41,7 @@ function FormUkuran({customer}) {
       
     }
     const [columnDefs, setColumnDefs] = useState([
-        {field : "line_id", headerName : "", filter : false, width : 180,
+        {field : "line_id", headerName : "", filter : false, resizable : false, floatingFilter : false, width : 110, minWidth : 110, pinned : "left",
             headerComponent : params => (
                     <TambahUkuran onSuccess={setUpdate} customerID={customer.row_id} params={params}/>
               ),
@@ -54,8 +54,8 @@ function FormUkuran({customer}) {
                 </>
             )
         },
-        {field : "product" , headerName : "Barang"},
-        {field : "txt", headerName : "Details", flex : 1, minWidth : 150}
+        {field : "product" , headerName : "Barang", filter : false, floatingFilter : false},
+        {field : "txt", headerName : "Details", flex : 1, minWidth : 150,filter : false, floatingFilter : false}
     ])
 
     const [rowsData,setRowsData] = useState([])

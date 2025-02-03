@@ -5,7 +5,7 @@ import axios from 'axios';
 import { encrypt, formatDate } from '../../../helper';
 import { useSnapshot } from 'valtio';
 import state from '../../../store/store';
-import { Box, Button, Modal, Grid2 as Grid, Table, TableHead, TableRow, TableCell } from '@mui/material';
+import { Box, Button, Modal, Grid2 as Grid, Table, TableHead, TableRow, TableCell, Card, CardActionArea, CardContent } from '@mui/material';
 import DataTable from '../../Layouts/components/Datatable'
 import { IoMdDocument } from "react-icons/io";
 function ModalInventory({params}) {
@@ -38,9 +38,9 @@ function ModalInventory({params}) {
   }
   const isMobile = useIsMobile()
   const [columnItem] = useState([
-    {field : "grain",headerName : "Butir",},
-    {field : "grade",headerName : "Karat",},
-    {field : "diamond_type",headerName : "Tipe"},
+    {field : "grain",headerName : "Butir",filter : false,floatingFilter : false, minWidth : 100, width : 100, flex : false},
+    {field : "grade",headerName : "Karat",filter : false,floatingFilter : false,},
+    {field : "diamond_type",headerName : "Tipe",filter : false,floatingFilter : false,},
     {field : "row_id",headerName : "Description", autoHeight : true, flex : 1,minWidth : 200,
         cellRenderer : params => (
             <>
@@ -50,7 +50,7 @@ function ModalInventory({params}) {
                 <h2><b>Warna : </b><span> {params.data?.color}</span></h2>
             </>
         )
-    },
+    ,filter : false,floatingFilter : false,},
     {field : "row_id",headerName : "Calculation", width : 230,
         cellRenderer : params => (
             <>
@@ -59,13 +59,13 @@ function ModalInventory({params}) {
                 <h2>{params.data?.grade} * {params.data?.harga_perbutir} = {Intl.NumberFormat('id-ID').format(params.data?.amount)}</h2>
             </>
         )
-    },
+    ,filter : false,floatingFilter : false,},
     {field : "amount",headerName : "Total",
         cellRenderer : params => {
             
             return (Intl.NumberFormat('en-US').format(params.value))
         }
-    },
+    ,filter : false,floatingFilter : false,},
   ])
 
   
@@ -182,8 +182,108 @@ function ModalInventory({params}) {
 
                     <Grid size={12}>
                         <h2>BERLIAN</h2>
-                        <DataTable refTable={tableRef} columns={columnItem} pagination={false} data={diamond}/>
-                        <Table className='mt-3'>
+                        <DataTable domLayout='normal' height={500} refTable={tableRef} columns={columnItem} pagination={false} data={diamond}/>
+                        <Grid container spacing={2} sx={{mt:2}}>
+
+                            <Grid size={{xs:12,md:3}}>
+                                <Card className='!bg-whoj'>
+                                    <CardActionArea>
+                                        <CardContent className='text-center !text-white'>
+                                            <h1 className='font-bold text-1xl'>Total Berlian</h1>
+                                            <hr className='my-2' />
+                                            <span>{Intl.NumberFormat('en-US').format(totalDiamond)}</span>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            </Grid>
+                            <Grid size={{xs:12,md:3}}>
+                                <Card className='!bg-whoj'>
+                                    <CardActionArea>
+                                        <CardContent className='text-center text-white'>
+                                            <h1 className='font-bold text-1xl'>Biaya Lainnya </h1>
+                                            <hr className='my-2' />
+                                            <span>{item?.other_expense}</span>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            </Grid>
+                            <Grid size={{xs:12,md:3}}>
+                                <Card className='!bg-whoj !text-white'>
+                                    <CardActionArea>
+                                        <CardContent className='text-center text-white'>
+                                            <h1 className='font-bold text-1xl'>Harga Emas/gr (USD) </h1>
+                                            <hr className='my-2' />
+                                            <span>
+                                                {item?.gold_weight == null ? 0 : item?.gold_weight} gr * {parseFloat(item?.gold_price).toFixed(2)} = {(parseFloat(item?.gold_weight == null ? 0 : item?.gold_weight) * parseFloat(item?.gold_price).toFixed(2)).toFixed(2)}
+                                            </span>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            </Grid>
+                            <Grid size={{xs:12,md:3}}>
+                                <Card className='!bg-whoj !text-white'>
+                                    <CardActionArea>
+                                        <CardContent className='text-center text-white'>
+                                            <h1 className='font-bold text-1xl'>HPP (USD) </h1>
+                                            <hr className='my-2' />
+                                            <span>{Intl.NumberFormat('en-US').format(item?.basic_price_usd)}</span>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            </Grid>
+                            <Grid size={{xs:12,md:3}}>
+                                <Card className='!bg-whoj !text-white'>
+                                    <CardActionArea>
+                                        <CardContent className='text-center text-white'>
+                                            <h1 className='font-bold text-1xl'>HPP (IDR) </h1>
+                                            <hr className='my-2' />
+                                            <span>
+                                            Rate jual (IDR) : {Intl.NumberFormat('id-ID').format(item?.sold_rate)} <br />
+                                            HPP : {Intl.NumberFormat('id-ID').format(item?.basic_price_usd * item?.sold_rate)}
+                                            </span>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            </Grid>
+                            <Grid size={{xs:12,md:3}}>
+                                <Card className='!bg-whoj !text-white'>
+                                    <CardActionArea>
+                                        <CardContent className='text-center text-white'>
+                                            <h1 className='font-bold text-1xl'>Margin (IDR) </h1>
+                                            <hr className='my-2' />
+                                            <span>
+                                                Margin (%) : {item?.profit_margin} <br />
+                                                Margin : {Intl.NumberFormat('id-ID').format((item?.basic_price_usd * item?.sold_rate) * (item?.profit_margin / 100))}
+                                            </span>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            </Grid>
+                            <Grid size={{xs:12,md:3}}>
+                                <Card className='!bg-whoj !text-white'>
+                                    <CardActionArea>
+                                        <CardContent className='text-center text-white'>
+                                            <h1 className='font-bold text-1xl'>Harga Kalkulasi </h1>
+                                            <hr className='my-2' />
+                                            <span>{Intl.NumberFormat('id-ID').format(item?.calc_price)}</span>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            </Grid>
+                            <Grid size={{xs:12,md:3}}>
+                                <Card className='!bg-whoj !text-white'>
+                                    <CardActionArea>
+                                        <CardContent className='text-center text-white'>
+                                            <h1 className='font-bold text-1xl'>Harga Jual </h1>
+                                            <hr className='my-2' />
+                                            <span>{Intl.NumberFormat('id-ID').format(item?.sell_price)}</span>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            </Grid>
+
+                        </Grid>
+                        {/* <Table className='mt-3' sx={{width:"50%"}}>
                             <TableHead>
                                 <TableRow>
                                     <TableCell style={{background : "#b89474",color : "white"}}><b>Total berlian : </b></TableCell>
@@ -227,7 +327,7 @@ function ModalInventory({params}) {
                                     <TableCell colSpan={2} className='dark:text-white'>{Intl.NumberFormat('id-ID').format(item?.sell_price)}</TableCell>
                                 </TableRow>
                             </TableHead>
-                        </Table>
+                        </Table> */}
                     </Grid>
 
                     <Grid size={12}>
