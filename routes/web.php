@@ -274,6 +274,11 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
             Route::post('/create',[GroupingOrderController::class,'create']);
             Route::get('/form/{id}',[GroupingOrderController::class,'form']);
             Route::delete('/delete/{id}',[GroupingOrderController::class,'delete']);
+            Route::get('/getDiamondDetail/{id}',[GroupingOrderController::class,'getDiamondDetail']);
+            Route::post('/addDiamond',[GroupingOrderController::class,'addDiamond']);
+            Route::post('/editDiamond/{id}',[GroupingOrderController::class,'editDiamond']);
+            Route::delete('/deleteDiamond/{id}',[GroupingOrderController::class,'deleteDiamond']);
+            Route::post('/save',[GroupingOrderController::class,'save']);
         });
     });
 

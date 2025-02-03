@@ -12,7 +12,7 @@ const Table = ({
     domLayout="autoHeight",
     height,
     pagination=true
-}) => {
+},props) => {
     const gridRef = useRef(null);
     const snap = useSnapshot(state)
     const fetchServerData = async (params) => {
@@ -64,17 +64,25 @@ const Table = ({
             gridRef.current.api.refreshInfiniteCache();
         }
     };
-
+    const removeAllFilters = () => {
+        if (gridRef.current) {
+            gridRef.current.api.setFilterModel(null);
+        }
+    };
     
     
     useImperativeHandle(ref,()=>{
-        return {refreshData : refreshData}
+        return {
+            refreshData : refreshData,
+            removeAllFilters : removeAllFilters
+        }
     })
     
     return (
 
         <div className={`${snap.theme == 'dark' ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'}`} style={{border:'none', height : height != undefined ? height : undefined }}>
             <AgGridReact
+            {...props}
             ref={gridRef}
             rowModelType="infinite"
             columnDefs={columnDefs}
