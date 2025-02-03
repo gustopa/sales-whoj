@@ -280,40 +280,42 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
             Route::delete('/deleteDiamond/{id}',[GroupingOrderController::class,'deleteDiamond']);
             Route::post('/save',[GroupingOrderController::class,'save']);
         });
-    });
 
+        Route::prefix('/sales')->group(function(){
+            Route::get('/',[MasterController::class,'sales']);
+            Route::get('/getAll',[SalesController::class,'getAll']);
+            Route::post('/tambah',[SalesController::class,'tambah']);
+            Route::post('/edit/{id}',[SalesController::class,'edit']);
+            Route::delete('/delete/{id}',[SalesController::class,'delete']);
+        });
+
+        Route::prefix('/craftsman')->group(function(){
+            Route::get('/',[MasterController::class,'craftsman']);
+            Route::get('/getAll',[CraftsmanController::class,'getAll']);
+            Route::post('/tambah',[CraftsmanController::class,'tambah']);
+            Route::post('/edit/{id}',[CraftsmanController::class,'edit']);
+            Route::delete('/delete/{id}',[CraftsmanController::class,'delete']);
+        });
+
+        Route::prefix('/city')->group(function(){
+            Route::get('/',[MasterController::class,'city']);
+            Route::get('/getAll',[CityController::class,'getAll']);
+            Route::post('/tambah',[CityController::class,'tambah']);
+            Route::post('/edit/{id}',[CityController::class,'edit']);
+            Route::delete('/delete/{id}',[CityController::class,'delete']);
+        });
+
+        Route::prefix('/productname')->group(function(){
+            Route::get('/',[MasterController::class,'productname']);
+            Route::get('/getAll',[ProductController::class,'getAll']);
+            Route::post('/tambah',[ProductController::class,'tambah']);
+            Route::post('/edit/{id}',[ProductController::class,'edit']);
+            Route::delete('/delete/{id}',[ProductController::class,'delete']);
+        });
+
+    });
 
     
-
-    
-
-    // Start sales
-    Route::prefix('/sales')->group(function(){
-        Route::get('/',[MasterController::class,'sales']);
-        Route::get('/getAll',[SalesController::class,'getAll']);
-    });
-    // End sales
-
-    // Start craftsman
-    Route::prefix('/craftsman')->group(function(){
-        Route::get('/',[MasterController::class,'craftsman']);
-        Route::get('/getAll',[CraftsmanController::class,'getAll']);
-    });
-    // End craftsman
-
-    // Start city
-    Route::prefix('/city')->group(function(){
-        Route::get('/',[MasterController::class,'city']);
-        Route::get('/getAll',[CityController::class,'getAll']);
-    });
-    // End city
-
-    // Start productname
-    Route::prefix('/productname')->group(function(){
-        Route::get('/',[MasterController::class,'productname']);
-        Route::get('/getAll',[ProductController::class,'getAll']);
-    });
-    // End productname
 
 
     // Start Laporan

@@ -3,7 +3,7 @@
 import { HiX } from "react-icons/hi";
 import logo from '../../../../assets/logo.jpg'
 import logo2 from '../../../../assets/favicon.ico'
-import { useState,useEffect } from "react";
+import { useState,useEffect, useRef } from "react";
 import { Link, usePage } from "@inertiajs/react";
 import { List, ListItem, ListItemText, Collapse, ListItemIcon } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
@@ -16,6 +16,12 @@ import { FiMinimize2 } from "react-icons/fi";
 
 const Dropdown = ({primary, isOpen, onToggle,subMenu,icon,color}) => {
   const pathname = location.pathname.split('/')[1]
+  const activeItemRef = useRef(null);
+  useEffect(() => {
+    if (activeItemRef.current) {
+      activeItemRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, []);
   return (
     <List className="m-0 dropdownParent" style={{color:'#b89474',padding:'0',cursor:'pointer'}}>
       {/* Menu Utama */}
@@ -33,7 +39,7 @@ const Dropdown = ({primary, isOpen, onToggle,subMenu,icon,color}) => {
         <List component="div" disablePadding>
           {subMenu.map((menu,index) => 
                 <Link href={`/${menu.link.toLowerCase()}`} key={index} style={{cursor : "pointer"}} underline="none">
-                  <ListItem className="listItem" sx={{ pl: 4,pb:0,pt:1, borderRight : pathname == menu.link.toLowerCase() ? "5px solid #b89474" : "none"}}>
+                  <ListItem className="listItem" ref={pathname == menu.link.toLowerCase() ? activeItemRef : null}  sx={{ pl: 4,pb:0,pt:1, borderRight : pathname == menu.link.toLowerCase() ? "5px solid #b89474" : "none"}}>
                       <ListItemIcon>
                         <ShortcutIcon className="listIcon" style={{color: pathname == menu.link.toLowerCase() ? "#b89474" : "#a3aed0",transform: 'rotate(180deg) scaleX(-1)'}}/>
                       </ListItemIcon>

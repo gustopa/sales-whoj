@@ -5,8 +5,8 @@ use Illuminate\Support\Facades\DB;
 if(! function_exists('checkPermission')){
     function checkPermission($page){
         $row_id = session('user_id');
-        $data = DB::table('vw_sysaccessmenuuserlist')->where('row_id',3)->get();
-        if($row_id == 1 || $row_id == 2){
+        // $data = DB::table('vw_sysaccessmenuuserlist')->where('row_id',3)->get();
+        if(session('role_id') == 1 || session('role_id') == 2){
             $object = new stdClass();
             $object->menu_access = "Full control";
             $access_page = $object;
