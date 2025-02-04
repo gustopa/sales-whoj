@@ -1,11 +1,12 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Table from '../../Components/Table'
 import FormDownPayment from './FormDownPayment';
 import { FaPlus } from 'react-icons/fa6';
 import { Button } from '@mui/material';
 import { MdDelete, MdEdit } from 'react-icons/md';
 import Swal from 'sweetalert2';
-import { showAlert } from '../../../helper';
+import { formatDate, showAlert } from '../../../helper';
+import DataTable from '../../Layouts/components/Datatable';
 
 function TablePembayaran({row_id}) {
     const tableRef = useRef(null)
@@ -31,7 +32,7 @@ function TablePembayaran({row_id}) {
         
       }
     const [columnDefs] = useState([
-        {field : "line_id", headerName : "",
+        {field : "line_id", headerName : "", minWidth : 110, width : 110,
             headerComponent : params => <FormDownPayment table={tableRef} sxButton={{background : "#b89474"}} endpoint="/request_order/tambahDownPayment" title="TAMBAH" iconButton={<FaPlus color='white'/>}/>,
             cellRenderer : params => (
                 <div key={params.value}>
@@ -42,13 +43,27 @@ function TablePembayaran({row_id}) {
                 </div>
             )
         },
-        {field : "dp_date", headerName : "Tanggal"},
-        {field : "down_payment", headerName : "Uang Muka"},
-        {field : "dp_ke", headerName : "DP Ke"},
-        {field : "bukti_dp", headerName : "Bukti DP"}
+        {field : "dp_date", headerName : "Tanggal",minWidth : 130, width : 130,cellRenderer : params => formatDate(params.value)},
+        {field : "down_payment", headerName : "Uang Muka", cellRenderer : params => Intl.NumberFormat("en-US").format(params.value),minWidth : 110, width : 110,},
+        {field : "dp_ke", headerName : "DP Ke",minWidth : 110, width : 110,},
+        {field : "bukti_dp", headerName : "Bukti DP",minWidth : 110, width : 110,}
     ]);
+    const [dataDp,setDataDp] = useState([])
+    const getData = async () => {
+      try{
+        const response = await axios.get(`/request_order/getDownPayment/${row_id}`)
+        const data = await response.data
+        setDataDp(data)
+      }catch(err){
+        showAlert("Error!","Terjadi kesalahan silahkan coba lagi","error")
+      }
+    }
+    useEffect(()=>{
+      getData()
+    },[row_id])
     return (
-        <Table ref={tableRef} kolomFilter={false} minWidth={100} filter={false} floatingFilter={false} pagination={false} columnDefs={columnDefs} endpoint={`/request_order/getDownPayment/${row_id}`}/>
+        <DataTable data={dataDp} pagination={false} filter={false} columns={columnDefs}/>
+        // <Table ref={tableRef} kolomFilter={false} minWidth={100} filter={false} floatingFilter={false} pagination={false} columnDefs={columnDefs} endpoint={`/request_order/getDownPayment/${row_id}`}/>
     )
 }
 

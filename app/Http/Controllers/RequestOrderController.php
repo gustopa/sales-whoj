@@ -153,7 +153,7 @@ class RequestOrderController extends Controller
         if($access == null || $access == "" || $access->menu_access == "Read only"){
             return abort(403);
         }
-        $request_order = RequestOrderModel::where('row_id',decrypt_id($id))->first();
+        $request_order = DB::table('vw_request_orderlist')->where('row_id',decrypt_id($id))->first();
         $grouping_order = DB::table('vw_grouping_orderlist')->where('is_deleted',0)->get();
         $stores = DB::table('vw_storelist')->where('is_deleted',0)->get();
         $menu = listMenu();
@@ -169,6 +169,12 @@ class RequestOrderController extends Controller
             "Online via Website", 
             "Online via Tokopedia"
         ];
+        $status_list = array("ORDER", "ON GOING", "POLES","PASANG BATU","CORAN","FINISHING","READY","PAID");
+        $items = DB::table("vw_itemlist")->where([
+            "company_id" => session("company_id"),
+            "is_deleted" => 0
+        ])->get();
+        $type_order_list = array("CUSTOM","Custom (DP PO)","Custom (DP Stock)","Nabung Bareng");
         return inertia('RequestOrder/Form',[
             "menu" => $menu,
             "session" => session()->all(),
@@ -176,7 +182,10 @@ class RequestOrderController extends Controller
             "grouping_order" => $grouping_order,
             "stores" => $stores,
             "sales" => $sales,
-            "onlineOffline" => $online_offline_list
+            "onlineOffline" => $online_offline_list,
+            "status" => $status_list,
+            "items" => $items,
+            "tipeOrder" => $type_order_list
         ]);
     }
 
@@ -185,9 +194,11 @@ class RequestOrderController extends Controller
         if($access == null || $access == ""){
             return abort(403);
         }
-        $data = datatable("vw_request_order_diamondlist",function($query) use ($id){
-            $query->where('row_id',$id);
-        });
+        $data = DB::table('vw_request_order_diamondlist')->where([
+            ['row_id','=',$id],
+            ['company_id','=',session('company_id')],
+            ['is_deleted','=',0]
+        ])->get();
         return $data;
     }
     public function getDownPayment($id){
@@ -195,9 +206,11 @@ class RequestOrderController extends Controller
         if($access == null || $access == ""){
             return abort(403);
         }
-        $data = datatable("request_order_dp",function($query) use ($id){
-            $query->where('row_id',$id);
-        });
+        $data = DB::table('request_order_dp')->where([
+            ['row_id','=',$id],
+            ['company_id','=',session('company_id')],
+            ['is_deleted','=',0]
+        ])->get();
         return $data;
     }
 }

@@ -13,12 +13,13 @@ const DataTable = ({
   refTable,
   pagination=true,
   domLayout="autoHeight",
-  height=undefined
+  height=undefined,
+  filter=true
 },props) => {
   const defaultColDef = useMemo(() => {
     return {
-      filter: "agTextColumnFilter",
-      floatingFilter: true,
+      filter: filter ? "agTextColumnFilter" : false,
+      floatingFilter: filter,
       headerClass : "header-table",
       flex : 1,
       minWidth : 200,
