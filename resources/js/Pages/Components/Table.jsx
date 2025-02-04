@@ -12,7 +12,11 @@ const Table = ({
     domLayout = "autoHeight",
     height,
     pagination = true,
-    statusFilter = false
+    statusFilter = false,
+    kolomFilter = true,
+    floatingFilter = true,
+    minWidth = 170,
+    filter = "agTextColumnFilter"
 }, props) => {
     const gridRef = useRef(null);
     const snap = useSnapshot(state);
@@ -39,10 +43,10 @@ const Table = ({
     };
 
     const defaultColDef = useMemo(() => ({
-        filter: "agTextColumnFilter",
-        floatingFilter: true,
+        filter: filter,
+        floatingFilter: floatingFilter,
         flex: 1,
-        minWidth: 170,
+        minWidth: minWidth,
         filterParams: { maxNumConditions: 1 },
     }), []);
 
@@ -111,21 +115,23 @@ const Table = ({
             }
 
             {/* Toolbox untuk memilih kolom */}
-            <Paper className='dark:bg-[#181d1f] dark:text-white' style={{ marginBottom: "10px", padding: "10px" }}>
-                <Typography variant="subtitle1">Pilih Kolom:</Typography>
-                {columnDefs.filter(col => col.headerName && col.headerName.trim() !== "").map(col => (
-                    <FormControlLabel
-                        key={col.field}
-                        control={
-                            <Checkbox
-                                checked={!updatedColumnDefs.find(c => c.field === col.field)?.hide}
-                                onChange={() => handleColumnToggle(col.field)}
-                            />
-                        }
-                        label={col.headerName}
-                    />
-                ))}
-            </Paper>
+            {kolomFilter && 
+                <Paper className='dark:bg-[#181d1f] dark:text-white' style={{ marginBottom: "10px", padding: "10px" }}>
+                    <Typography variant="subtitle1">Pilih Kolom:</Typography>
+                    {columnDefs.filter(col => col.headerName && col.headerName.trim() !== "").map(col => (
+                        <FormControlLabel
+                            key={col.field}
+                            control={
+                                <Checkbox
+                                    checked={!updatedColumnDefs.find(c => c.field === col.field)?.hide}
+                                    onChange={() => handleColumnToggle(col.field)}
+                                />
+                            }
+                            label={col.headerName}
+                        />
+                    ))}
+                </Paper>
+            }
 
 
             {/* AG Grid */}
@@ -138,6 +144,7 @@ const Table = ({
                     defaultColDef={defaultColDef}
                     cacheBlockSize={10}
                     domLayout={domLayout}
+                    rowHeight={rowHeight}
                     pagination={pagination}
                     paginationPageSize={10}
                     paginationPageSizeSelector={[10, 20, 50]}

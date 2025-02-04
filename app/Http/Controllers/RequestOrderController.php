@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\RequestOrderModel;
 class RequestOrderController extends Controller
 {
 
@@ -27,6 +28,7 @@ class RequestOrderController extends Controller
             return $value === null ? "" : $value;
         },$status);
         $data = datatable('vw_request_orderlist',function($query) use ($status){
+            $query->where('doc_no','not like', '');
             $query->whereIn("status",$status);
             $query->whereIn('type_order',['CUSTOM', 'Custom (DP PO)', 'Custom (DP Stock)', 'Custom (DP Stock)', 'Nabung Bareng']);
             $query->orderBy('row_id','desc');
@@ -105,5 +107,97 @@ class RequestOrderController extends Controller
             "menu" => $menu,
             "access" => $access->menu_access
         ]);
+    }
+
+    public function create(){
+        $access = checkPermission("request_order");
+        if($access == null || $access == "" || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        $newRequestOrder = RequestOrderModel::create([
+            "is_submitted" => 1,
+			"trans_date" => date("Y-m-d H:i:s"),
+			"type_order" => "CUSTOM",
+            "company_id" => session('company_id'),
+			"created_date" => date("Y-m-d H:i:s"),
+            "created_by" => session('username'),
+            "modified_date" => date("Y-m-d H:i:s"),
+            "modified_by" => session('username'),
+			"is_deleted" => 0,
+            "item_id" => 0,
+            "grouping_order_id" => 0,
+            "identity_code" => "",
+            "outsource_intern" => "",
+            "online_offline" => "",
+            "berat_jadi" => 0,
+            "work_estimated_date" => date("Y-m-d",0),
+            "work_qty" => 0,
+            "work_length" => "",
+            "work_diameter" => "",
+            "work_ring_size" => "",
+            "work_gold_content" => "",
+            "work_notes" => "",
+            "work_supplier" => "",
+            "work_status_order" => "",
+            "work_spk_no" => "",
+            "work_jwcad_3d" => "",
+            "work_master" => "",
+            "work_pb" => ""
+        ]);
+
+        return redirect('/request_order/form/'.encrypt_id($newRequestOrder->id));
+    }
+
+    public function form($id){
+        $access = checkPermission("request_order");
+        if($access == null || $access == "" || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        $request_order = RequestOrderModel::where('row_id',decrypt_id($id))->first();
+        $grouping_order = DB::table('vw_grouping_orderlist')->where('is_deleted',0)->get();
+        $stores = DB::table('vw_storelist')->where('is_deleted',0)->get();
+        $menu = listMenu();
+        $sales = DB::table('sysuser')->select('row_id','name')->where([
+            ["is_deleted",'=',0],
+            ["role_id",'=',6],
+        ])->get();
+        $online_offline_list = [
+            "OFFLINE", 
+            "ONLINE", 
+            "Online via WA", 
+            "Online via IG", 
+            "Online via Website", 
+            "Online via Tokopedia"
+        ];
+        return inertia('RequestOrder/Form',[
+            "menu" => $menu,
+            "session" => session()->all(),
+            "data" => $request_order,
+            "grouping_order" => $grouping_order,
+            "stores" => $stores,
+            "sales" => $sales,
+            "onlineOffline" => $online_offline_list
+        ]);
+    }
+
+    public function getDiamondDetail($id){
+        $access = checkPermission("request_order");
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $data = datatable("vw_request_order_diamondlist",function($query) use ($id){
+            $query->where('row_id',$id);
+        });
+        return $data;
+    }
+    public function getDownPayment($id){
+        $access = checkPermission("request_order");
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $data = datatable("request_order_dp",function($query) use ($id){
+            $query->where('row_id',$id);
+        });
+        return $data;
     }
 }

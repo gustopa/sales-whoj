@@ -4,7 +4,7 @@ import { Button, Chip, Grid2 as Grid } from '@mui/material'
 import Table from '../Components/Table'
 import { Link } from '@inertiajs/react'
 import { MdDelete, MdDone, MdEdit } from 'react-icons/md'
-import { formatDate } from '../../helper'
+import { encrypt, formatDate } from '../../helper'
 import ModalComponent from '../Components/Modal'
 import { FaCirclePlus } from 'react-icons/fa6'
 function statusColor(status){
@@ -40,17 +40,21 @@ function RequestOrder({access}) {
             cellRenderer : params => 
                 (
                     <div key={params.value}>
-                        <Link>
-                            <Button sx={{ width: "30px", minWidth: "30px" }} size="small" variant='contained' color="primary">
-                                <MdEdit/>
-                            </Button>
-                        </Link>
-                        <Button sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="error">
-                            <MdDelete/>
-                        </Button>
-                        <Button sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="success">
-                            <MdDone/>
-                        </Button>
+                        {params.value &&
+                            <>
+                                <Link href={`/request_order/form/${encrypt(params.value)}`}>
+                                    <Button sx={{ width: "30px", minWidth: "30px" }} size="small" variant='contained' color="primary">
+                                        <MdEdit/>
+                                    </Button>
+                                </Link>
+                                <Button sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="error">
+                                    <MdDelete/>
+                                </Button>
+                                <Button sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="success">
+                                    <MdDone/>
+                                </Button>
+                            </>
+                        }
                     </div>
                 ),
             
