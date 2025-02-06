@@ -10,6 +10,7 @@ import DataTable from '../../Layouts/components/Datatable';
 
 function TablePembayaran({row_id}) {
     const tableRef = useRef(null)
+    const [update,setUpdate] = useState('')
     const handleDelete = (row_id) => {
         Swal.fire({
           title: "Are you sure?",
@@ -21,9 +22,10 @@ function TablePembayaran({row_id}) {
         }).then( async (result) => {
           if (result.isConfirmed) {
             try{
-              await axios.delete(`/request_order/deleteDownPayment/${row_id}`)
+              const response = await axios.delete(`/request_order/deleteDownPayment/${row_id}`)
+              const responseData = await response.data
               showAlert("Berhasil!","Item berhasil dihapus",'success')
-              tableRef.current.refreshData()
+              setUpdate(responseData)
             }catch(err){
               showAlert("Error!","Terjadi kesalahan silahkan coba lagi","error")
             }
@@ -33,10 +35,10 @@ function TablePembayaran({row_id}) {
       }
     const [columnDefs] = useState([
         {field : "line_id", headerName : "", minWidth : 110, width : 110,
-            headerComponent : params => <FormDownPayment table={tableRef} sxButton={{background : "#b89474"}} endpoint="/request_order/tambahDownPayment" title="TAMBAH" iconButton={<FaPlus color='white'/>}/>,
+            headerComponent : params => <FormDownPayment onSuccess={setUpdate} table={tableRef} sxButton={{background : "#2e7d32"}} row_id={row_id} endpoint="/request_order/tambahDownPayment" title="TAMBAH" iconButton={<FaPlus color='white'/>}/>,
             cellRenderer : params => (
                 <div key={params.value}>
-                    <FormDownPayment table={tableRef} nama={params.data?.name} endpoint={`/request_order/editDownPayment/${params.value}`} title="EDIT" sxButton={{minWidth : "30px", background : "#1976d2",padding : 3}} iconButton={<MdEdit color='white'/>} />
+                    <FormDownPayment onSuccess={setUpdate} row_id={params.data?.row_id} table={tableRef} dataTanggal={params.data?.dp_date} dataAmount={params.data?.down_payment} data_dp={params.data?.dp_ke} bukti_dp={params.data?.bukti_dp} endpoint={`/request_order/editDownPayment/${params.value}`} title="EDIT" sxButton={{minWidth : "30px", background : "#1976d2",padding : 3}} iconButton={<MdEdit color='white'/>} />
                     <Button onClick={()=>handleDelete(params.value)} sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="error">
                         <MdDelete/>
                     </Button>
@@ -60,7 +62,7 @@ function TablePembayaran({row_id}) {
     }
     useEffect(()=>{
       getData()
-    },[row_id])
+    },[row_id,update])
     return (
         <DataTable data={dataDp} pagination={false} filter={false} columns={columnDefs}/>
         // <Table ref={tableRef} kolomFilter={false} minWidth={100} filter={false} floatingFilter={false} pagination={false} columnDefs={columnDefs} endpoint={`/request_order/getDownPayment/${row_id}`}/>

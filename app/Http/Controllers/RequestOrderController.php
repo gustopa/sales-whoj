@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\RequestOrderModel;
+use App\Models\RequestOrderDpModel;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 class RequestOrderController extends Controller
 {
 
@@ -213,4 +217,83 @@ class RequestOrderController extends Controller
         ])->get();
         return $data;
     }
+
+    public function editDownPayment($id){
+        $access = checkPermission("request_order");
+        if($access == null || $access == "" || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        $request = request();
+        $filename = RequestOrderDpModel::where('line_id',$id)->first()->bukti_dp;
+        if ($request->hasFile('bukti_dp')) {
+            $file = $request->file('bukti_dp');
+            $filename = "bukti_dp".time().'.jpeg';
+            $destinationPath = storage_path('app/public/uploaded');
+
+            // Konversi gambar agar ukurannya sekitar 200KB
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($file->getRealPath());
+            $image->scale(1920,1080);
+
+            $image->save($destinationPath . '/' . $filename); // Simpan dengan kompresi
+
+        }
+        RequestOrderDpModel::where('line_id',$id)->update([
+            "dp_date" => $request['tanggal'],
+            "down_payment" => $request['amount'],
+            "dp_ke" => $request['dp_ke'],
+            "bukti_dp" => $filename,
+            "modified_date" => date("Y-m-d H:i:s"),
+            "modified_by" => session('username'),
+        ]);
+        return response()->json(time());
+    }
+    public function tambahDownPayment(Request $request){
+        $access = checkPermission("request_order");
+        if($access == null || $access == "" || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        $filename = "";
+        if ($request->hasFile('bukti_dp')) {
+            $file = $request->file('bukti_dp');
+            $filename = "bukti_dp".time().'.jpeg';
+            $destinationPath = storage_path('app/public/uploaded');
+
+            // Konversi gambar agar ukurannya sekitar 200KB
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($file->getRealPath());
+            $image->scale(1920,1080);
+
+            $image->save($destinationPath . '/' . $filename); // Simpan dengan kompresi
+
+        }
+        RequestOrderDpModel::insert([
+            "row_id" => $request['row_id'],
+            "company_id" => session('company_id'),
+            "dp_date" => $request['tanggal'],
+            "down_payment" => $request['amount'],
+            "dp_ke" => $request['dp_ke'],
+            "bukti_dp" => $filename,
+            "is_deleted" => 0,
+            "created_date" => date("Y-m-d H:i:s"),
+            "created_by" => session('username'),
+            "modified_date" => date("Y-m-d H:i:s"),
+            "modified_by" => session('username'),
+        ]);
+        return response()->json(time());
+    }
+
+    public function deleteDownPayment($id){
+        $access = checkPermission("request_order");
+        if($access == null || $access == "" || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        RequestOrderDpModel::where('line_id',$id)->update([
+            "is_deleted" => 1,
+            "modified_date" => date("Y-m-d H:i:s"),
+            "modified_by" => session('username'),
+        ]);
+        return response()->json(time());
+    }
+
 }

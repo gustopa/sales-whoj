@@ -79,7 +79,7 @@ function EditUkuran({params,id,onSuccess}) {
         },
       }
   return (
-    <LayoutModal ref={refModal} width={isMobile ? '80vw' : '50vw'} height={isMobile ? "80vw" : "20vw"} closeButton={false} sxButton={{backgroundColor : "#1976d2",padding : "9px"}} iconButton={<MdEdit style={{color:'white'}}/>}>
+    <LayoutModal size="small" ref={refModal} width={isMobile ? '80vw' : '50vw'} height={isMobile ? "80vw" : "20vw"} closeButton={false} sxButton={{backgroundColor : "#1976d2",minWidth : "30px",padding : 7.5}} iconButton={<MdEdit style={{color:'white'}}/>}>
         <h2 className='mb-3 font-bold'>EDIT UKURAN</h2>
         <Grid container spacing={2}>
             <Grid size={12}>

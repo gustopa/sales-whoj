@@ -41,14 +41,14 @@ function FormUkuran({customer}) {
       
     }
     const [columnDefs, setColumnDefs] = useState([
-        {field : "line_id", headerName : "", filter : false, resizable : false, floatingFilter : false, width : 110, minWidth : 110, pinned : "left",
+        {field : "line_id", headerName : "", filter : false, resizable : true, floatingFilter : false, width : 110, minWidth : 110, pinned : "left",
             headerComponent : params => (
                     <TambahUkuran onSuccess={setUpdate} customerID={customer.row_id} params={params}/>
               ),
             cellRenderer : params => (
                 <>
                     <EditUkuran params={params} id={params.value} onSuccess={setUpdate}/>
-                    <Button onClick={() => handleDelete(params.value)} style={{marginLeft : "5px"}} variant='contained' color="error">
+                    <Button size='small' onClick={() => handleDelete(params.value)} style={{marginLeft : "5px",minWidth : "30px",width : "30px"}} variant='contained' color="error">
                       <MdDelete style={{fontSize: "20px",color:"white"}}/>
                     </Button>
                 </>
