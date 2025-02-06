@@ -267,19 +267,34 @@ class RequestOrderController extends Controller
             $image->save($destinationPath . '/' . $filename); // Simpan dengan kompresi
 
         }
-        RequestOrderDpModel::insert([
-            "row_id" => $request['row_id'],
-            "company_id" => session('company_id'),
-            "dp_date" => $request['tanggal'],
-            "down_payment" => $request['amount'],
-            "dp_ke" => $request['dp_ke'],
-            "bukti_dp" => $filename,
-            "is_deleted" => 0,
-            "created_date" => date("Y-m-d H:i:s"),
-            "created_by" => session('username'),
-            "modified_date" => date("Y-m-d H:i:s"),
-            "modified_by" => session('username'),
-        ]);
+        DB::transaction(function() use($request,$filename){
+            $requestOrder = RequestOrderModel::where('row_id',$request['row_id'])->first();
+            
+            $updateRequestOrder = [
+                "modified_date" => date("Y-m-d H:i:s"),
+                "modified_by" => session('username'),
+            ];
+            if($requestOrder->doc_no == ""){
+                $last_doc = RequestOrderModel::where('doc_no','not like','')->latest('row_id')->first()->doc_no;
+                $current_doc = incrementID($last_doc);
+                $updateRequestOrder["doc_no"] = $current_doc;
+            }
+            RequestOrderDpModel::insert([
+                "row_id" => $request['row_id'],
+                "company_id" => session('company_id'),
+                "dp_date" => $request['tanggal'],
+                "down_payment" => $request['amount'],
+                "dp_ke" => $request['dp_ke'],
+                "bukti_dp" => $filename,
+                "is_deleted" => 0,
+                "created_date" => date("Y-m-d H:i:s"),
+                "created_by" => session('username'),
+                "modified_date" => date("Y-m-d H:i:s"),
+                "modified_by" => session('username'),
+            ]);
+            RequestOrderModel::where('row_id',$request['row_id'])->update($updateRequestOrder);
+            updateLastId('payment_order_id');
+        });
         return response()->json(time());
     }
 
