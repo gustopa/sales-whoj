@@ -119,6 +119,7 @@ class RequestOrderController extends Controller
             return abort(403);
         }
         $newRequestOrder = RequestOrderModel::create([
+            "status" => "",
             "is_submitted" => 1,
 			"trans_date" => date("Y-m-d H:i:s"),
 			"type_order" => "CUSTOM",
@@ -134,7 +135,7 @@ class RequestOrderController extends Controller
             "outsource_intern" => "",
             "online_offline" => "",
             "berat_jadi" => 0,
-            "work_estimated_date" => date("Y-m-d",0),
+            "work_estimated_date" => "0000-00-00",
             "work_qty" => 0,
             "work_length" => "",
             "work_diameter" => "",
