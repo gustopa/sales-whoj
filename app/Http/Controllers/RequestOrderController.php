@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\RequestOrderModel;
 use App\Models\RequestOrderDpModel;
+use App\Models\RequestOrderDiamondModel;
+use App\Models\GroupingOrderModel;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
@@ -135,7 +137,7 @@ class RequestOrderController extends Controller
             "outsource_intern" => "",
             "online_offline" => "",
             "berat_jadi" => 0,
-            "work_estimated_date" => "0000-00-00",
+            "work_estimated_date" => date("Y-m-d",0),
             "work_qty" => 0,
             "work_length" => "",
             "work_diameter" => "",
@@ -268,7 +270,7 @@ class RequestOrderController extends Controller
             $image->save($destinationPath . '/' . $filename); // Simpan dengan kompresi
 
         }
-        DB::transaction(function() use($request,$filename){
+        $doc_no = DB::transaction(function() use($request,$filename){
             $requestOrder = RequestOrderModel::where('row_id',$request['row_id'])->first();
             
             $updateRequestOrder = [
@@ -278,6 +280,7 @@ class RequestOrderController extends Controller
             if($requestOrder->doc_no == ""){
                 $last_doc = RequestOrderModel::where('doc_no','not like','')->latest('row_id')->first()->doc_no;
                 $current_doc = incrementID($last_doc);
+                updateLastId('payment_order_id');
                 $updateRequestOrder["doc_no"] = $current_doc;
             }
             RequestOrderDpModel::insert([
@@ -294,9 +297,14 @@ class RequestOrderController extends Controller
                 "modified_by" => session('username'),
             ]);
             RequestOrderModel::where('row_id',$request['row_id'])->update($updateRequestOrder);
-            updateLastId('payment_order_id');
+            
+            $updatedRequestOrder = RequestOrderModel::where('row_id', $request['row_id'])->first();
+            return $updatedRequestOrder->doc_no;
         });
-        return response()->json(time());
+        return response()->json([
+            "doc_no" => $doc_no,
+            "timestamp" => time()
+        ]);
     }
 
     public function deleteDownPayment($id){
@@ -311,5 +319,67 @@ class RequestOrderController extends Controller
         ]);
         return response()->json(time());
     }
+
+    public function setGroupingOrder(Request $request){
+        $access = checkPermission("request_order");
+        if($access == null || $access == "" || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        $data = DB::transaction(function() use($request){
+            $dataDiamond = DB::table("grouping_order_diamond")
+            ->where('row_id',$request['order_group_id'])
+            ->where('is_deleted',0)
+            ->get();
+            $dataGrouping = GroupingOrderModel::where('row_id',$request['order_group_id'])->first();
+            foreach($dataDiamond as $diamond){
+                RequestOrderDiamondModel::insert([
+                    "row_id" => $request['row_id'],
+                    "company_id" => session('company_id'),
+                    "grain" => $diamond->grain,
+                    "grade" => $diamond->grade,
+                    "diamond_type" => $diamond->diamond_type,
+                    "no_sert" => $diamond->no_sert,
+                    "diameter" => $diamond->diameter,
+                    "color" => $diamond->color,
+                    "work_size" => "",
+                    "is_deleted" => 0,
+                    "created_date" => date("Y-m-d H:i:s"),
+                    "created_by" => session('username'),
+                    "modified_date" => date("Y-m-d H:i:s"),
+                    "modified_by" => session('username'),
+                ]);
+            }
+
+            $updateRequestOrder = [
+                "modified_date" => date("Y-m-d H:i:s"),
+                "modified_by" => session('username'),
+                "item_id" => $dataGrouping->item_id,
+                "grouping_order_id" => $dataGrouping->row_id,
+                "berat_emas" => $dataGrouping->gold_weight
+            ];
+            if($request['doc_no'] == ""){
+                $last_doc = RequestOrderModel::where('doc_no','not like','')->latest('row_id')->first()->doc_no;
+                $current_doc = incrementID($last_doc);
+                updateLastId('payment_order_id');
+                $updateRequestOrder["doc_no"] = $current_doc;
+            }
+            RequestOrderModel::where('row_id',$request['row_id'])->update($updateRequestOrder);
+            $updatedRequestOrder = RequestOrderModel::where('row_id', $request['row_id'])->first();
+            return [
+                "item_id" => $updatedRequestOrder->item_id,
+                "grouping" => $updatedRequestOrder->grouping_order_id,
+                "gold_weight" => $updatedRequestOrder->gold_weight,
+                "doc_no" => $updatedRequestOrder->doc_no
+            ];
+        });
+        return response()->json([
+            "doc_no" => $data['doc_no'],
+            "grouping" => $data['grouping'],
+            "gold_weight" => $data['gold_weight'],
+            "item_id" => $data['item_id'],
+            "timestamp" => time()
+        ]);
+    }
+
 
 }

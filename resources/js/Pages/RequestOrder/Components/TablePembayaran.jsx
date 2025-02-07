@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 import { formatDate, showAlert } from '../../../helper';
 import DataTable from '../../Layouts/components/Datatable';
 
-function TablePembayaran({row_id}) {
+function TablePembayaran({row_id,setDocNo}) {
     const tableRef = useRef(null)
     const [update,setUpdate] = useState('')
     const handleDelete = (row_id) => {
@@ -35,10 +35,10 @@ function TablePembayaran({row_id}) {
       }
     const [columnDefs] = useState([
         {field : "line_id", headerName : "", minWidth : 110, width : 110,
-            headerComponent : params => <FormDownPayment onSuccess={setUpdate} table={tableRef} sxButton={{background : "#2e7d32"}} row_id={row_id} endpoint="/request_order/tambahDownPayment" title="TAMBAH" iconButton={<FaPlus color='white'/>}/>,
+            headerComponent : params => <FormDownPayment setDocNo={setDocNo} onSuccess={setUpdate} table={tableRef} sxButton={{background : "#2e7d32"}} row_id={row_id} endpoint="/request_order/tambahDownPayment" title="TAMBAH" iconButton={<FaPlus color='white'/>}/>,
             cellRenderer : params => (
                 <div key={params.value}>
-                    <FormDownPayment onSuccess={setUpdate} row_id={params.data?.row_id} table={tableRef} dataTanggal={params.data?.dp_date} dataAmount={params.data?.down_payment} data_dp={params.data?.dp_ke} bukti_dp={params.data?.bukti_dp} endpoint={`/request_order/editDownPayment/${params.value}`} title="EDIT" sxButton={{minWidth : "30px", background : "#1976d2",padding : 3}} iconButton={<MdEdit color='white'/>} />
+                    <FormDownPayment setDocNo={setDocNo} onSuccess={setUpdate} row_id={params.data?.row_id} table={tableRef} dataTanggal={params.data?.dp_date} dataAmount={params.data?.down_payment} data_dp={params.data?.dp_ke} bukti_dp={params.data?.bukti_dp} endpoint={`/request_order/editDownPayment/${params.value}`} title="EDIT" sxButton={{minWidth : "30px", background : "#1976d2",padding : 3}} iconButton={<MdEdit color='white'/>} />
                     <Button onClick={()=>handleDelete(params.value)} sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="error">
                         <MdDelete/>
                     </Button>

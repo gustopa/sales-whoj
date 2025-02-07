@@ -8,7 +8,8 @@ import TablePembayaran from './Components/TablePembayaran';
 import { useSnapshot } from 'valtio';
 import state from '../../store/store';
 import ModalCustomer from '../Components/ModalCustomer';
-import { formatNumber } from '../../helper';
+import { formatNumber, showAlert } from '../../helper';
+import Swal from 'sweetalert2';
 function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeOrder}) {
     const snap = useSnapshot(state)
     const sxInputField = {
@@ -56,8 +57,8 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
           
         },
       }
-
-      const [grouping,setGrouping] = useState(data.grouping_order_id || "")
+      const [docNo, setDocNo] = useState(data.doc_no || "")
+      const [grouping,setGrouping] = useState(data.grouping_order_id || 0)
       const [store,setStore] = useState(data.store_id || "")
       const [idSales,setIdSales] = useState(data.sales_id || "")
       const [customer,setCustomer] = useState(data.customer_id_txt || "")
@@ -68,7 +69,7 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
       const [estimatedPrice,setEstimatedPrice] = useState(data.estimated_price || "")
       const [displayEstimatedPrice,setDisplayEstimatedPrice] = useState(formatNumber(Number(data.estimated_price)))
 
-      const [estimatedDelivery,setEstimatedDelivery] = useState(data.estimated_date == "0000-00-00" ? "" : data.estimated_date)
+      const [estimatedDelivery,setEstimatedDelivery] = useState(data.estimated_date == "0000-00-00" || data.estimated_date == null ? "" : data.estimated_date)
       const [item,setItem] = useState(data.item_id || "")
       const [tipe,setTipe] = useState(data.type_order || "CUSTOM")
       const [origin,setOrigin] = useState(data.outsource_intern || "")
@@ -80,6 +81,38 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
       const [customBox,setCustomBox] = useState(data.custom_box || "")
       const [deskripsi,setDeskripsi] = useState(data.txt || "")
       const [qty,setQty] = useState(data.qty || "")
+
+      const setDataDiamond = async e => {
+        if(grouping == 0){
+            return showAlert("warning!","Pilih grouping order terlebih dahulu","warning")
+        }
+        Swal.fire({
+            title: "Apakah anda yakin?",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya",
+            cancelButtonText: "Batal"
+        }).then( async (result) => {
+            if (result.isConfirmed) {
+                const formData = {
+                    order_group_id : grouping,
+                    row_id : data.row_id,
+                    doc_no : data.doc_no
+                }
+                try{
+                    const response = await axios.post("/request_order/setGroupingOrder",formData)
+                    const responseData = await response.data
+                    setDocNo(responseData.doc_no)
+                    showAlert('Berhasil!', 'Data berhasil diset','success')
+                }catch(err){
+                    console.log(err);
+                    showAlert('Gagal!','Terjadi kesalahan silahkan coba lagi', "error");
+                }
+            }
+        });
+      }
       
   return (
     <Layout title="Form Pesanan" page="Form Pesanan">
@@ -90,7 +123,7 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                     <h2 className='font-bold dark:text-white text-1xl mb-2 text-center'>PESANAN</h2>
                     <Grid container spacing={2}>
                         <Grid size={{xs:12,md : 6}}>
-                            <Input value={data.doc_no} fullWidth label="Doc no : "/>
+                            <Input value={docNo} fullWidth label="Doc no : "/>
                         </Grid>
                         <Grid size={{xs:12,md : 6}}>
                             <FormControl fullWidth sx={sxInputField}>
@@ -107,6 +140,7 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                                         id="grouping_order-select"
                                         value={grouping}
                                         label="Grouping Order :"
+                                        onChange={e => setGrouping(e.target.value)}
                                     >
                                         <MenuItem key={0} value={0}> </MenuItem>
                                         {grouping_order.map(a => (
@@ -121,6 +155,7 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                                     color="primary" 
                                     size="small" 
                                     className='text-start'
+                                    onClick={setDataDiamond}
                                     >
                                     SET <br />DATA
                                     </Button>
@@ -350,7 +385,7 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                 <h2 className='font-bold dark:text-white text-1xl mb-2 text-center'>PEMBAYARAN (DP)</h2>
                 <Grid container spacing={2}>
                         <Grid size={12}>
-                            <TablePembayaran row_id={data.row_id}/>
+                            <TablePembayaran setDocNo={setDocNo} row_id={data.row_id}/>
                         </Grid>
                     </Grid>
                 </Card>

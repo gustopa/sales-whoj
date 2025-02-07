@@ -4,7 +4,7 @@ import { Button, Card, Chip } from '@mui/material'
 import Table from '../Components/Table'
 import ModalComponent from '../Components/Modal'
 import { Link, usePage } from '@inertiajs/react'
-import { formatDate } from '../../helper'
+import { encrypt, formatDate } from '../../helper'
 import { MdEdit } from 'react-icons/md'
 
 function statusColor(status){
@@ -48,11 +48,17 @@ function BySales() {
         {field : "row_id", headerName : "", filter : false, resizable : false, width : 70, minWidth : 70, pinned : "left",
             cellRenderer : params => 
                 (
-                    <Link>
-                        <Button sx={{ width: "30px", minWidth: "30px" }} size="small" variant='contained' color="primary">
-                            <MdEdit/>
-                        </Button>
-                    </Link>
+                    <div key={params.value}>
+                        {params.value &&
+                            <>
+                                <Link href={`/request_order/form/${encrypt(params.value)}`}>
+                                    <Button sx={{ width: "30px", minWidth: "30px" }} size="small" variant='contained' color="primary">
+                                        <MdEdit/>
+                                    </Button>
+                                </Link>
+                            </>
+                        }
+                    </div>
                 )
         },
         {field : "doc_no", headerName : "Doc No", minWidth: 100, width : 100, cellRenderer : params => <ModalComponent params={params}/>},
@@ -69,7 +75,7 @@ function BySales() {
     <Layout title="Pesanan" page="Pesanan">
         <Card className='dark:bg-navy-800 p-4'>
             <h2 className='text-2xl dark:text-white font-bold mb-2'>WAITING</h2>
-            <Table columnDefs={columnDefs} endpoint={`/request_order/getBySales/${session.user_id}?status[]=ORDER&status[]=ON GOING&status[]=READY&status[]=`}/>
+            <Table columnDefs={columnDefs} endpoint={`/request_order/getBySales/${session.user_id}?status[]=ORDER&status[]=ON GOING&status[]=READY&status[]=FINISHING&status[]=`}/>
         </Card>
         <Card className='dark:bg-navy-800 p-4 mt-3'>
             <h2 className='text-2xl dark:text-white font-bold mb-2'>COMPLETED</h2>

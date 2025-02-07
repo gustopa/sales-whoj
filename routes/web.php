@@ -59,10 +59,12 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         Route::post('/create',[RequestOrderController::class,'create']);
         Route::get('/form/{id}',[RequestOrderController::class,'form']);
         Route::get('/getDiamondDetail/{id}',[RequestOrderController::class,'getDiamondDetail']);
+        Route::post('/addDiamondDetail',[RequestOrderController::class,'addDiamondDetail']);
         Route::get('/getDownPayment/{id}',[RequestOrderController::class,'getDownPayment']);
         Route::post('/tambahDownPayment',[RequestOrderController::class,'tambahDownPayment']);
         Route::post('/editDownPayment/{id}',[RequestOrderController::class,'editDownPayment']);
         Route::delete('/deleteDownPayment/{id}',[RequestOrderController::class,'deleteDownPayment']);
+        Route::post('/setGroupingOrder',[RequestOrderController::class,'setGroupingOrder']);
     });
     // End Request order
 

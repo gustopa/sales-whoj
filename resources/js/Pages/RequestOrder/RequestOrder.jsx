@@ -67,6 +67,7 @@ function RequestOrder({access}) {
         {field : "type_order", headerName : "Tipe order"},
         {field : "outsource_intern", headerName : "Outsource"},
         {field : "status", headerName : "Status",cellRenderer : params => <Chip color={statusColor(params.value)} label={params.value == "" ? "DRAFT" : params.value} />},
+        {field : "last_process", headerName : "Proses"},
     ])
     const [columnPaid] = useState([
         {field : "doc_no", headerName : "Doc No", cellRenderer : params => <ModalComponent params={params}/>},

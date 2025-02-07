@@ -5,7 +5,7 @@ import { Button, Card } from '@mui/material'
 import { useIsMobile } from '../../../hooks/IsMobile'
 import axios from 'axios'
 import { formatNumber, getTodayDate, sanitizedNumber, showAlert, unformatNumber } from '../../../helper'
-function FormDownPayment({title,sxButton,iconButton,endpoint,dataTanggal,table,bukti_dp,dataAmount, data_dp,row_id,onSuccess}) {
+function FormDownPayment({title,sxButton,iconButton,endpoint,dataTanggal,table,bukti_dp,dataAmount, data_dp,row_id,onSuccess,setDocNo}) {
     const isMobile = useIsMobile()
     const modalTambah = useRef(null)
     
@@ -48,15 +48,14 @@ function FormDownPayment({title,sxButton,iconButton,endpoint,dataTanggal,table,b
             })
             const responseData = await response.data
             showAlert("Berhasil!",`DP berhasil di${title.toLowerCase()}`, "success")
-            onSuccess(responseData)
+            onSuccess(responseData.timestamp)
+            setDocNo(responseData.doc_no)
         }catch(err){
-            
             showAlert("Error!","Terjadi kesalahan silahkan coba lagi","error")
         }finally{
             modalTambah.current?.close()
         }
     }
-    console.log(preview);
     
   return (
     <LayoutModal ref={modalTambah} height='auto' closeButton={false} width={ isMobile ? "80%" : "30%"} sxButton={sxButton} iconButton={iconButton}>
