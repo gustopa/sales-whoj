@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use PDF;
 use App\Models\PaymentModel;
 use App\Models\InventoryModel;
+use App\Models\InventoryMovementModel;
 use App\Models\RequestOrderModel;
 use App\Models\StoreModel;
 use App\Models\PaymentDetailsModel;
@@ -142,12 +143,21 @@ class PaymentController extends Controller
                         "modified_by"    => session('username')
                     ]);
                 }
-                }
+            }
             InventoryModel::where('row_id',$request['inventory_id'])->update([
                 "status" => "SOLD",
-                "store_id" => $request['store_id'],
+                "store_id" => 3, // Customer
                 "modified_date" => date("Y-m-d H:i:s"),
                 "modified_by" => session('username')
+            ]);
+            InventoryMovementModel::insert([
+                "company_id" => session('company_id'),
+                "is_deleted" => 0,
+                "is_submitted" => 1,
+	            "inventory_id" => $request['inventory_id'],
+	            "store_id" => 3, // Customer
+	            "notes" => "Invoice no ".$request['doc_no'],
+	            "trans_date" => date("Y-m-d H:i:s"),
             ]);
 
         });

@@ -8,7 +8,7 @@ import TablePembayaran from './Components/TablePembayaran';
 import { useSnapshot } from 'valtio';
 import state from '../../store/store';
 import ModalCustomer from '../Components/ModalCustomer';
-import { formatNumber, showAlert } from '../../helper';
+import { encrypt, formatNumber, showAlert } from '../../helper';
 import Swal from 'sweetalert2';
 function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeOrder}) {
     const snap = useSnapshot(state)
@@ -81,7 +81,7 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
       const [customBox,setCustomBox] = useState(data.custom_box || "")
       const [deskripsi,setDeskripsi] = useState(data.txt || "")
       const [qty,setQty] = useState(data.qty || "")
-
+      const [timestamp,setTimestamp] = useState(0)
       const setDataDiamond = async e => {
         if(grouping == 0){
             return showAlert("warning!","Pilih grouping order terlebih dahulu","warning")
@@ -104,7 +104,13 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                 try{
                     const response = await axios.post("/request_order/setGroupingOrder",formData)
                     const responseData = await response.data
+                    console.log(responseData);
+                    
                     setDocNo(responseData.doc_no)
+                    setGoldWeight(responseData.gold_weight)
+                    setGrouping(responseData.grouping)
+                    setItem(responseData.item_id)
+                    setTimestamp(responseData.timestamp)
                     showAlert('Berhasil!', 'Data berhasil diset','success')
                 }catch(err){
                     console.log(err);
@@ -261,10 +267,12 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                         <Grid size={12}>
                             <Grid container spacing={1}>
                                 <Grid size={{xs:6,md:4}}>
-                                    <Button fullWidth variant='contained'><MdPrint/> Print Order</Button>
+                                    <a href={`/request_order/print/${encrypt(data.row_id)}`} target="__blank">
+                                        <Button fullWidth variant='contained'><MdPrint/> Print Order</Button>
+                                    </a>
                                 </Grid>
                                 <Grid size={{xs:6,md:4}}>
-                                    <Button fullWidth variant='contained'><MdPrint/> Print DP</Button>
+                                        <Button fullWidth variant='contained'><MdPrint/> Print DP</Button>
                                 </Grid>
                                 <Grid size={{xs:6,md:4}}>
                                     <Button fullWidth variant='contained'><MdPayment/> Pelunasan</Button>
@@ -374,7 +382,7 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                 <h2 className='font-bold dark:text-white text-1xl mb-2 text-center'>DETAIL</h2>
                 <Grid container spacing={2}>
                         <Grid size={12}>
-                            <TableDetail row_id={data.row_id}/>
+                            <TableDetail key={`detail-${timestamp}`} row_id={data.row_id}/>
                         </Grid>
                     </Grid>
                 </Card>

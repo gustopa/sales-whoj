@@ -11,6 +11,7 @@ use App\Models\GroupingOrderModel;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use PDF;
 class RequestOrderController extends Controller
 {
 
@@ -368,7 +369,7 @@ class RequestOrderController extends Controller
             return [
                 "item_id" => $updatedRequestOrder->item_id,
                 "grouping" => $updatedRequestOrder->grouping_order_id,
-                "gold_weight" => $updatedRequestOrder->gold_weight,
+                "gold_weight" => $updatedRequestOrder->berat_emas,
                 "doc_no" => $updatedRequestOrder->doc_no
             ];
         });
@@ -379,6 +380,19 @@ class RequestOrderController extends Controller
             "item_id" => $data['item_id'],
             "timestamp" => time()
         ]);
+    }
+
+    public function print($id){
+        $access = checkPermission("request_order");
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $data = DB::table('vw_request_orderlist')->where('row_id',decrypt_id($id))->first();
+        $request_order_diamond = DB::table('vw_request_order_diamondlist')->where('row_id',decrypt_id($id))->where('is_deleted',0)->get();
+        $pdf = PDF::loadView('pdf.requestorder', ['request_order' => $data,'request_order_diamond' => $request_order_diamond]);
+
+        // return view('pdf/payment',['payment' => $data]);
+        return $pdf->stream("pesanan-$data->doc_no.pdf",["Attachment" => false]);
     }
 
 

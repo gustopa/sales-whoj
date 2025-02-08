@@ -55,6 +55,7 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         Route::get('/getCustomOrder',[RequestOrderController::class,'getCustomOrder']);
         Route::post('/view/{id}',[RequestOrderController::class,'view']);
         Route::post('/getDPList/{id}',[RequestOrderController::class,'getDPList']);
+        Route::get('/print/{id}',[RequestOrderController::class,'print']);
 
         Route::post('/create',[RequestOrderController::class,'create']);
         Route::get('/form/{id}',[RequestOrderController::class,'form']);
