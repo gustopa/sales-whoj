@@ -5,7 +5,7 @@ import logo from '../../../../assets/logo.jpg'
 import logo2 from '../../../../assets/favicon.ico'
 import { useState,useEffect, useRef } from "react";
 import { Link, usePage } from "@inertiajs/react";
-import { List, ListItem, ListItemText, Collapse, ListItemIcon } from '@mui/material';
+import { List, ListItem, ListItemText, Collapse, ListItemIcon, Tooltip } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import ShortcutIcon from '@mui/icons-material/Shortcut';
 import HomeIcon from '@mui/icons-material/Home';
@@ -14,7 +14,7 @@ import { FaExpandAlt } from "react-icons/fa";
 import { FiMinimize2 } from "react-icons/fi";
 
 
-const Dropdown = ({primary, isOpen, onToggle,subMenu,icon,color}) => {
+const Dropdown = ({primary, isOpen, onToggle,subMenu,icon,color,miniSidebar}) => {
   const pathname = location.pathname.split('/')[1]
   const activeItemRef = useRef(null);
   useEffect(() => {
@@ -25,13 +25,15 @@ const Dropdown = ({primary, isOpen, onToggle,subMenu,icon,color}) => {
   return (
     <List className="m-0 dropdownParent" style={{color:'#b89474',padding:'0',cursor:'pointer'}}>
       {/* Menu Utama */}
-      <ListItem onClick={onToggle}>
-        <ListItemIcon >
-          <i className={`fa ${icon} dropdownIcon`} style={{color:color}}></i>
-        </ListItemIcon>
-        <ListItemText className="dropdownText" style={{color:color}} primary={primary} />
-        {isOpen ? <ExpandLess style={{color:color}} className="dropdownIcon" /> : <ExpandMore style={{color:color}} className="dropdownIcon" />}
-      </ListItem>
+      <Tooltip title={`${miniSidebar ? primary : ""}`}>
+        <ListItem onClick={onToggle}>
+          <ListItemIcon >
+            <i className={`fa ${icon} dropdownIcon`} style={{color:color}}></i>
+          </ListItemIcon>
+          <ListItemText className="dropdownText" style={{color:color}} primary={primary} />
+          {isOpen ? <ExpandLess style={{color:color}} className="dropdownIcon" /> : <ExpandMore style={{color:color}} className="dropdownIcon" />}
+        </ListItem>
+      </Tooltip>
       
       
       {/* Submenu */}
@@ -71,9 +73,10 @@ const Sidebar = ({ open, onClose, miniSidebar, setMiniSidebar }) => {
   const [openDropdown, setOpenDropdown] = useState(ActiveGroupLink); 
 
   const handleToggle = (id) => {
-    setOpenDropdown((prev) => (prev === id ? null : id)); 
+    setOpenDropdown((prev) => (prev === id && miniSidebar === false ? null : id));
     setMiniSidebar(false)
   };
+  
 
   function activeRoute(route){
     return location.pathname == route;
@@ -153,10 +156,11 @@ const Sidebar = ({ open, onClose, miniSidebar, setMiniSidebar }) => {
         {Object.keys(folderMenuObject).map((menu,index)=>
           <Dropdown 
           color={ActiveGroupLink == menu ? "#b89474" : "#a3aed0"} 
-          key={index} 
+          key={index}
           primary={menu} 
+          miniSidebar={miniSidebar}
           id={menu} 
-          isOpen={openDropdown === menu} 
+          isOpen={openDropdown === menu && miniSidebar === false} 
           subMenu={folderMenuObject[menu]} 
           onToggle={() => handleToggle(menu)}
           icon={folderMenuObject[menu][0].icon}

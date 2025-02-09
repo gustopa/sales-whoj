@@ -1,54 +1,53 @@
-import React, { useState, useEffect } from 'react';
-// import { IFilterParams } from 'ag-grid-community';
+import React, { useEffect, useState } from "react";
+import { MenuItem, Select, FormControl } from "@mui/material";
 
 const CustomDropdownFilter = (props) => {
-    const [selectedValue, setSelectedValue] = useState('');
-    const { filterChangedCallback, api, column, values } = props;
+  const [selectedValue, setSelectedValue] = useState("");
 
-    useEffect(() => {
-        // Inisialisasi filter dengan nilai yang sudah ada
-        if (props.model) {
-            setSelectedValue(props.model.value || '');
-        }
-    }, [props.model]);
+  useEffect(() => {
+    props.filterChangedCallback(); // Notify AG Grid filter has changed
+  }, [selectedValue]);
 
-    const onFilterChange = (event) => {
-        const value = event.target.value;
-        setSelectedValue(value);
+  const handleChange = (event) => {
+    setSelectedValue(event.target.value);
+  };
 
-        // Memanggil callback untuk memberitahu AG Grid bahwa filter sudah berubah
-        filterChangedCallback();
+  // AG Grid memanggil ini untuk memfilter data
+  const doesFilterPass = (params) => {
+    return selectedValue ? params.data.status === selectedValue : true;
+  };
 
-        // Memasukkan filter ke grid
-        api.setQuickFilter(value);
-    };
+  // AG Grid memanggil ini untuk mendapatkan nilai filter
+  const getModel = () => {
+    return selectedValue ? { value: selectedValue } : null;
+  };
 
-    const doesFilterPass = (params) => {
-        // Cek apakah data yang ada sesuai dengan nilai filter yang dipilih
-        if (!selectedValue) return true; // Jika tidak ada filter, tampilkan semua data
-        return params.data[column.field] === selectedValue;
-    };
+  // AG Grid memanggil ini untuk mengatur filter
+  const setModel = (model) => {
+    setSelectedValue(model ? model.value : "");
+  };
 
-    const getModel = () => {
-        return selectedValue ? { value: selectedValue } : null;
-    };
-
-    return (
-        <div>
-            <select value={selectedValue} onChange={onFilterChange}>
-                <option value="">Select {column.headerName}</option>
-                {values.map((value, index) => (
-                    <option key={index} value={value}>
-                        {value}
-                    </option>
-                ))}
-            </select>
-        </div>
-    );
+  return (
+    <FormControl fullWidth>
+      <Select value={selectedValue} onChange={handleChange} displayEmpty>
+        <MenuItem value="">Semua</MenuItem>
+        <MenuItem value="Active">Aktif</MenuItem>
+        <MenuItem value="Inactive">Tidak Aktif</MenuItem>
+      </Select>
+    </FormControl>
+  );
 };
 
-CustomDropdownFilter.defaultProps = {
-    values: [], // Nilai default kosong jika tidak diberikan
-};
+// Agar bisa dipakai di AG Grid
+export default React.forwardRef((props, ref) => {
+  useEffect(() => {
+    ref.current = {
+      doesFilterPass: (params) => doesFilterPass(params),
+      isFilterActive: () => !!selectedValue,
+      getModel: () => getModel(),
+      setModel: (model) => setModel(model),
+    };
+  });
 
-export default CustomDropdownFilter;
+  return <CustomDropdownFilter {...props} />;
+});

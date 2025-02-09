@@ -254,9 +254,9 @@ class RequestOrderController extends Controller
 
     public function getDiamondDetail($id){
         $access = checkPermission("request_order");
-        if($access == null || $access == ""){
-            return abort(403);
-        }
+        // if($access == null || $access == ""){
+        //     return abort(403);
+        // }
         $data = DB::table('vw_request_order_diamondlist')->where([
             ['row_id','=',$id],
             ['company_id','=',session('company_id')],
@@ -438,10 +438,10 @@ class RequestOrderController extends Controller
     }
 
     public function print($id){
-        $access = checkPermission("request_order");
-        if($access == null || $access == ""){
-            return abort(403);
-        }
+        // $access = checkPermission("request_order");
+        // if($access == null || $access == ""){
+        //     return abort(403);
+        // }
         $data = DB::table('vw_request_orderlist')->where('row_id',decrypt_id($id))->first();
         $request_order_diamond = DB::table('vw_request_order_diamondlist')->where('row_id',decrypt_id($id))->where('is_deleted',0)->get();
         $pdf = PDF::loadView('pdf.requestorder', ['request_order' => $data,'request_order_diamond' => $request_order_diamond]);
@@ -450,10 +450,10 @@ class RequestOrderController extends Controller
         return $pdf->stream("pesanan-$data->doc_no.pdf",["Attachment" => false]);
     }
     public function printDp($id){
-        $access = checkPermission("request_order");
-        if($access == null || $access == ""){
-            return abort(403);
-        }
+        // $access = checkPermission("request_order");
+        // if($access == null || $access == ""){
+        //     return abort(403);
+        // }
         $data = DB::table('vw_request_order_dplist')->where('row_id',decrypt_id($id))->latest('line_id')->first();
         $dataAll = DB::table('vw_request_order_dplist')->where('row_id',decrypt_id($id))->get();
         $request_order = DB::table('vw_request_orderlist')->where('row_id',decrypt_id($id))->first();
@@ -465,6 +465,96 @@ class RequestOrderController extends Controller
 
         // return view('pdf/payment',['payment' => $data]);
         return $pdf->stream("dp_pesanan-$data->doc_no.pdf",["Attachment" => false]);
+    }
+
+    public function formRequestBySales($id){
+        $access = checkPermission("request_order_bysales");
+        if($access == null || $access == "" || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        $request_order = DB::table('vw_request_orderlist')->where('row_id',decrypt_id($id))->first();
+        $grouping_order = DB::table('vw_grouping_orderlist')->where('is_deleted',0)->get();
+        $stores = DB::table('vw_storelist')->where('is_deleted',0)->get();
+        $menu = listMenu();
+        $sales = DB::table('sysuser')->select('row_id','name')->where([
+            ["is_deleted",'=',0],
+            ["role_id",'=',6],
+        ])->get();
+        $online_offline_list = [
+            "OFFLINE", 
+            "ONLINE", 
+            "Online via WA", 
+            "Online via IG", 
+            "Online via Website", 
+            "Online via Tokopedia"
+        ];
+        $status_list = array("ORDER", "ON GOING", "POLES","PASANG BATU","CORAN","FINISHING","READY","PAID");
+        $items = DB::table("vw_itemlist")->where([
+            "company_id" => session("company_id"),
+            "is_deleted" => 0
+        ])->get();
+        $type_order_list = array("CUSTOM","Custom (DP PO)","Custom (DP Stock)","Nabung Bareng");
+        return inertia('RequestOrder/FormBySales',[
+            "menu" => $menu,
+            "session" => session()->all(),
+            "data" => $request_order,
+            "grouping_order" => $grouping_order,
+            "stores" => $stores,
+            "sales" => $sales,
+            "onlineOffline" => $online_offline_list,
+            "status" => $status_list,
+            "items" => $items,
+            "tipeOrder" => $type_order_list
+        ]);
+    }
+
+    public function tambahDiamond(Request $request){
+        RequestOrderDiamondModel::insert([
+            "row_id" => $request['row_id'],
+            "company_id" => session('company_id'),
+            "grain" => $request['grain'],
+            "grade" => $request['grade'],
+            "diamond_type" => $request['diamond_type'],
+            "no_sert" => $request['no_sert'],
+            "diameter" => $request['diameter'],
+            "color" => $request['color'],
+            "work_size" => "",
+            "is_deleted" => 0,
+            "created_date" => date("Y-m-d H:i:s"),
+            "created_by" => session('username'),
+            "modified_date" => date("Y-m-d H:i:s"),
+            "modified_by" => session('username'),
+        ]);
+        return response()->json([
+            "timestamp" => password_hash(time(),PASSWORD_DEFAULT)
+        ]);
+    }
+    public function editDiamond($id){
+        $request = request();
+        RequestOrderDiamondModel::where('line_id',$id)->update([
+            "grain" => $request['grain'],
+            "grade" => $request['grade'],
+            "diamond_type" => $request['diamond_type'],
+            "no_sert" => $request['no_sert'],
+            "diameter" => $request['diameter'],
+            "color" => $request['color'],
+            "modified_date" => date("Y-m-d H:i:s"),
+            "modified_by" => session('username'),
+        ]);
+        return response()->json([
+            "timestamp" => password_hash(time(),PASSWORD_DEFAULT)
+        ]);
+    }
+    public function deleteDiamond($id){
+        $request = request();
+        RequestOrderDiamondModel::where('line_id',$id)->update([
+            "is_deleted" => 1,
+            "modified_date" => date("Y-m-d H:i:s"),
+            "modified_by" => session('username'),
+        ]);
+        return response()->json([
+            "timestamp" => password_hash(time(),PASSWORD_DEFAULT)
+        ]);
     }
 
 

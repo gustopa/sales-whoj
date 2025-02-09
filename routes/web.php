@@ -68,12 +68,16 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         Route::post('/editDownPayment/{id}',[RequestOrderController::class,'editDownPayment']);
         Route::delete('/deleteDownPayment/{id}',[RequestOrderController::class,'deleteDownPayment']);
         Route::post('/setGroupingOrder',[RequestOrderController::class,'setGroupingOrder']);
+        Route::post('/tambahDiamond',[RequestOrderController::class,'tambahDiamond']);
+        Route::post('/editDiamond/{id}',[RequestOrderController::class,'editDiamond']);
+        Route::delete('/deleteDiamond/{id}',[RequestOrderController::class,'deleteDiamond']);
     });
     // End Request order
 
     // Start Request Order By Sales
     Route::prefix('/request_order_bysales')->group(function(){
         Route::get('/',[RequestOrderController::class,'requestBySales']);
+        Route::get('/form/{id}',[RequestOrderController::class,'formRequestBySales']);
     });
     // End Request Order By Sales
 

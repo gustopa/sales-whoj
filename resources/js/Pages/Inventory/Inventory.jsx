@@ -7,6 +7,7 @@ import { FaPrint,FaBuilding } from "react-icons/fa";
 import { Link } from '@inertiajs/react';
 import { FaCirclePlus } from 'react-icons/fa6';
 import ModalInventory from './components/ModalInventory';
+import { formatDate } from '../../helper';
 
 function Inventory({totalInventoryList,access}) {
     
@@ -49,14 +50,15 @@ function Inventory({totalInventoryList,access}) {
                 </div>
             )
         },
-        {field : "identity_code",headerName : "PLU",
+        {field : "identity_code",headerName : "PLU", minWidth : 120, width : 120, flex : false,
             cellRenderer : params => <ModalInventory params={params}/>
         },
+        {field : "created_date",headerName : "Tgl dibuat", hide : true, cellRenderer : params => formatDate(params.value)},
         {field : "item_id_txt",headerName : "Item"},
         {field : "model_id_txt",headerName : "Model"},
         {field : "store_id_txt",headerName : "Store"},
         {field : "location_id_txt",headerName : "Letak", cellRenderer : params => params.value == null ? "-" : params.value},
-        {field : "sell_price",headerName : "Harga jual (IDR)", cellRenderer : params => Intl.NumberFormat("id-ID").format(params.value)},
+        {field : "sell_price",headerName : "Harga jual", cellRenderer : params => Intl.NumberFormat("id-ID").format(params.value), filter : 'agNumberColumnFilter', flex : false,minWidth : 130, width : 130},
         {field : "status",headerName : "Status", cellRenderer : params => <Chip label={params.value} color={params.value == "READY" ? "success" : "error" }/>},
     ])
   return (
@@ -77,7 +79,7 @@ function Inventory({totalInventoryList,access}) {
         </Grid>
         <Grid container spacing={2} className="mt-5">
             <Grid size={12}>
-                <Table columnDefs={columnDef} endpoint="/inventory/getAll" />
+                <Table statusFilter={true} columnDefs={columnDef} endpoint="/inventory/getAll" />
             </Grid>
         </Grid>
     </Layout>

@@ -13,17 +13,17 @@ function Home({session}) {
     const refTable = useRef(null)
     const [columnDefs, setColumnDefs] = useState([
         { field: "doc_no", headerName: "Doc No", 
-            cellRenderer : params => params.data ? <ModalComponent params={params} /> : ""
+            cellRenderer : params => params.data ? <ModalComponent params={params} /> : "", minWidth : 120,width : 120,
         },
-        { field: "customer_id_txt", headerName: "Customer" },
-        { field: "trans_date", headerName: "Tanggal", cellRenderer : params => formatDate(params.value) },
-        { field: "estimated_date", headerName: "Perkiraan Delivery", cellRenderer : params => params.value == "0000-00-00" ? "-" : formatDate(params.value) },
-        { field: "item_id_txt", headerName: "Tipe Item" },
-        { field: "name", headerName: "Nama Item"},
+        { field: "customer_id_txt", headerName: "Customer", cellRenderer : params => params.value == "" || params.value == null ? "-" : params.value },
+        { field: "trans_date", headerName: "Tanggal", cellRenderer : params => formatDate(params.value), filter : 'agDateColumnFilter', minWidth : 120, width : 120 },
+        { field: "estimated_date", headerName: "Perkiraan Delivery", cellRenderer : params => params.value == "0000-00-00" ? "-" : formatDate(params.value), filter : 'agDateColumnFilter' },
+        { field: "item_id_txt", headerName: "Tipe Item", cellRenderer : params => params.value == null || params.value  == "" ? "-" : params.value },
+        { field: "name", headerName: "Nama Item", cellRenderer : params => params.value == "" || params.value == null ? "-" : params.value},
         { field: "estimated_price", headerName: "Harga Perkiraan",
           cellRenderer : (params) => `Rp.${Intl.NumberFormat('id-ID').format(params.value)}`
         },
-        { field: "status", headerName: "Status", 
+        { field: "status", headerName: "Status", minWidth : 120, width : 120,
             cellRenderer :  (params) => {
                 return (
                     <div className="dark:text-white">
@@ -35,7 +35,7 @@ function Home({session}) {
       ]);
   return (
     <Layout title="Dashboard" page="Dashboard">
-        <Grid container spacing={2}>
+        {/* <Grid container spacing={2}>
          <Grid xs={12} md={4}>
           <Card extra="p-5">
             <Grid container spacing={2}>
@@ -54,7 +54,7 @@ function Home({session}) {
             </Grid>
           </Card>
         </Grid>
-      </Grid>
+      </Grid> */}
 
       <Grid container spacing={2} className="mt-4">
         <Grid size={12}>

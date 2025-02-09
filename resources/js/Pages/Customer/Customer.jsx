@@ -46,7 +46,7 @@ function Customer({permission}) {
   }
 
   const [column, setColumn] = useState([
-    { field : 'row_id', headerName : "", filter: false,resizable: false, sortable: false, minWidth : 164, width : 164, pinned : "left",
+    { field : 'row_id', headerName : "", filter: false,resizable: false, sortable: false, minWidth : 110, width : 110, pinned : "left",
       hide : menu_access != "Full control",
       headerComponent : props => (
         <Link href='/customer/create'>
@@ -69,16 +69,13 @@ function Customer({permission}) {
                   <MdDeleteForever style={{color: 'white'}}/>
                 </Button>
               </span> */}
-              <Button size="small" style={{cursor : "default"}}>
-                <MdDone style={{color : params.data.is_submitted == 0 ? '#bbb' : '#059c1b',fontWeight : "bold"}}/>
-              </Button>
             </>
           )
         }
         }
         
     },
-    { field: "customer_no", headerName: "Pelanggan No", 
+    { field: "customer_no", headerName: "Pelanggan No", minWidth : 125, width : 125, flex : false,
         cellRenderer : params => {
             return <ModalViewCustomer params={params} id_customer={params.data?.row_id}/>
         }
@@ -96,7 +93,7 @@ function Customer({permission}) {
         return params.value != null && params.value != "" ? params.value : "-"
       }
     },
-    { field: "address", headerName: "Alamat",width: 350, wrapText : false, cellStyle : {lineHeight : "1.3"}, 
+    { field: "address", headerName: "Alamat",width: 350,minWidth : 200, wrapText : false, cellStyle : {lineHeight : "1.3"}, editable : true, cellEditor: "agDateCellEditor",
       editable : true,
       cellEditor: "agLargeTextCellEditor",
       cellEditorPopup: true,
@@ -105,13 +102,13 @@ function Customer({permission}) {
         return params.value != null && params.value != "" ? params.value : "-"
       }
     },
-    { field: "pi_no", headerName: "ID Member PI" },
-    { field: "birth_date", headerName: "Tgl Lahir", 
+    { field: "pi_no", headerName: "ID Member PI", hide : true },
+    { field: "birth_date", headerName: "Tgl Lahir", width : 120, minWidth : 120, flex : false, filter : "agDateColumnFilter",
       cellRenderer : params => {
         return params.value != "0000-00-00" && params.value != null ? formatDate(params.value) : "-"
       }
     },
-    { field: "visit_date", headerName: "Tanggal datang",editable : true, cellEditor: "agDateCellEditor",
+    { field: "visit_date", headerName: "Tanggal datang",editable : true, filter : "agDateColumnFilter", cellEditor: "agDateCellEditor",flex : false, width : 150, minWidth : 150,
       cellRenderer : params => {
         return params.value != "0000-00-00" && params.value ? formatDate(params.value) : "-"
       }

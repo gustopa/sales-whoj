@@ -33,7 +33,7 @@ function BySales() {
     const session = usePage().props.session
     
     const [columnPaid] = useState([
-        {field : "doc_no", headerName : "Doc No", cellRenderer : params => <ModalComponent params={params}/>, minWidth : 100, width : 100, pinned : "left"},
+        {field : "doc_no", headerName : "Doc No", cellRenderer : params => <ModalComponent params={params}/>, minWidth : 120, width : 120, pinned : "left"},
         {field : "customer_id_txt", headerName : "Pelanggan"},
         {field : "trans_date", headerName : "Tanggal", cellRenderer : params => params.value == "0000-00-00" ? "-" : formatDate(params.value)},
         {field : "estimated_date", headerName : "Perkiraan delivery time",cellRenderer : params => params.value == "0000-00-00" ? "-" : formatDate(params.value)},
@@ -51,7 +51,7 @@ function BySales() {
                     <div key={params.value}>
                         {params.value &&
                             <>
-                                <Link href={`/request_order/form/${encrypt(params.value)}`}>
+                                <Link href={`/request_order_bysales/form/${encrypt(params.value)}`}>
                                     <Button sx={{ width: "30px", minWidth: "30px" }} size="small" variant='contained' color="primary">
                                         <MdEdit/>
                                     </Button>
@@ -61,7 +61,7 @@ function BySales() {
                     </div>
                 )
         },
-        {field : "doc_no", headerName : "Doc No", minWidth: 100, width : 100, cellRenderer : params => <ModalComponent params={params}/>},
+        {field : "doc_no", headerName : "Doc No", minWidth: 130, width : 130, cellRenderer : params => <ModalComponent params={params}/>},
         {field : "customer_id_txt", headerName : "Pelanggan"},
         {field : "trans_date", headerName : "Tanggal", cellRenderer : params => params.value == "0000-00-00" ? "-" : formatDate(params.value)},
         {field : "estimated_date", headerName : "Perkiraan delivery time",cellRenderer : params => params.value == "0000-00-00" ? "-" : formatDate(params.value)},

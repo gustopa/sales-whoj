@@ -7,7 +7,7 @@ export default function Layout(props) {
   const { ...rest } = props;
   const [open, setOpen] = React.useState(true);
   const {name} = usePage().props
-  const [miniSidebar,setMiniSidebar] = useState(false)
+  const [miniSidebar,setMiniSidebar] = useState(true)
   React.useEffect(() => {
     window.addEventListener("resize", () => {
       if(window.innerWidth < 1200){

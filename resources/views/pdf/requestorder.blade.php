@@ -96,9 +96,11 @@
             </table>
         </td>
         <td>
-            <div style="float:right;">
-                <img class="photo" style="width:200px" src="{{storage_path('app/public/uploaded/'.$request_order->photo_file)}}" />
-            </div>
+            @if ($request_order->photo_file != null || $request_order->photo_file != "")
+              <div style="float:right;">
+                  <img class="photo" style="width:200px" src="{{storage_path('app/public/uploaded/'.$request_order->photo_file)}}" />
+              </div>
+            @endif
         </td>
     </tr>
 </table>

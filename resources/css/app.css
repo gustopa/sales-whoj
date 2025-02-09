@@ -1,8 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-body{
-    font-size: 13px !important;
+.ag-root-wrapper{
+    font-size: 13px;
 }
 .ag-theme-alpine {
     width: 100%;

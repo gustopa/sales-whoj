@@ -3,8 +3,9 @@ import { AgGridReact } from 'ag-grid-react';
 import axios from 'axios';
 import { useSnapshot } from 'valtio';
 import state from '../../store/store';
-import { FormControlLabel, Checkbox, Paper, Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
-import { MdExpand } from 'react-icons/md';
+import { FormControlLabel, Checkbox, Paper, Typography, Accordion, AccordionSummary, AccordionDetails, Button } from '@mui/material';
+import { IoIosArrowDown, IoIosSettings } from "react-icons/io";
+import { MdPrint } from 'react-icons/md';
 const Table = ({
     endpoint,
     columnDefs,
@@ -80,9 +81,6 @@ const Table = ({
             col.field === field ? { ...col, hide: !col.hide } : col
         );
         setUpdatedColumnDefs(newColumnDefs);
-        // if (gridRef.current) {
-        //     gridRef.current.api?.setColumnDefs(newColumnDefs);
-        // }
     };
 
     const handleFilterChange = (status) => {
@@ -92,34 +90,23 @@ const Table = ({
         }
     };
 
+    const exportCSV = () => {
+        
+        gridRef.current.api.exportDataAsCsv();
+    }
+
     return (
         <div>
-            {statusFilter &&
-                <div style={{ display: "flex", gap: "10px", marginBottom: "10px", padding: "10px", borderRadius: "8px", background: "#1a1e2d", color: "#fff" }}>
-                    {["All", "SOLD", "READY"].map(status => (
-                        <button
-                            key={status}
-                            onClick={() => handleFilterChange(status)}
-                            style={{
-                                padding: "8px 16px",
-                                borderRadius: "6px",
-                                background: filterStatus === status ? "#fff" : "transparent",
-                                color: filterStatus === status ? "#000" : "#fff",
-                                border: "none",
-                                cursor: "pointer"
-                            }}
-                        >
-                            {status}
-                        </button>
-                    ))}
-                </div>
-            }
-
             {/* Toolbox untuk memilih kolom */}
             {kolomFilter && 
                 <Accordion className="dark:bg-[#181d1f] dark:text-white" sx={{ marginBottom: "10px" }}>
-                <AccordionSummary expandIcon={<MdExpand />}>
-                    <Typography variant="subtitle1">Pilih Kolom</Typography>
+                <AccordionSummary expandIcon={<IoIosArrowDown className='text-[black] dark:text-white' />}>
+                    <Typography variant="subtitle1">
+                        <span className='flex'>
+                            <IoIosSettings style={{fontSize : '25px',marginRight : '5px'}} />
+                            Table Settings
+                        </span>
+                    </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     <Paper sx={{ padding: "10px", backgroundColor: "inherit", boxShadow: "none" }}>
@@ -127,6 +114,7 @@ const Table = ({
                             .filter(col => col.headerName && col.headerName.trim() !== "")
                             .map(col => (
                                 <FormControlLabel
+                                    className='text-[black] dark:text-white'
                                     key={col.field}
                                     control={
                                         <Checkbox
@@ -137,6 +125,31 @@ const Table = ({
                                     label={col.headerName}
                                 />
                             ))}
+                    </Paper>
+                    <Paper sx={{ padding: "10px", backgroundColor: "inherit", boxShadow: "none" }}>
+                        <Button onClick={exportCSV} variant='contained'><MdPrint className='mr-1'/>EXPORT CSV</Button>
+                    </Paper>
+                    <Paper sx={{background : "none",mt:1}}>
+                        {statusFilter &&
+                            <div className='bg-whoj' style={{ display: "flex", gap: "10px", marginBottom: "10px", padding: "10px", borderRadius: "8px", color: "#fff" }}>
+                                {["All", "SOLD", "READY"].map(status => (
+                                    <button
+                                        key={status}
+                                        onClick={() => handleFilterChange(status)}
+                                        style={{
+                                            padding: "8px 16px",
+                                            borderRadius: "6px",
+                                            background: filterStatus === status ? "#fff" : "transparent",
+                                            color: filterStatus === status ? "#000" : "#fff",
+                                            border: "none",
+                                            cursor: "pointer"
+                                        }}
+                                    >
+                                        {status}
+                                    </button>
+                                ))}
+                            </div>
+                        }
                     </Paper>
                 </AccordionDetails>
             </Accordion>

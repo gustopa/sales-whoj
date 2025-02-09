@@ -11,7 +11,7 @@ import ModalCustomer from '../Components/ModalCustomer';
 import { encrypt, formatNumber, sanitizedNumber, showAlert, unformatNumber } from '../../helper';
 import Swal from 'sweetalert2';
 import { router } from '@inertiajs/react';
-function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeOrder}) {
+function FormBySales({data,grouping_order,stores,sales,onlineOffline,items,status,tipeOrder}) {
     const snap = useSnapshot(state)
     const sxInputField = {
         "& .MuiFormLable-root" : {
@@ -226,6 +226,7 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
         
 
       }
+      
   return (
     <Layout title="Form Pesanan" page="Form Pesanan">
         <Grid container spacing={2}>
@@ -239,17 +240,18 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                               input: {
                               readOnly: true,
                               }, 
-                          }} value={docNo} fullWidth label="Doc no : "/>
+                          }} value={docNo} disabled fullWidth label="Doc no : "/>
                         </Grid>
                         <Grid size={{xs:12,md : 6}}>
                             <FormControl fullWidth sx={sxInputField}>
                                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                                     {/* Select Box */}
-                                    <FormControl sx={{ flexGrow: 1 }}>
+                                    <FormControl sx={{ flexGrow: 1 }} disabled>
                                     <InputLabel shrink id="grouping_order" style={{ color: "#b89474" }}>
                                         <span>Grouping Order :</span>
                                     </InputLabel>
                                     <Select
+                                        
                                         displayEmpty
                                         name="grouping_order"
                                         labelId="grouping_order"
@@ -264,22 +266,11 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                                         ))}
                                     </Select>
                                     </FormControl>
-
-                                    {/* Button di Sebelah Kanan */}
-                                    <Button 
-                                    variant="contained" 
-                                    color="primary" 
-                                    size="small" 
-                                    className='text-start'
-                                    onClick={setDataDiamond}
-                                    >
-                                    SET <br />DATA
-                                    </Button>
                                 </Box>
                             </FormControl>
                         </Grid>
                         <Grid size={{xs:12,md : 6}}>
-                            <FormControl fullWidth sx={sxInputField}>
+                            <FormControl fullWidth sx={sxInputField} disabled>
                                 <InputLabel shrink id="store" style={{color:"#b89474"}}><span>Store :</span></InputLabel>
                                 <Select
                                     displayEmpty
@@ -298,7 +289,7 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                             </FormControl>
                         </Grid>
                         <Grid size={{xs:12,md : 6}}>
-                            <FormControl fullWidth sx={sxInputField}>
+                            <FormControl fullWidth sx={sxInputField} disabled>
                                 <InputLabel shrink id="sales" style={{color:"#b89474"}}>Sales</InputLabel>
                                 <Select
                                     displayEmpty
@@ -317,11 +308,11 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                             </FormControl>
                         </Grid>
                         <Grid size={{xs:12,md : 6}}>
-                            <TextField variant="outlined" value={customer} sx={sxInputField} label="Pelanggan" fullWidth
+                            <TextField disabled variant="outlined" value={customer} sx={sxInputField} label="Pelanggan" fullWidth
                                 InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
-                                        <ModalCustomer setCustomer={setCustomer} setIdCustomer={setIdCustomer} />
+                                        {/* <ModalCustomer setCustomer={setCustomer} setIdCustomer={setIdCustomer} /> */}
                                     </InputAdornment>
                                 ),
                                     readOnly : true
@@ -332,10 +323,10 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                             />
                         </Grid>
                         <Grid size={{xs:12,md : 6}}>
-                            <Input value={transDate} onChange={e => setTransDate(e.target.value)} type="date" fullWidth label="Tanggal : "/>
+                            <Input value={transDate} disabled onChange={e => setTransDate(e.target.value)} type="date" fullWidth label="Tanggal : "/>
                         </Grid>
                         <Grid size={{xs:12,md : 6}}>
-                            <FormControl fullWidth sx={sxInputField}>
+                            <FormControl disabled fullWidth sx={sxInputField}>
                                 <InputLabel shrink id="onof" style={{color:"#b89474"}}>Online/Offline :</InputLabel>
                                 <Select
                                     displayEmpty
@@ -353,8 +344,8 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                             </FormControl>
                         </Grid>
                         <Grid size={{xs:12,md : 6}}>
-                            <FormControl fullWidth sx={sxInputField}>
-                                <InputLabel shrink id="status" style={{color:"#b89474"}}>Status :</InputLabel>
+                            <FormControl fullWidth sx={sxInputField} disabled>
+                                <InputLabel disabled shrink id="status" style={{color:"#b89474"}}>Status :</InputLabel>
                                 <Select
                                     displayEmpty
                                     name='status'
@@ -372,7 +363,7 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                             </FormControl>
                         </Grid>
                         <Grid size={{xs:12,md : 6}}>
-                            <Input value={displayEstimatedPrice} onChange={e => {
+                            <Input disabled value={displayEstimatedPrice} onChange={e => {
                                 const value = sanitizedNumber(e.target.value)
                                 const rawValue = unformatNumber(value)
                                 setEstimatedPrice(rawValue)
@@ -392,11 +383,6 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                                 <Grid size={{xs:6,md:4}}>
                                     <a href={`/request_order/print/${encrypt(data.row_id)}`} target="__blank">
                                         <Button fullWidth variant='contained'><MdPrint/> Print Order</Button>
-                                    </a>
-                                </Grid>
-                                <Grid size={{xs:6,md:4}}>
-                                    <a onClick={printDp} target="__blank">
-                                        <Button fullWidth variant='contained'><MdPrint/> Print DP</Button>
                                     </a>
                                 </Grid>
                                 <Grid size={{xs:6,md:4}}>
@@ -510,18 +496,7 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                 <h2 className='font-bold dark:text-white text-1xl mb-2 text-center'>DETAIL</h2>
                 <Grid container spacing={2}>
                         <Grid size={12}>
-                            <TableDetail key={`detail-${timestamp}`} row_id={data.row_id}/>
-                        </Grid>
-                    </Grid>
-                </Card>
-            </Grid>
-
-            <Grid size={{xs:12,md:6}}>
-                <Card className='p-3 dark:bg-navy-800'>
-                <h2 className='font-bold dark:text-white text-1xl mb-2 text-center'>PEMBAYARAN (DP)</h2>
-                <Grid container spacing={2}>
-                        <Grid size={12}>
-                            <TablePembayaran ref={tableDp} setDocNo={setDocNo} row_id={data.row_id}/>
+                            <TableDetail onSuccess={setTimestamp} key={`detail-${timestamp}`} row_id={data.row_id}/>
                         </Grid>
                     </Grid>
                 </Card>
@@ -533,4 +508,4 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
   )
 }
 
-export default Form
+export default FormBySales
