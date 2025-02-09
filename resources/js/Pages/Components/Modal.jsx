@@ -29,7 +29,6 @@ function ModalComponent({params}) {
             const response = await axios.post(`/request_order/view/${row_id}`)
             const dataJson = await response.data;
             setData(dataJson.data)
-            
         }catch(err){
             console.log(err)  
         }
@@ -40,8 +39,6 @@ function ModalComponent({params}) {
             const response = await axios.post(`/request_order/getDPList/${row_id}`)
             const dataJson = await response.data;
             setDataDp(dataJson)
-            console.log('ok');
-            
         }catch(err){
             console.log(err);
         }
@@ -49,7 +46,7 @@ function ModalComponent({params}) {
     
   return (
     <div className=''>
-      <Button onClick={handleModal} className={`${params.data?.is_submitted ? '!text-whoj' : '!text-[black] dark:!text-white'}`} style={{textDecoration : "underline"}}>
+      <Button onClick={handleModal} className={`${params.data?.is_submitted ? '!text-whoj' : '!text-[black] dark:!text-white'}`} style={{textDecoration : "underline",fontSize : "13px"}}>
         {params.value}
       </Button>
       <Modal

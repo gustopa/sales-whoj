@@ -3,7 +3,8 @@ import { AgGridReact } from 'ag-grid-react';
 import axios from 'axios';
 import { useSnapshot } from 'valtio';
 import state from '../../store/store';
-import { FormControlLabel, Checkbox, Paper, Typography } from '@mui/material';
+import { FormControlLabel, Checkbox, Paper, Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import { MdExpand } from 'react-icons/md';
 const Table = ({
     endpoint,
     columnDefs,
@@ -116,21 +117,29 @@ const Table = ({
 
             {/* Toolbox untuk memilih kolom */}
             {kolomFilter && 
-                <Paper className='dark:bg-[#181d1f] dark:text-white' style={{ marginBottom: "10px", padding: "10px" }}>
-                    <Typography variant="subtitle1">Pilih Kolom:</Typography>
-                    {columnDefs.filter(col => col.headerName && col.headerName.trim() !== "").map(col => (
-                        <FormControlLabel
-                            key={col.field}
-                            control={
-                                <Checkbox
-                                    checked={!updatedColumnDefs.find(c => c.field === col.field)?.hide}
-                                    onChange={() => handleColumnToggle(col.field)}
+                <Accordion className="dark:bg-[#181d1f] dark:text-white" sx={{ marginBottom: "10px" }}>
+                <AccordionSummary expandIcon={<MdExpand />}>
+                    <Typography variant="subtitle1">Pilih Kolom</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Paper sx={{ padding: "10px", backgroundColor: "inherit", boxShadow: "none" }}>
+                        {columnDefs
+                            .filter(col => col.headerName && col.headerName.trim() !== "")
+                            .map(col => (
+                                <FormControlLabel
+                                    key={col.field}
+                                    control={
+                                        <Checkbox
+                                            checked={!updatedColumnDefs.find(c => c.field === col.field)?.hide}
+                                            onChange={() => handleColumnToggle(col.field)}
+                                        />
+                                    }
+                                    label={col.headerName}
                                 />
-                            }
-                            label={col.headerName}
-                        />
-                    ))}
-                </Paper>
+                            ))}
+                    </Paper>
+                </AccordionDetails>
+            </Accordion>
             }
 
 
@@ -146,6 +155,12 @@ const Table = ({
                     domLayout={domLayout}
                     rowHeight={rowHeight}
                     pagination={pagination}
+                    getRowStyle={(params) => {
+                        return { fontSize : '13px' };
+                    }}
+                    getRowClass={(params) => {
+                        return `${params.node.rowIndex % 2 === 0 ? 'bg-[#f0f0f0] dark:bg-[#181d1f]' : 'bg-white dark:bg-[#222628]'}`;
+                    }}
                     paginationPageSize={10}
                     paginationPageSizeSelector={[10, 20, 50]}
                     localeText={localeText}

@@ -1,7 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+body{
+    font-size: 13px !important;
+}
 .ag-theme-alpine {
     width: 100%;
     overflow-x: auto;  

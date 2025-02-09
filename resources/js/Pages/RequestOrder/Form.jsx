@@ -235,7 +235,11 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                     <h2 className='font-bold dark:text-white text-1xl mb-2 text-center'>PESANAN</h2>
                     <Grid container spacing={2}>
                         <Grid size={{xs:12,md : 6}}>
-                            <Input value={docNo} fullWidth label="Doc no : "/>
+                            <Input slotProps={{
+                              input: {
+                              readOnly: true,
+                              }, 
+                          }} value={docNo} fullWidth label="Doc no : "/>
                         </Grid>
                         <Grid size={{xs:12,md : 6}}>
                             <FormControl fullWidth sx={sxInputField}>
