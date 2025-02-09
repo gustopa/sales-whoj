@@ -197,6 +197,61 @@ class RequestOrderController extends Controller
         ]);
     }
 
+    public function save(Request $request){
+        $doc_no = DB::transaction(function() use($request){
+            $filename = "";
+            if ($request->hasFile('file_photo')) {
+                $file = $request->file('file_photo');
+                $filename = "photo_file".time().'.jpeg';
+                $destinationPath = storage_path('app/public/uploaded');
+
+                // Konversi gambar agar ukurannya sekitar 200KB
+                $manager = new ImageManager(new Driver());
+                $image = $manager->read($file->getRealPath());
+                $image->scale(1920,1080);
+
+                $image->save($destinationPath . '/' . $filename); // Simpan dengan kompresi
+
+            }
+            $updateOrder = [
+                "grouping_order_id" => $request['grouping_order_id'],
+                "store_id" => $request['store'],
+                "sales_id" => $request['sales'],
+                "customer_id" => $request['customer_id'],
+                "trans_date" => $request['trans_date'],
+                "online_offline" => $request['online_offline'],
+                "status" => $request['status'],
+                "estimated_price" => $request['estimated_price'],
+                "photo_file" => $filename,
+                "estimated_date" => $request['estimated_delivery_time'],
+                "item_id" => $request['item_type'],
+                "type_order" => $request['order_type'],
+                "outsource_intern" => $request['origin'] == null ? "" : $request['origin'],
+                "qty" => $request['pengiriman'],
+                "size" => $request['size'],
+                "warna_emas" => $request['gold_color'],
+                "berat_emas" => $request['gold_weight'],
+                "customer_material" => $request['customer_material'],
+                "custom_box" => $request['custom_box'],
+                "txt" => $request['deskripsi'],
+                "is_submitted" => $request['mode'] == "simpan" ? 0 : 1,
+            ];
+            if($request['doc_no'] == ""){
+                $last_doc = RequestOrderModel::where('doc_no','not like','')->latest('row_id')->first()->doc_no;
+                $current_doc = incrementID($last_doc);
+                updateLastId('payment_order_id');
+                $updateOrder["doc_no"] = $current_doc;
+            }
+            RequestOrderModel::where('row_id',$request['row_id'])->update($updateOrder);
+            $updatedRequestOrder = RequestOrderModel::where('row_id', $request['row_id'])->first();
+            return $updatedRequestOrder->doc_no;
+        });
+        
+        return response()->json([
+            "doc_no" => $doc_no
+        ]);
+    }
+
     public function getDiamondDetail($id){
         $access = checkPermission("request_order");
         if($access == null || $access == ""){
@@ -393,6 +448,23 @@ class RequestOrderController extends Controller
 
         // return view('pdf/payment',['payment' => $data]);
         return $pdf->stream("pesanan-$data->doc_no.pdf",["Attachment" => false]);
+    }
+    public function printDp($id){
+        $access = checkPermission("request_order");
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $data = DB::table('vw_request_order_dplist')->where('row_id',decrypt_id($id))->latest('line_id')->first();
+        $dataAll = DB::table('vw_request_order_dplist')->where('row_id',decrypt_id($id))->get();
+        $request_order = DB::table('vw_request_orderlist')->where('row_id',decrypt_id($id))->first();
+        // dd($data);
+        $pdf = PDF::loadView('pdf.requestorderdp', [
+            'request_order_dp' => $data,
+            'request_order_dp_all' => $dataAll,
+            "request_order" => $request_order])->setPaper('a4','landscape');
+
+        // return view('pdf/payment',['payment' => $data]);
+        return $pdf->stream("dp_pesanan-$data->doc_no.pdf",["Attachment" => false]);
     }
 
 

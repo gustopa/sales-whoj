@@ -5,16 +5,19 @@ import { Button, Card } from '@mui/material'
 import { useIsMobile } from '../../../hooks/IsMobile'
 import axios from 'axios'
 import { formatNumber, getTodayDate, sanitizedNumber, showAlert, unformatNumber } from '../../../helper'
+import { useSnapshot } from 'valtio'
+import state from '../../../store/store'
 function FormDownPayment({title,sxButton,iconButton,endpoint,dataTanggal,table,bukti_dp,dataAmount, data_dp,row_id,onSuccess,setDocNo}) {
     const isMobile = useIsMobile()
     const modalTambah = useRef(null)
-    
+    const snap = useSnapshot(state)
     const [tanggal,setTanggal] = useState(dataTanggal || getTodayDate())
     const [buktiDp, setBuktiDp] = useState(null)
-    const [preview,setPreview] = useState(bukti_dp != null ? `http://localhost:8000/storage/uploaded/${bukti_dp}` : null)
+    const [preview,setPreview] = useState(bukti_dp != null ? `${snap.base_url}/storage/uploaded/${bukti_dp}` : null)
     const [amount,setAmount] = useState(dataAmount || 0)
     const [displayAmount,setDisplayAmount] = useState(dataAmount ? formatNumber(Number(dataAmount)) : "0")
     const [dpKe,setDpKe] = useState(data_dp || "")
+
     const handleAmount = e => {
         const value = sanitizedNumber(e.target.value)
         const rawValue = unformatNumber(value)
@@ -32,6 +35,9 @@ function FormDownPayment({title,sxButton,iconButton,endpoint,dataTanggal,table,b
     }
     
     const handleSubmit = async () => {
+        if(tanggal == null || tanggal == ""){
+            return showAlert("Warning!","Tanggal tidak boleh kosong",'warning')
+        }
         const formData = {
             row_id : row_id,
             tanggal : tanggal,

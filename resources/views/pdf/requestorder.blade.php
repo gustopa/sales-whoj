@@ -1,5 +1,5 @@
 @extends('pdf.layout')
-@section('document_name','INVOICE')
+@section('document_name','REQUEST_ORDER')
 @section('content')
 <div class="space-20"></div>
 
@@ -95,7 +95,11 @@
               </tr>     
             </table>
         </td>
-        {{-- <td><div style="float:right;"><?= $logo ?></div></td> --}}
+        <td>
+            <div style="float:right;">
+                <img class="photo" style="width:200px" src="{{storage_path('app/public/uploaded/'.$request_order->photo_file)}}" />
+            </div>
+        </td>
     </tr>
 </table>
 
@@ -157,7 +161,7 @@
     <td class="width-30 text-left">13.</td>
     <td class="width-150 text-left"><b>Estimated Price</b></td>
     <td class="width-30 text-left">:</td>
-    <td class="text-left"><?= $request_order->estimated_price ?></td>
+    <td class="text-left"><?= formatRupiah($request_order->estimated_price) ?></td>
   </tr>     
 </table>
 <table class="noborder margin-bottom-table">
@@ -165,7 +169,7 @@
     <td class="width-30 text-left">&nbsp;</td>
     <td class="width-150 text-left"><b>Uang Muka</b></td>
     <td class="width-30 text-left">:</td>
-    <td class="text-left"><?= $request_order->down_payment ?></td>
+    <td class="text-left"><?= formatRupiah($request_order->down_payment) ?></td>
   </tr>     
 </table>
 <table class="noborder margin-bottom-table">
@@ -173,7 +177,7 @@
     <td class="width-30 text-left">&nbsp;</td>
     <td class="width-150 text-left"><b>Pelunasan</b></td>
     <td class="width-30 text-left">:</td>
-    <td class="text-left"><?= $request_order->settlement ?></td>
+    <td class="text-left"><?= formatRupiah($request_order->settlement) ?></td>
   </tr>     
 </table>
 <table class="noborder margin-bottom-table">

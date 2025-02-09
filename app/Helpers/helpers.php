@@ -21,6 +21,11 @@ if (! function_exists('enkripsi')) {
         }
     }
 }
+if(! function_exists('formatRupiah')){
+    function formatRupiah($angka, $prefix = 'Rp ') {
+        return $prefix . number_format($angka, 0, ',', '.');
+    }
+}
 
 
 if(! function_exists('incrementID')){

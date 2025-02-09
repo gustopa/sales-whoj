@@ -56,9 +56,11 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         Route::post('/view/{id}',[RequestOrderController::class,'view']);
         Route::post('/getDPList/{id}',[RequestOrderController::class,'getDPList']);
         Route::get('/print/{id}',[RequestOrderController::class,'print']);
+        Route::get('/print_dp/{id}',[RequestOrderController::class,'printDp']);
 
         Route::post('/create',[RequestOrderController::class,'create']);
         Route::get('/form/{id}',[RequestOrderController::class,'form']);
+        Route::post('/save',[RequestOrderController::class,'save']);
         Route::get('/getDiamondDetail/{id}',[RequestOrderController::class,'getDiamondDetail']);
         Route::post('/addDiamondDetail',[RequestOrderController::class,'addDiamondDetail']);
         Route::get('/getDownPayment/{id}',[RequestOrderController::class,'getDownPayment']);

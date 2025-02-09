@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useImperativeHandle, useRef, useState } from 'react'
 import Table from '../../Components/Table'
 import FormDownPayment from './FormDownPayment';
 import { FaPlus } from 'react-icons/fa6';
@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 import { formatDate, showAlert } from '../../../helper';
 import DataTable from '../../Layouts/components/Datatable';
 
-function TablePembayaran({row_id,setDocNo}) {
+function TablePembayaran({row_id,setDocNo,ref}) {
     const tableRef = useRef(null)
     const [update,setUpdate] = useState('')
     const handleDelete = (row_id) => {
@@ -45,7 +45,7 @@ function TablePembayaran({row_id,setDocNo}) {
                 </div>
             )
         },
-        {field : "dp_date", headerName : "Tanggal",minWidth : 130, width : 130,cellRenderer : params => formatDate(params.value)},
+        {field : "dp_date", headerName : "Tanggal",minWidth : 130, width : 130,cellRenderer : params => params.value == null ? "-" : formatDate(params.value)},
         {field : "down_payment", headerName : "Uang Muka", cellRenderer : params => Intl.NumberFormat("en-US").format(params.value),minWidth : 110, width : 110,},
         {field : "dp_ke", headerName : "DP Ke",minWidth : 110, width : 110,},
         {field : "bukti_dp", headerName : "Bukti DP",minWidth : 110, width : 110,}
@@ -63,6 +63,11 @@ function TablePembayaran({row_id,setDocNo}) {
     useEffect(()=>{
       getData()
     },[row_id,update])
+    useImperativeHandle(ref,()=>{
+      return {
+        total_dp : dataDp.length
+      }
+    })
     return (
         <DataTable data={dataDp} pagination={false} filter={false} columns={columnDefs}/>
         // <Table ref={tableRef} kolomFilter={false} minWidth={100} filter={false} floatingFilter={false} pagination={false} columnDefs={columnDefs} endpoint={`/request_order/getDownPayment/${row_id}`}/>
