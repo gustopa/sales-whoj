@@ -3,6 +3,16 @@
 @tailwind utilities;
 .ag-root-wrapper{
     font-size: 13px;
+    border: none;
+    padding: 10px;
+}
+.ag-header{
+    height: 49px;
+    min-height: 49px;
+    background: #b89474;
+    border-bottom: none;
+    color: white;
+    border-radius: 15px;
 }
 .ag-theme-alpine {
     width: 100%;

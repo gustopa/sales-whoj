@@ -3,9 +3,13 @@ import { AgGridReact } from 'ag-grid-react';
 import axios from 'axios';
 import { useSnapshot } from 'valtio';
 import state from '../../store/store';
-import { FormControlLabel, Checkbox, Paper, Typography, Accordion, AccordionSummary, AccordionDetails, Button } from '@mui/material';
+import { FormControlLabel, Checkbox, Paper, Typography, Accordion, AccordionSummary, AccordionDetails, Button, Pagination, Card } from '@mui/material';
 import { IoIosArrowDown, IoIosSettings } from "react-icons/io";
 import { MdPrint } from 'react-icons/md';
+import {Grid2 as Grid} from '@mui/material';
+// import { StatusBarModule } from 'ag-grid-enterprise'; 
+// import {ModuleRegistry} from 'ag-grid-community'
+// ModuleRegistry.registerModules([ StatusBarModule ]); 
 const Table = ({
     endpoint,
     columnDefs,
@@ -24,7 +28,7 @@ const Table = ({
     const snap = useSnapshot(state);
     const [updatedColumnDefs, setUpdatedColumnDefs] = useState(columnDefs);
     const [filterStatus, setFilterStatus] = useState("All");
-
+    const [totalData,setTotaldata] = useState(0)
     const fetchServerData = async (params) => {
         const request = {
             startRow: params.startRow,
@@ -37,6 +41,7 @@ const Table = ({
         try {
             const response = await axios.get(endpoint, { params: request });
             params.successCallback(response.data.rows, response.data.lastRow);
+            setTotaldata(response.data.lastRow)
             gridRef.current.api.hideOverlay();
         } catch (error) {
             params.failCallback();
@@ -46,7 +51,7 @@ const Table = ({
 
     const defaultColDef = useMemo(() => ({
         filter: filter,
-        floatingFilter: floatingFilter,
+        // floatingFilter: floatingFilter,
         flex: 1,
         minWidth: minWidth,
         filterParams: { maxNumConditions: 1 },
@@ -94,7 +99,23 @@ const Table = ({
         
         gridRef.current.api.exportDataAsCsv();
     }
-
+    
+    // console.log(gridRef.current?.api.paginationGetRowCount());
+    const currentPageRef = useRef(1);
+    const [totalPages,setTotalPages] = useState(0)
+    const [totalPageSize,setTotalPageSize] = useState(10)
+    const [startRow,setStartRow] = useState(0)
+    const [endRow,setEndRow] = useState(10)
+    const handlePagination = value => {
+        console.log(value);
+        gridRef.current?.api.paginationGoToPage(value-1);
+        currentPageRef.current = value;
+    }
+    console.log(currentPageRef.current);
+    
+    useEffect(()=>{
+        setTotalPages(Math.ceil(totalData / totalPageSize))
+    },[totalData,totalPageSize])
     return (
         <div>
             {/* Toolbox untuk memilih kolom */}
@@ -151,13 +172,44 @@ const Table = ({
                             </div>
                         }
                     </Paper>
+                    {/* Pagination Selector */}
+                    <Paper sx={{ padding: "10px", backgroundColor: "inherit", boxShadow: "none" }}>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">
+                            Jumlah data per page:
+                        </label>
+                        <select
+                            className="p-2 border rounded-md dark:bg-[#222628] dark:text-white"
+                            onChange={(e) => {
+                                if (gridRef.current && gridRef.current.api) {
+                                    setTotalPageSize(e.target.value)
+                                    gridRef.current.api.setGridOption('paginationPageSize', Number(e.target.value));
+                                }
+                            }}
+                            defaultValue={10}
+                        >
+                            <option value={10}>10</option>
+                            <option value={20}>20</option>
+                            <option value={50}>50</option>
+                        </select>
+                    </Paper>
                 </AccordionDetails>
             </Accordion>
             }
 
-
+            
+            
             {/* AG Grid */}
             <div className={`${snap.theme === 'dark' ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'}`} style={{ border: 'none', height: height || undefined }}>
+                <Card className='mb-2'>
+                    <Grid container spacing={2}>
+                        <Grid size={{xs:12,md:6}}>
+                            <Pagination color="primary"  page={currentPageRef.current} sx={{my:2}} onChange={(event,value) =>  handlePagination(value)} count={totalPages}/>
+                        </Grid>
+                        <Grid size={{xs:6,md:3}}>
+                            <h2>{startRow}-{endRow}</h2>
+                        </Grid>
+                    </Grid>
+                </Card>
                 <AgGridReact
                     {...props}
                     ref={gridRef}
@@ -167,25 +219,43 @@ const Table = ({
                     cacheBlockSize={10}
                     domLayout={domLayout}
                     rowHeight={rowHeight}
-                    pagination={pagination}
+                    pagination={true}
+                    suppressPaginationPanel={false}
                     getRowStyle={(params) => {
-                        return { fontSize : '13px' };
+                        return { fontSize : '13px',borderBottom : 'none' };
                     }}
                     getRowClass={(params) => {
-                        return `${params.node.rowIndex % 2 === 0 ? 'bg-[#f0f0f0] dark:bg-[#181d1f]' : 'bg-white dark:bg-[#222628]'}`;
+                        // return `${params.node.rowIndex % 2 === 0 ? 'bg-[#f0f0f0] dark:bg-[#181d1f]' : 'bg-white dark:bg-[#222628]'}`;
+                        return `bg-[transparent]`;
                     }}
                     paginationPageSize={10}
-                    paginationPageSizeSelector={[10, 20, 50]}
+                    paginationPageSizeSelector={false}
                     localeText={localeText}
                     datasource={{ getRows: fetchServerData }}
                     overlayNoRowsTemplate={<NoRowsOverlay />}
-                    onGridReady={(e) => {
-                        gridRef.current = e
+                    onGridReady={(params) => {
+                        params.api.addEventListener("sortChanged", () => {
+                            console.log('ok');
+                            
+                        });
+                        // gridRef.current = e
                         // e.api.setColumnDefs(updatedColumnDefs);
-                        const inputs = document.querySelectorAll('.ag-input-field-input');
-                        inputs.forEach((input) => input.setAttribute('placeholder', 'Search...'));
+                        // const inputs = document.querySelectorAll('.ag-input-field-input');
+                        // inputs.forEach((input) => input.setAttribute('placeholder', 'Search...'));
+                        // const btnFilter = document.querySelector('.ag-floating-filter-button')
+                        // e.api.setGridOption("statusBar", {
+                        //     statusPanels: [
+                        //       {
+                        //         statusPanel: () => , // Custom Pagination di Tool Panel
+                        //         align: "left",
+                        //       },
+                        //     ],
+                        //   });
+                        
                     }}
                 />
+                
+                
             </div>
         </div>
     );
