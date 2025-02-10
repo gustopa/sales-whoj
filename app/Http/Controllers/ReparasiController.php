@@ -199,6 +199,16 @@ class ReparasiController extends Controller
         
     }
 
+    public function delete($id){
+        $access = checkPermission('reparation');
+        RequestOrderModel::where('row_id',$id)->update([
+            "is_deleted" => 1,
+            "modified_date" => date("Y-m-d H:i:s"),
+            "modified_by" => session('username'),
+        ]);
+        return response()->json(password_hash(time(),PASSWORD_DEFAULT));
+    }
+
     public function print($id){
         $data = DB::table('vw_request_orderlist')->where('row_id',decrypt_id($id))->first();
         $request_order_diamond = DB::table('vw_request_order_diamondlist')->where('row_id',decrypt_id($id))->where('is_deleted',0)->get();

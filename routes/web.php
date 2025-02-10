@@ -86,6 +86,7 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         Route::get('/',[ReparasiController::class,'index']);
         Route::get('/getAll',[ReparasiController::class,'getAll']);
         Route::post('/create',[ReparasiController::class,'create']);
+        Route::delete('/delete/{id}',[ReparasiController::class,'delete']);
         Route::get('/form/{id}',[ReparasiController::class,'form']);
         Route::get('/getPayment/{id}',[ReparasiController::class,'getPayment']);
         Route::post('/tambahPayment',[ReparasiController::class,'tambahPayment']);
