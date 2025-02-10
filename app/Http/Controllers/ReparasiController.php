@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use PDF;
 class ReparasiController extends Controller
 {
     public function index(){
@@ -196,5 +197,24 @@ class ReparasiController extends Controller
             "timestamp" => password_hash(time(),PASSWORD_DEFAULT)
         ]);
         
+    }
+
+    public function print($id){
+        $data = DB::table('vw_request_orderlist')->where('row_id',decrypt_id($id))->first();
+        $request_order_diamond = DB::table('vw_request_order_diamondlist')->where('row_id',decrypt_id($id))->where('is_deleted',0)->get();
+        
+        $pdf = PDF::loadView('pdf.reparasi', ['request_order' => $data,'request_order_diamond' => $request_order_diamond])->setPaper('a4','landscape');
+
+
+        // return view('pdf/payment',['payment' => $data]);
+        return $pdf->stream("reparasi-$data->doc_no.pdf",["Attachment" => false]);
+    }
+
+    public function printPelunasan($id){
+        $request_order = DB::table('vw_request_orderlist')->where('row_id',decrypt_id($id))->first();
+        $request_order_diamond = DB::table('vw_request_order_diamondlist')->where('row_id',decrypt_id($id))->where('is_deleted',0)->get();
+        $request_order_reparation = DB::table('vw_request_order_reparationlist')->where('row_id',decrypt_id($id))->where('is_deleted',0)->orderBy('line_id','desc')->get();
+        $pdf = PDF::loadView('pdf.pelunasan_reparasi', ['request_order' => $request_order,'request_order_diamond' => $request_order_diamond,'request_order_reparation' => $request_order_reparation])->setPaper('a4','landscape');
+        return $pdf->stream("reparasi-$request_order->doc_no.pdf",["Attachment" => false]);
     }
 }

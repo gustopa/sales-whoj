@@ -5,7 +5,7 @@ import Input from '../Layouts/components/Input'
 import { useSnapshot } from 'valtio'
 import state from '../../store/store'
 import ModalCustomer from '../Components/ModalCustomer'
-import { formatNumber, sanitizedNumber, showAlert, unformatNumber } from '../../helper'
+import { encrypt, formatNumber, sanitizedNumber, showAlert, unformatNumber } from '../../helper'
 import { MdDone, MdPrint, MdSave, MdScanner } from 'react-icons/md'
 import TableDetail from '../RequestOrder/Components/TableDetail'
 import TablePembayaran from './Components/TablePembayaran'
@@ -308,8 +308,12 @@ function Form({data,sales,stores,items,statusList}) {
                 <Grid size={{xs:12,md : 12, lg:8}}>
                     <Button onClick={() => handleSend('simpan')} variant='contained' ><MdSave className='mr-1'/> Simpan</Button>
                     <Button onClick={() => handleSend('submit')} variant='contained' sx={{ml:1}}><MdDone className='mr-1'/> Submit</Button>
-                    <Button variant='contained' sx={{ml:1}}><MdPrint className='mr-1'/>PRINT REPARASI</Button>
-                    <Button variant='contained' sx={{ml:1}}><MdPrint className='mr-1'/>PRINT PEMBAYARAN</Button>
+                    <a href={`/reparation/print_reparasi/${encrypt(data.row_id)}`} target='__blank'>
+                        <Button variant='contained' sx={{ml:1}}><MdPrint className='mr-1'/>PRINT REPARASI</Button>
+                    </a>
+                    <a href={`/reparation/print_pelunasan/${encrypt(data.row_id)}`} target='__blank'>
+                        <Button variant='contained' sx={{ml:1}}><MdPrint className='mr-1'/>PRINT PEMBAYARAN</Button>
+                    </a>
                 </Grid>
             </Grid>
         </Card>

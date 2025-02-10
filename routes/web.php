@@ -92,6 +92,8 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         Route::post('/editPayment/{id}',[ReparasiController::class,'editPayment']);
         Route::delete('/deletePayment/{id}',[ReparasiController::class,'deletePayment']);
         Route::post('/save',[ReparasiController::class,'save']);
+        Route::get('/print_reparasi/{id}',[ReparasiController::class,'print']);
+        Route::get('/print_pelunasan/{id}',[ReparasiController::class,'printPelunasan']);
     });
     // End reparation
 
