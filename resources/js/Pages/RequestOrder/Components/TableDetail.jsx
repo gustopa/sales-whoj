@@ -7,7 +7,10 @@ import { FaPlus } from 'react-icons/fa6'
 import { MdDelete, MdEdit } from 'react-icons/md'
 import { Button } from '@mui/material'
 import Swal from 'sweetalert2'
-function TableDetail({row_id,onSuccess}) {
+import { usePage } from '@inertiajs/react'
+function TableDetail({row_id,onSuccess,mode,setDocNo}) {
+    const {session} = usePage().props
+    
     const handleDelete = (row_id) => {
           Swal.fire({
             title: "Are you sure?",
@@ -32,7 +35,7 @@ function TableDetail({row_id,onSuccess}) {
         }
     const [columnDefs] = useState([
         {field : "line_id", headerName : "",minWidth : 110, width : 110, flex : false, resizable : false, pinned : "left",
-          headerComponent : params => <FormDiamond onSuccess={onSuccess} iconButton={<FaPlus color='white'/>} title="TAMBAH" sxButton={{background : "#2e7d32"}} row_id={row_id} endpoint="/request_order/tambahDiamond"/>,
+          headerComponent : params => <FormDiamond setDocNo={setDocNo} mode={mode} onSuccess={onSuccess} iconButton={<FaPlus color='white'/>} title="TAMBAH" sxButton={{background : "#2e7d32"}} row_id={row_id} endpoint="/request_order/tambahDiamond"/>,
           cellRenderer : params => (
             <div key={params.value}>
               <FormDiamond onSuccess={onSuccess} dataButir={params.data?.grain} dataKarat={params.data?.grade} dataTipe={params.data?.diamond_type} dataSert={params.data?.no_sert} dataDiameter={params.data?.diameter} dataWarna={params.data?.color} iconButton={<MdEdit color='white'/>} title="EDIT" sxButton={{minWidth : "30px", background : "#1976d2",padding : 3}} row_id={row_id} endpoint={`/request_order/editDiamond/${params.value}`}/>
@@ -40,7 +43,8 @@ function TableDetail({row_id,onSuccess}) {
                   <MdDelete/>
               </Button>
             </div>
-          )
+          ),
+          hide : session.role_id == 6 ? false : mode == "reparasi" ? false : true,
         },
         {field : "grain", headerName : "Butir", minWidth : 110, width : 110, flex : false},
         {field : "grade", headerName : "Karat",minWidth : 90, width : 90, flex : false},

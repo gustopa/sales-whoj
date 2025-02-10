@@ -10,7 +10,7 @@ function FormDiamond({
     sxButton,
     iconButton,
     endpoint,
-    dataButir,dataKarat,dataTipe, dataSert,dataDiameter,dataWarna,row_id,
+    dataButir,dataKarat,dataTipe, dataSert,dataDiameter,dataWarna,row_id,mode,
     onSuccess,setDocNo}) {
     const isMobile = useIsMobile()
     const modalTambah = useRef(null)
@@ -37,7 +37,10 @@ function FormDiamond({
             const responseData = await response.data
             showAlert("Berhasil!",`Diamond berhasil di${title.toLowerCase()}`, "success")
             onSuccess(responseData.timestamp)
+            if(setDocNo) setDocNo(responseData.doc_no)
         }catch(err){
+            console.log(err);
+            
             showAlert("Error!","Terjadi kesalahan silahkan coba lagi","error")
         }finally{
             modalTambah.current?.close()

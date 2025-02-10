@@ -126,13 +126,12 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
         });
       }
 
-      const handleFileChange = e => {
+    const handleFileChange = e => {
         const file = e.target.files[0]
         if (file) {
             setPhoto(file);
             setPreview(URL.createObjectURL(file));
         }
-
     }
       
       const printDp = () => {

@@ -53,13 +53,13 @@ function Inventory({totalInventoryList,access}) {
         {field : "identity_code",headerName : "PLU", minWidth : 120, width : 120, flex : false,
             cellRenderer : params => <ModalInventory params={params}/>
         },
-        {field : "created_date",headerName : "Tgl dibuat", hide : true, cellRenderer : params => formatDate(params.value)},
+        {field : "created_date",headerName : "Tgl dibuat", hide : true, cellRenderer : params => formatDate(params.value), filter : 'agDateColumnFilter' },
         {field : "item_id_txt",headerName : "Item"},
         {field : "model_id_txt",headerName : "Model"},
         {field : "store_id_txt",headerName : "Store"},
         {field : "location_id_txt",headerName : "Letak", cellRenderer : params => params.value == null ? "-" : params.value},
         {field : "sell_price",headerName : "Harga jual", cellRenderer : params => Intl.NumberFormat("id-ID").format(params.value), filter : 'agNumberColumnFilter', flex : false,minWidth : 130, width : 130},
-        {field : "status",headerName : "Status", cellRenderer : params => <Chip label={params.value} color={params.value == "READY" ? "success" : "error" }/>},
+        {field : "status",headerName : "Status", cellRenderer : params => <Chip size='small' label={params.value} color={params.value == "READY" ? "success" : "error" }/>},
     ])
   return (
     <Layout title="Barang" page="Barang">

@@ -27,7 +27,7 @@ function Home({session}) {
             cellRenderer :  (params) => {
                 return (
                     <div className="dark:text-white">
-                        <Chip className={`dark:text-white`} color={params.value == "ON GOING" ? 'warning' : 'primary'} label={params.value} variant="filled" />
+                        <Chip size='small' className={`dark:text-white`} color={params.value == "ON GOING" ? 'warning' : 'primary'} label={params.value} variant="filled" />
                     </div>
                 )
             }

@@ -237,7 +237,7 @@ class RequestOrderController extends Controller
                 "is_submitted" => $request['mode'] == "simpan" ? 0 : 1,
             ];
             if($request['doc_no'] == ""){
-                $last_doc = RequestOrderModel::where('doc_no','not like','')->latest('row_id')->first()->doc_no;
+                $last_doc = RequestOrderModel::where('doc_no','not like','')->where('doc_no','like','DP-%')->latest('row_id')->first()->doc_no;
                 $current_doc = incrementID($last_doc);
                 updateLastId('payment_order_id');
                 $updateOrder["doc_no"] = $current_doc;
@@ -253,10 +253,6 @@ class RequestOrderController extends Controller
     }
 
     public function getDiamondDetail($id){
-        $access = checkPermission("request_order");
-        // if($access == null || $access == ""){
-        //     return abort(403);
-        // }
         $data = DB::table('vw_request_order_diamondlist')->where([
             ['row_id','=',$id],
             ['company_id','=',session('company_id')],
@@ -265,10 +261,6 @@ class RequestOrderController extends Controller
         return $data;
     }
     public function getDownPayment($id){
-        $access = checkPermission("request_order");
-        if($access == null || $access == ""){
-            return abort(403);
-        }
         $data = DB::table('request_order_dp')->where([
             ['row_id','=',$id],
             ['company_id','=',session('company_id')],
@@ -334,7 +326,7 @@ class RequestOrderController extends Controller
                 "modified_by" => session('username'),
             ];
             if($requestOrder->doc_no == ""){
-                $last_doc = RequestOrderModel::where('doc_no','not like','')->latest('row_id')->first()->doc_no;
+                $last_doc = RequestOrderModel::where('doc_no','not like','')->where('doc_no','like','DP-%')->latest('row_id')->first()->doc_no;
                 $current_doc = incrementID($last_doc);
                 updateLastId('payment_order_id');
                 $updateRequestOrder["doc_no"] = $current_doc;
@@ -414,7 +406,7 @@ class RequestOrderController extends Controller
                 "berat_emas" => $dataGrouping->gold_weight
             ];
             if($request['doc_no'] == ""){
-                $last_doc = RequestOrderModel::where('doc_no','not like','')->latest('row_id')->first()->doc_no;
+                $last_doc = RequestOrderModel::where('doc_no','not like','')->where('doc_no','like','DP-%')->latest('row_id')->first()->doc_no;
                 $current_doc = incrementID($last_doc);
                 updateLastId('payment_order_id');
                 $updateRequestOrder["doc_no"] = $current_doc;
@@ -509,23 +501,47 @@ class RequestOrderController extends Controller
     }
 
     public function tambahDiamond(Request $request){
-        RequestOrderDiamondModel::insert([
-            "row_id" => $request['row_id'],
-            "company_id" => session('company_id'),
-            "grain" => $request['grain'],
-            "grade" => $request['grade'],
-            "diamond_type" => $request['diamond_type'],
-            "no_sert" => $request['no_sert'],
-            "diameter" => $request['diameter'],
-            "color" => $request['color'],
-            "work_size" => "",
-            "is_deleted" => 0,
-            "created_date" => date("Y-m-d H:i:s"),
-            "created_by" => session('username'),
-            "modified_date" => date("Y-m-d H:i:s"),
-            "modified_by" => session('username'),
-        ]);
+        $doc_no = DB::transaction(function() use($request){
+            $requestOrder = RequestOrderModel::where('row_id',$request['row_id'])->first();
+            $updateRequestOrder = [
+                "modified_date" => date("Y-m-d H:i:s"),
+                "modified_by" => session('username'),
+            ];
+            if($requestOrder->doc_no == null){
+                if($requestOrder->type_order != "REPARASI"){
+                    $last_doc = RequestOrderModel::where('doc_no','not like','')->where('doc_no','like','DP-%')->latest('row_id')->first()->doc_no;
+                    $current_doc = incrementID($last_doc);
+                    updateLastId('payment_order_id');
+                    $updateRequestOrder["doc_no"] = $current_doc;
+                }else{
+                    $last_doc = RequestOrderModel::where('doc_no','not like','')->where('doc_no','like','RP-%')->latest('row_id')->first()->doc_no;
+                    $current_doc = incrementID($last_doc);
+                    updateLastId('reparasi_id');
+                    $updateRequestOrder["doc_no"] = $current_doc;
+                }
+            }
+            RequestOrderDiamondModel::insert([
+                "row_id" => $request['row_id'],
+                "company_id" => session('company_id'),
+                "grain" => $request['grain'],
+                "grade" => $request['grade'],
+                "diamond_type" => $request['diamond_type'],
+                "no_sert" => $request['no_sert'],
+                "diameter" => $request['diameter'],
+                "color" => $request['color'],
+                "work_size" => "",
+                "is_deleted" => 0,
+                "created_date" => date("Y-m-d H:i:s"),
+                "created_by" => session('username'),
+                "modified_date" => date("Y-m-d H:i:s"),
+                "modified_by" => session('username'),
+            ]);
+            RequestOrderModel::where('row_id',$request['row_id'])->update($updateRequestOrder);
+            return RequestOrderModel::select('doc_no')->where('row_id',$request['row_id'])->first()->doc_no;
+
+        });
         return response()->json([
+            "doc_no" => $doc_no,
             "timestamp" => password_hash(time(),PASSWORD_DEFAULT)
         ]);
     }

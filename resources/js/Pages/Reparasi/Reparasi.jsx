@@ -5,7 +5,7 @@ import { MdDelete, MdEdit } from 'react-icons/md'
 import { Button, Chip } from '@mui/material'
 import { Link } from '@inertiajs/react'
 import ModalComponent from '../Components/Modal'
-import { formatDate } from '../../helper'
+import { encrypt, formatDate } from '../../helper'
 import { FaCirclePlus } from 'react-icons/fa6'
 
 function statusColor(status){
@@ -40,27 +40,29 @@ function Reparasi({access}) {
             ),
             cellRenderer : params => 
                 (
-                    <div key={params.value}>
-                        <Link>
-                            <Button sx={{ width: "30px", minWidth: "30px" }} size="small" variant='contained' color="primary">
-                                <MdEdit/>
+                    params.value && (
+                        <div key={params.value}>
+                            <Link href={`/reparation/form/${encrypt(params.value)}`}>
+                                <Button sx={{ width: "30px", minWidth: "30px" }} size="small" variant='contained' color="primary">
+                                    <MdEdit/>
+                                </Button>
+                            </Link>
+                            <Button sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="error">
+                                <MdDelete/>
                             </Button>
-                        </Link>
-                        <Button sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="error">
-                            <MdDelete/>
-                        </Button>
-                    </div>
+                        </div>
+                    )
                 ),
             
         },
-        {field : "doc_no", headerName : "Doc No", cellRenderer : params => <ModalComponent key={params.value} params={params}/>},
+        {field : "doc_no", headerName : "Doc No", cellRenderer : params => <ModalComponent key={params.value} params={params}/>, width : 110, minWidth : 110, flex : false},
         {field : "customer_id_txt", headerName : "Pelanggan"},
-        {field : "trans_date", headerName : "Tanggal", cellRenderer : params => params.value == "0000-00-00" ? "-" : formatDate(params.value)},
+        {field : "trans_date", headerName : "Tanggal", filter : 'agDateColumnFilter', cellRenderer : params => params.value == "0000-00-00" ? "-" : formatDate(params.value)},
         {field : "estimated_date", headerName : "Perkiraan delivery time",cellRenderer : params => params.value == "0000-00-00" ? "-" : formatDate(params.value)},
         {field : "item_id_txt", headerName : "Tipe item"},
-        {field : "type_order", headerName : "Tipe order"},
-        {field : "outsource_intern", headerName : "Outsource"},
-        {field : "status", headerName : "Status",cellRenderer : params => <Chip color={statusColor(params.value)} label={params.value == "" ? "DRAFT" : params.value} />},
+        {field : "type_order", headerName : "Tipe order", minWidth : 120, width: 120, flex: false},
+        {field : "outsource_intern", headerName : "Outsource", minWidth : 120, width : 120, flex : false},
+        {field : "status", headerName : "Status",cellRenderer : params => <Chip size='small' color={statusColor(params.value)} label={params.value == "" ? "DRAFT" : params.value} />},
     ])
   return (
     <Layout title="Reparasi" page="Reparasi">

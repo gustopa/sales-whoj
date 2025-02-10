@@ -59,25 +59,25 @@ function RequestOrder({access}) {
                 ),
             
         },
-        {field : "doc_no", headerName : "Doc No", cellRenderer : params => <ModalComponent key={params.value} params={params}/>},
+        {field : "doc_no", headerName : "Doc No", cellRenderer : params => <ModalComponent key={params.value} params={params}/>, minWidth : 120, width : 120, flex : false},
         {field : "customer_id_txt", headerName : "Pelanggan"},
         {field : "trans_date", headerName : "Tanggal", cellRenderer : params => params.value == "0000-00-00" ? "-" : formatDate(params.value), filter : 'agDateColumnFilter'},
-        {field : "estimated_date", headerName : "Perkiraan delivery time",cellRenderer : params => params.value == "0000-00-00" || params.value == null ? "-" : formatDate(params.data?.estimated_date), filter : 'agDateColumnFilter'},
-        {field : "item_id_txt", headerName : "Tipe item"},
-        {field : "type_order", headerName : "Tipe order"},
-        {field : "outsource_intern", headerName : "Outsource"},
-        {field : "status", headerName : "Status",cellRenderer : params => <Chip color={statusColor(params.value)} label={params.value == "" ? "DRAFT" : params.value} />},
+        {field : "estimated_date", headerName : "Perkiraan delivery time", minWidth : 190, width : 190, flex : false,cellRenderer : params => params.value == "0000-00-00" || params.value == null ? "-" : formatDate(params.data?.estimated_date), filter : 'agDateColumnFilter'},
+        {field : "item_id_txt", headerName : "Tipe item", width : 125, minWidth : 125, flex : false},
+        {field : "type_order", headerName : "Tipe order", minWidth : 120, width : 120, flex : false},
+        {field : "outsource_intern", headerName : "Outsource", width : 120, minWidth : 120, flex : false},
+        {field : "status", headerName : "Status",cellRenderer : params => <Chip size='small' color={statusColor(params.value)} label={params.value == "" ? "DRAFT" : params.value} />, width : 110, minWidth : 110, flex : false},
         {field : "last_process", headerName : "Proses"},
     ])
     const [columnPaid] = useState([
-        {field : "doc_no", headerName : "Doc No", cellRenderer : params => <ModalComponent params={params}/>},
+        {field : "doc_no", headerName : "Doc No", cellRenderer : params => <ModalComponent params={params}/>, minWidth : 120, width : 120, flex : false},
         {field : "customer_id_txt", headerName : "Pelanggan"},
         {field : "trans_date", headerName : "Tanggal", cellRenderer : params => params.value == "0000-00-00" ? "-" : params.value, filter : 'agDateColumnFilter'},
-        {field : "estimated_date", headerName : "Perkiraan delivery time",cellRenderer : params => params.value == "0000-00-00" ? "-" : params.data?.estimated_date, filter : 'agDateColumnFilter'},
-        {field : "item_id_txt", headerName : "Tipe item"},
-        {field : "type_order", headerName : "Tipe order"},
-        {field : "outsource_intern", headerName : "Outsource"},
-        {field : "status", headerName : "Status",cellRenderer : params => <Chip color={statusColor(params.value)} label={params.value == "" ? "DRAFT" : params.value} />},
+        {field : "estimated_date", headerName : "Perkiraan delivery time",minWidth : 190, width : 190, flex : false,cellRenderer : params => params.value == "0000-00-00" ? "-" : params.data?.estimated_date, filter : 'agDateColumnFilter'},
+        {field : "item_id_txt", headerName : "Tipe item", width : 125, minWidth : 125, flex : false},
+        {field : "type_order", headerName : "Tipe order", minWidth : 120, width : 120, flex : false},
+        {field : "outsource_intern", headerName : "Outsource", width : 120, minWidth : 120, flex : false},
+        {field : "status", headerName : "Status",cellRenderer : params => <Chip size='small' color={statusColor(params.value)} label={params.value == "" ? "DRAFT" : params.value} />, width : 110, minWidth : 110, flex : false},
     ])
     const tableWaiting = useRef(null)
     const tableProccess = useRef(null)

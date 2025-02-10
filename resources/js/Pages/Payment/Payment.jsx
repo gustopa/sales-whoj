@@ -141,7 +141,7 @@ function Payment({access}) {
                         color = "secondary"
                 }
                 return (
-                    <Chip label={params.value == null || params.value == "" ? "DRAFT" : params.value} color={color} />
+                    <Chip size='small' label={params.value == null || params.value == "" ? "DRAFT" : params.value} color={color} />
                 )
             }
             
