@@ -14,6 +14,10 @@
     color: white;
     border-radius: 15px;
 }
+.ag-body-viewport{
+    max-height: 60vh;
+    overflow: auto;
+}
 .ag-theme-alpine {
     width: 100%;
     overflow-x: auto;  
@@ -59,7 +63,9 @@
   font-weight: 400;
   /* color: #333;  */
 }
-
+.dark .MuiPagination-ul li .MuiPaginationItem-root {
+    color: white !important;
+  }
 .listItem:hover .listText{
     color: #b89474 !important;
 }

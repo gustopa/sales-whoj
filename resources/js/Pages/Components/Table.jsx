@@ -54,7 +54,8 @@ const Table = ({
         // floatingFilter: floatingFilter,
         flex: 1,
         minWidth: minWidth,
-        filterParams: { maxNumConditions: 1 },
+        filterParams: { maxNumConditions: 1,filterPlaceholder : "Search..." },
+        hide : false,
     }), []);
 
     const localeText = {
@@ -103,6 +104,7 @@ const Table = ({
     // console.log(gridRef.current?.api.paginationGetRowCount());
     const currentPageRef = useRef(1);
     const [pageKey,setPageKey] = useState(0)
+    const [columnKey,setColumnKey] = useState(0)
     const [totalPages,setTotalPages] = useState(0)
     const [totalPageSize,setTotalPageSize] = useState(10)
     const [startRow,setStartRow] = useState(0)
@@ -131,13 +133,13 @@ const Table = ({
                     </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <Paper sx={{ padding: "10px", backgroundColor: "inherit", boxShadow: "none" }}>
+                    <Paper  sx={{ padding: "10px", backgroundColor: "inherit", boxShadow: "none" }}>
                         {columnDefs
                             .filter(col => col.headerName && col.headerName.trim() !== "")
                             .map(col => (
                                 <FormControlLabel
                                     className='text-[black] dark:text-white'
-                                    key={col.field}
+                                    key={`${col.field}`}
                                     control={
                                         <Checkbox
                                             checked={!updatedColumnDefs.find(c => c.field === col.field)?.hide}
@@ -173,26 +175,7 @@ const Table = ({
                             </div>
                         }
                     </Paper>
-                    {/* Pagination Selector */}
-                    <Paper sx={{ padding: "10px", backgroundColor: "inherit", boxShadow: "none" }}>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">
-                            Jumlah data per page:
-                        </label>
-                        <select
-                            className="p-2 border rounded-md dark:bg-[#222628] dark:text-white"
-                            onChange={(e) => {
-                                if (gridRef.current && gridRef.current.api) {
-                                    setTotalPageSize(e.target.value)
-                                    gridRef.current.api.setGridOption('paginationPageSize', Number(e.target.value));
-                                }
-                            }}
-                            defaultValue={10}
-                        >
-                            <option value={10}>10</option>
-                            <option value={20}>20</option>
-                            <option value={50}>50</option>
-                        </select>
-                    </Paper>
+                    
                 </AccordionDetails>
             </Accordion>
             }
@@ -201,18 +184,49 @@ const Table = ({
             
             {/* AG Grid */}
             <div className={`${snap.theme === 'dark' ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'}`} style={{ border: 'none', height: height || undefined }}>
-                <Card className='mb-2'>
+                <Card className='mb-2 px-3 dark:bg-[#181d1f] dark:!text-white'>
                     <Grid container spacing={2} sx={{py:2}}>
+                        
                         <Grid size={{xs:12,md:6}}>
-                            <Pagination key={pageKey} ref={paginationRef} color="primary"  onChange={(event,value) =>  handlePagination(value)} count={totalPages}/>
+                            <h2 className=''>
+                                
+                                <select
+                                        className="p-1 border rounded-md dark:bg-[#222628] dark:text-white ml-2"
+                                        onChange={(e) => {
+                                            if (gridRef.current && gridRef.current.api) {
+                                                setTotalPageSize(e.target.value)
+                                                gridRef.current.api.setGridOption('paginationPageSize', Number(e.target.value));
+                                            }
+                                        }}
+                                        defaultValue={10}
+                                    >
+                                        <option value={10}>10</option>
+                                        <option value={20}>20</option>
+                                        <option value={50}>50</option>
+                                </select> | 
+                            Total data : {Intl.NumberFormat('en-US').format(totalData)}
+                            </h2>
+                            {/* Pagination Selector
+                            <Paper sx={{ backgroundColor: "inherit", boxShadow: "none", display : 'flex' }}>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">
+                                    Jumlah data per page:
+                                </label>
+                                
+                            </Paper> */}
                         </Grid>
-                        <Grid size={{xs:6,md:5}}>
-                            <h2 className='text-end'>Total data : {Intl.NumberFormat('en-US').format(totalData)}</h2>
+                        <Grid size={{xs:12,md:6}} className="flex lg:justify-end">
+                            <Pagination sx={{
+                                "& .Mui-selected": {
+                                    backgroundColor: "#b89474 !important", // Warna latar belakang saat dipilih
+                                    color: "#fff !important", // Warna teks saat dipilih
+                                }
+                            }} key={pageKey} className='text-black dark:!text-white' ref={paginationRef} color='#b89474' onChange={(event,value) =>  handlePagination(value)} count={totalPages}/>
                         </Grid>
                     </Grid>
                 </Card>
                 <AgGridReact
                     {...props}
+                    
                     ref={gridRef}
                     rowModelType="infinite"
                     columnDefs={updatedColumnDefs}
@@ -239,19 +253,15 @@ const Table = ({
                         params.api.addEventListener("sortChanged", () => {
                             setPageKey(prev => prev + 1)
                         });
-                        // gridRef.current = e
-                        // e.api.setColumnDefs(updatedColumnDefs);
-                        // const inputs = document.querySelectorAll('.ag-input-field-input');
-                        // inputs.forEach((input) => input.setAttribute('placeholder', 'Search...'));
-                        // const btnFilter = document.querySelector('.ag-floating-filter-button')
-                        // e.api.setGridOption("statusBar", {
-                        //     statusPanels: [
-                        //       {
-                        //         statusPanel: () => , // Custom Pagination di Tool Panel
-                        //         align: "left",
-                        //       },
-                        //     ],
-                        //   });
+                        params.api.addEventListener("columnVisible", (event) => {
+                            const field = event.column.getColId();
+                            setUpdatedColumnDefs(prevColumnDefs => 
+                                prevColumnDefs.map(col =>
+                                    col.field === field ? { ...col, hide: !event.visible } : col
+                                )
+                            );
+                            setPageKey(prev => prev + 1)
+                        });
                         
                     }}
                 />
