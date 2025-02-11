@@ -201,12 +201,12 @@ const Table = ({
             {/* AG Grid */}
             <div className={`${snap.theme === 'dark' ? 'ag-theme-alpine-dark' : 'ag-theme-alpine'}`} style={{ border: 'none', height: height || undefined }}>
                 <Card className='mb-2'>
-                    <Grid container spacing={2}>
+                    <Grid container spacing={2} sx={{py:2}}>
                         <Grid size={{xs:12,md:6}}>
-                            <Pagination ref={paginationRef} color="primary"  sx={{my:2}} onChange={(event,value) =>  handlePagination(value)} count={totalPages}/>
+                            <Pagination ref={paginationRef} color="primary"  onChange={(event,value) =>  handlePagination(value)} count={totalPages}/>
                         </Grid>
-                        <Grid size={{xs:6,md:3}}>
-                            <h2>{startRow}-{endRow}</h2>
+                        <Grid size={{xs:6,md:5}}>
+                            <h2 className='text-end'>Total data : {totalData}</h2>
                         </Grid>
                     </Grid>
                 </Card>
