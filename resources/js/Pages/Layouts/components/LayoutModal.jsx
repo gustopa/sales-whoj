@@ -4,7 +4,7 @@ import { Box, Button, Modal } from '@mui/material'
 import { useSnapshot } from 'valtio';
 import state from '../../../store/store';
 import { useIsMobile } from '../../../hooks/IsMobile';
-function LayoutModal({iconButton,children,sxButton,closeButton=true,ref, width="70%", height="70%",variant="", size}) {
+function LayoutModal({iconButton,children,sxButton,closeButton=true,ref, width="70%", height="70%",variant="", size,color}) {
     const snap = useSnapshot(state)
     const [open,setOpen] = useState(false)
     const isMobile = useIsMobile()
@@ -19,7 +19,7 @@ function LayoutModal({iconButton,children,sxButton,closeButton=true,ref, width="
     }
   return (
     <>
-        <Button size={size} onClick={handleModal} style={sxButton} variant={variant} type="button">
+        <Button size={size} color={color} onClick={handleModal} style={sxButton} variant={variant} type="button">
             {iconButton}
         </Button>
         <Modal open={open} onClose={handleClose}>

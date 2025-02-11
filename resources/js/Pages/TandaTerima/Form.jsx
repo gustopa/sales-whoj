@@ -5,11 +5,33 @@ import Input from '../Layouts/components/Input'
 import ModalCustomer from '../Components/ModalCustomer'
 import TableItem from './components/TableItem'
 import { MdDone, MdPrint, MdSave } from 'react-icons/md'
+import { encrypt, getNow, getTodayDate, showAlert } from '../../helper'
+import { router, usePage } from '@inertiajs/react'
 function Form({data}) {
+    const {session} = usePage().props
     const [docNo,setDocNo] = useState(data.doc_no)
-    const [tanggal,setTanggal] = useState(data.trans_date)
-    const [customer,setCustomer] = useState(data.customer_id_txt)
-    const [idCustomer,setIdCustomer] = useState(data.customer_id)
+    const [tanggal,setTanggal] = useState(data.trans_date == "0000-00-00" ? getTodayDate() : data.trans_date)
+    const [customer,setCustomer] = useState(data.customer_id_txt || "")
+    const [idCustomer,setIdCustomer] = useState(data.customer_id || 0)
+    const handleSend = async mode => {
+        const formData = {
+            data : {
+                trans_date : tanggal,
+                customer_id : idCustomer,
+                is_submitted : mode == 'submit' ? 1 : 0 ,
+                modified_date : getNow(),
+                modified_by : session.username
+            }
+        }
+        try{
+            await axios.post(`/tanda_terima/save/${data.row_id}`,formData)
+            showAlert("Berhasil!",`Tanda terima berhasil di${mode}`,'success')
+            if(mode == 'submit') router.visit('/tanda_terima')
+        }catch(err){
+            console.log(err);
+            showAlert("Error!","Terjadi kesalahan silahkan coba lagi",'error')
+        }
+    }
   return (
     <Layout title="Tanda Terima | Form" page="Form Tanda Terima">
         <Grid container spacing={2}>
@@ -38,8 +60,8 @@ function Form({data}) {
                             />
                         </Grid>
                         <Grid size={12}>
-                            <Button variant='contained'><MdSave/>Simpan</Button>
-                            <Button sx={{ml:1}} variant='contained'><MdDone/>Submit</Button>
+                            <Button onClick={() => handleSend("simpan")} variant='contained'><MdSave/>Simpan</Button>
+                            <Button onClick={() => handleSend('submit')} sx={{ml:1}} variant='contained'><MdDone/>Submit</Button>
                         </Grid>
                     </Grid>
                 </Card>
@@ -47,8 +69,10 @@ function Form({data}) {
 
             <Grid size={{xs:12,md:9}}>
                 <Card className='p-3 dark:bg-navy-800'>
-                    <Button variant='contained' sx={{mb:1,ml:2}}><MdPrint/>Print</Button>
-                    <TableItem row_id={data.row_id}/>
+                    <a href={`/tanda_terima/print/${encrypt(data.row_id)}`} target='__blank'>
+                        <Button variant='contained' sx={{mb:0.2,ml:2}}><MdPrint/>Print</Button>
+                    </a>
+                    <TableItem key={idCustomer} customer_id={idCustomer} row_id={data.row_id}/>
                 </Card>
             </Grid>
         </Grid>

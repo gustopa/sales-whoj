@@ -5,9 +5,31 @@ import { Link } from '@inertiajs/react'
 import { Button } from '@mui/material'
 import { MdDelete, MdEdit } from 'react-icons/md'
 import { FaCirclePlus } from 'react-icons/fa6'
-import { encrypt, formatDate } from '../../helper'
+import { encrypt, formatDate, showAlert } from '../../helper'
 import ModalTandaTerima from './components/ModalTandaTerima'
+import Swal from 'sweetalert2'
 function TandaTerima({access}) {
+    const [timestamp,setTimestamp] = useState(0)
+    const handleDelete = row_id =>{
+        Swal.fire({
+            title: "Are you sure?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes"
+          }).then( async (result) => {
+            if (result.isConfirmed) {
+              try{
+                await axios.delete(`/tanda_terima/delete/${row_id}`)
+                showAlert("Berhasil!","Tanda terima berhasil dihapus",'success')
+                setTimestamp(prev => prev + 1)
+              }catch(err){
+                showAlert("Error!","Terjadi kesalahan silahkan coba lagi","error")
+              }
+            }
+          });
+    }
     const [columnDef] = useState([
         {field : "row_id", headerName: "",filter : false, resizable : false, width : 100,minWidth : 100,pinned : "left", hide : access == "Read only" ? true : false,
             headerComponent : params => (
@@ -26,7 +48,7 @@ function TandaTerima({access}) {
                                     </Button>
                                 </Link>
                             }
-                            <Button sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="error">
+                            <Button onClick={() => handleDelete(params.value)} sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="error">
                                 <MdDelete/>
                             </Button>
                         </div>
@@ -42,7 +64,7 @@ function TandaTerima({access}) {
     ])
   return (
     <Layout title="Tanda Terima" page="Tanda Terima">
-        <Table columnDefs={columnDef} endpoint="/tanda_terima/getAll"/>
+        <Table key={timestamp} columnDefs={columnDef} endpoint="/tanda_terima/getAll"/>
     </Layout>
   )
 }

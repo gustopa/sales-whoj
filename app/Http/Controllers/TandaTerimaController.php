@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\TandaTerimaModel;
+use App\Models\TandaTerimaItemModel;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+use PDF;
 class TandaTerimaController extends Controller
 {
     public function index(){
@@ -78,5 +83,105 @@ class TandaTerimaController extends Controller
             "menu" => $menu,
             "session" => session()->all()
         ]);
+    }
+
+    public function tambahItem(Request $request){
+        $access = checkPermission('tanda_terima');
+        if($access == null || $access == "" || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        DB::transaction(function() use ($request) {
+            $filename = "";
+            if ($request->hasFile('file')) {
+                $file = $request->file('file');
+                $filename = "photo_file".time().'.jpeg';
+                $destinationPath = storage_path('app/public/uploaded');
+    
+                $manager = new ImageManager(new Driver());
+                $image = $manager->read($file->getRealPath());
+                $image->scale(1920,1080);
+    
+                $image->save($destinationPath . '/' . $filename); 
+    
+            }
+            $data = $request->input('data', []); 
+            $data['photo'] = $filename; 
+            $request->merge(['data' => $data]); 
+            TandaTerimaItemModel::insert($request['data']);
+        });
+        return response()->json(password_hash(time(),PASSWORD_DEFAULT));
+    }
+
+    public function editItem($id){
+        $access = checkPermission('tanda_terima');
+        if($access == null || $access == "" || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        $request = request();
+        if ($request->hasFile('file')) {
+            $filename = "";
+            $file = $request->file('file');
+            $filename = "photo_file".time().'.jpeg';
+            $destinationPath = storage_path('app/public/uploaded');
+
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($file->getRealPath());
+            $image->scale(1920,1080);
+
+            $image->save($destinationPath . '/' . $filename); 
+
+            $data = $request->input('data', []); 
+            $data['photo'] = $filename; 
+            $request->merge(['data' => $data]); 
+        }
+        TandaTerimaItemModel::where('line_id',$id)->update($request['data']);
+
+        return response()->json(password_hash(time(),PASSWORD_DEFAULT));
+    }
+
+    public function deleteItem($id){
+        $access = checkPermission('tanda_terima');
+        if($access == null || $access == "" || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        TandaTerimaItemModel::where('line_id',$id)->update([
+            "is_deleted" => 1,
+            "modified_date" => date("Y-m-d H:i:s"),
+            "modified_by"   => session('username'),
+        ]);
+        return response()->json(time());
+    }
+
+    public function print($id){
+        $tanda_terima = DB::table('vw_tanda_terimalist')->where('row_id',decrypt_id($id))->first();
+        $tanda_terima_item = DB::table('vw_tanda_terima_itemlist')->where('row_id',decrypt_id($id))->get();
+        $pdf = PDF::loadView('pdf.tanda_terima', [
+            'tanda_terima' => $tanda_terima,
+            'tanda_terima_item' => $tanda_terima_item])->setPaper('a4','landscape');
+
+        // return view('pdf/payment',['payment' => $data]);
+        return $pdf->stream("tanda-terima-$tanda_terima->doc_no.pdf",["Attachment" => false]);
+    }
+
+    public function save($id){
+        $access = checkPermission('tanda_terima');
+        if($access == null || $access == "" || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        $request = request();
+        TandaTerimaModel::where('row_id',$id)->update($request['data']);
+        return response()->json("okeee");
+    }
+    public function delete($id){
+        $access = checkPermission('tanda_terima');
+        if($access == null || $access == "" || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        TandaTerimaModel::where('row_id',$id)->update([
+            "is_deleted" => 1,
+            "modified_date" => date("Y-m-d H:i:s"),
+            "modified_by"   => session('username'),
+        ]);
+        return response()->json("okeee");
     }
 }

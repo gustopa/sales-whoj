@@ -119,6 +119,12 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         Route::get('/getItem/{id}',[TandaTerimaController::class,'getItem']);
         Route::post('/create',[TandaTerimaController::class,'create']);
         Route::get('/form/{id}',[TandaTerimaController::class,'form']);
+        Route::post('/tambahItem',[TandaTerimaController::class,'tambahItem']);
+        Route::post('/editItem/{id}',[TandaTerimaController::class,'editItem']);
+        Route::delete('/deleteItem/{id}',[TandaTerimaController::class,'deleteItem']);
+        Route::get('/print/{id}',[TandaTerimaController::class,'print']);
+        Route::post('/save/{id}',[TandaTerimaController::class,'save']);
+        Route::delete('/delete/{id}',[TandaTerimaController::class,'delete']);
     });
     // End tanda terima
 

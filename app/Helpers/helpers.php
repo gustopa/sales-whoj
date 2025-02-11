@@ -32,7 +32,7 @@ if(! function_exists('formatDate')){
         $dateTime = new DateTime($date);
 
         // Format ulang tanggal
-        $formattedDate = $dateTime->format('d/F/Y');
+        $formattedDate = $dateTime->format('d F, Y');
 
         return $formattedDate;
     }
