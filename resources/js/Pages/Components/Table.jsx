@@ -102,6 +102,7 @@ const Table = ({
     
     // console.log(gridRef.current?.api.paginationGetRowCount());
     const currentPageRef = useRef(1);
+    const [pageKey,setPageKey] = useState(0)
     const [totalPages,setTotalPages] = useState(0)
     const [totalPageSize,setTotalPageSize] = useState(10)
     const [startRow,setStartRow] = useState(0)
@@ -203,10 +204,10 @@ const Table = ({
                 <Card className='mb-2'>
                     <Grid container spacing={2} sx={{py:2}}>
                         <Grid size={{xs:12,md:6}}>
-                            <Pagination ref={paginationRef} color="primary"  onChange={(event,value) =>  handlePagination(value)} count={totalPages}/>
+                            <Pagination key={pageKey} ref={paginationRef} color="primary"  onChange={(event,value) =>  handlePagination(value)} count={totalPages}/>
                         </Grid>
                         <Grid size={{xs:6,md:5}}>
-                            <h2 className='text-end'>Total data : {totalData}</h2>
+                            <h2 className='text-end'>Total data : {Intl.NumberFormat('en-US').format(totalData)}</h2>
                         </Grid>
                     </Grid>
                 </Card>
@@ -220,7 +221,7 @@ const Table = ({
                     domLayout={domLayout}
                     rowHeight={rowHeight}
                     pagination={true}
-                    suppressPaginationPanel={false}
+                    suppressPaginationPanel={true}
                     getRowStyle={(params) => {
                         return { fontSize : '13px',borderBottom : 'none' };
                     }}
@@ -228,6 +229,7 @@ const Table = ({
                         // return `${params.node.rowIndex % 2 === 0 ? 'bg-[#f0f0f0] dark:bg-[#181d1f]' : 'bg-white dark:bg-[#222628]'}`;
                         return `bg-[transparent]`;
                     }}
+                    
                     paginationPageSize={10}
                     paginationPageSizeSelector={false}
                     localeText={localeText}
@@ -235,7 +237,7 @@ const Table = ({
                     overlayNoRowsTemplate={<NoRowsOverlay />}
                     onGridReady={(params) => {
                         params.api.addEventListener("sortChanged", () => {
-                            console.log('ok');
+                            setPageKey(prev => prev + 1)
                         });
                         // gridRef.current = e
                         // e.api.setColumnDefs(updatedColumnDefs);

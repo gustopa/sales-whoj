@@ -46,7 +46,7 @@ function ModalComponent({params}) {
     
   return (
     <div className=''>
-      <Button onClick={handleModal} className={`${params.data?.is_submitted ? '!text-whoj' : '!text-[black] dark:!text-white'}`} style={{textDecoration : "underline",fontSize : "13px"}}>
+      <Button onClick={handleModal} className={`${params.data?.is_submitted ? '!text-whoj' : '!text-[black] dark:!text-white'}`} style={{textDecoration : "underline",fontSize : "13px", paddingBottom : "3px"}}>
         {params.value}
       </Button>
       <Modal
