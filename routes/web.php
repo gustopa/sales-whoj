@@ -117,6 +117,8 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         Route::get('/',[TandaTerimaController::class,'index']);
         Route::get('/getAll',[TandaTerimaController::class,'getAll']);
         Route::get('/getItem/{id}',[TandaTerimaController::class,'getItem']);
+        Route::post('/create',[TandaTerimaController::class,'create']);
+        Route::get('/form/{id}',[TandaTerimaController::class,'form']);
     });
     // End tanda terima
 

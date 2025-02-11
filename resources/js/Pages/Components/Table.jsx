@@ -118,6 +118,7 @@ const Table = ({
     
     useEffect(()=>{
         setTotalPages(Math.ceil(totalData / totalPageSize))
+        
     },[totalData,totalPageSize])
     return (
         <div>
@@ -204,7 +205,7 @@ const Table = ({
                                         <option value={20}>20</option>
                                         <option value={50}>50</option>
                                 </select> | 
-                            Total data : {Intl.NumberFormat('en-US').format(totalData)}
+                            Total data : {totalData == undefined ? 0 : Intl.NumberFormat('en-US').format(totalData)}
                             </h2>
                             {/* Pagination Selector
                             <Paper sx={{ backgroundColor: "inherit", boxShadow: "none", display : 'flex' }}>
