@@ -106,12 +106,12 @@ const Table = ({
     const [totalPageSize,setTotalPageSize] = useState(10)
     const [startRow,setStartRow] = useState(0)
     const [endRow,setEndRow] = useState(10)
-    const handlePagination = value => {
-        console.log(value);
-        gridRef.current?.api.paginationGoToPage(value-1);
-        currentPageRef.current = value;
+    const paginationRef = useRef(null)
+    const handlePagination = async value => {
+        await gridRef.current?.api.paginationGoToPage(value-1);
+        // currentPageRef.current = value;
+        
     }
-    console.log(currentPageRef.current);
     
     useEffect(()=>{
         setTotalPages(Math.ceil(totalData / totalPageSize))
@@ -203,7 +203,7 @@ const Table = ({
                 <Card className='mb-2'>
                     <Grid container spacing={2}>
                         <Grid size={{xs:12,md:6}}>
-                            <Pagination color="primary"  page={currentPageRef.current} sx={{my:2}} onChange={(event,value) =>  handlePagination(value)} count={totalPages}/>
+                            <Pagination ref={paginationRef} color="primary"  sx={{my:2}} onChange={(event,value) =>  handlePagination(value)} count={totalPages}/>
                         </Grid>
                         <Grid size={{xs:6,md:3}}>
                             <h2>{startRow}-{endRow}</h2>
@@ -236,7 +236,6 @@ const Table = ({
                     onGridReady={(params) => {
                         params.api.addEventListener("sortChanged", () => {
                             console.log('ok');
-                            
                         });
                         // gridRef.current = e
                         // e.api.setColumnDefs(updatedColumnDefs);
