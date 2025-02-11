@@ -57,6 +57,8 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         Route::post('/getDPList/{id}',[RequestOrderController::class,'getDPList']);
         Route::get('/print/{id}',[RequestOrderController::class,'print']);
         Route::get('/print_dp/{id}',[RequestOrderController::class,'printDp']);
+        Route::delete('/delete/{id}',[RequestOrderController::class,'delete']);
+        Route::post('/order_ready/{id}',[RequestOrderController::class,'orderReady']);
 
         Route::post('/create',[RequestOrderController::class,'create']);
         Route::get('/form/{id}',[RequestOrderController::class,'form']);
@@ -102,6 +104,11 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
     Route::prefix('/refund')->group(function(){
         Route::get('/',[RefundController::class,'index']);
         Route::get('/getAll',[RefundController::class,'getAll']);
+        Route::post('/create',[RefundController::class,'create']);
+        Route::get('/form/{id}',[RefundController::class,'form']);
+        Route::post('/save',[RefundController::class,'save']);
+        Route::get('/print/{id}',[RefundController::class,'print']);
+        Route::post('/cancel/{id}',[RefundController::class,'cancel']);
     });
     // End refund
 

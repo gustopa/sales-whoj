@@ -13,6 +13,8 @@ function ModalComponent({params}) {
     const [dataDp,setDataDp] = useState([])
     const [isLoaded,setIsLoaded] = useState(false)
     const handleModal = ()=>{
+        console.log(dataOrder);
+        
         setOpen(true)
         if(!isLoaded){
             getDataDetailRequestOrder()
@@ -113,7 +115,7 @@ function ModalComponent({params}) {
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>PLU</label><br />
-                    <span>{dataOrder?.identify_code == null ? '-' : dataOrder?.identify_code}</span>
+                    <span>{dataOrder?.identity_code == null ? '-' : dataOrder?.identity_code}</span>
                 </Grid>
                 <Grid size={{md : 4, xs: 6}}>
                     <label className='text-[#999]' style={{fontSize:'10px'}}>TIPE ORDER</label><br />

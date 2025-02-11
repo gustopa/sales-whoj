@@ -1,6 +1,67 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.MuiFormLabel-root {
+    color: #b89474 !important;
+  }
+  
+  .MuiInputLabel-outlined {
+    color: #b89474;
+  }
+  
+  .MuiInputBase-input {
+    color: #b89474;
+  }
+  
+  .MuiOutlinedInput-root {
+    color: #b89474;
+  }
+  
+  .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+    border-color: #b89474;
+    border-width: 1px;
+  }
+  
+  .MuiOutlinedInput-root fieldset {
+    border-color: #b89474;
+  }
+  
+  .MuiOutlinedInput-root:hover fieldset {
+    border-color: #b89474;
+  }
+  
+  .MuiOutlinedInput-root.Mui-focused fieldset {
+    border-color: #b89474;
+  }
+  
+  /* Perubahan warna input berdasarkan tema */
+  .MuiOutlinedInput-root .MuiInputBase-input {
+    color: black; /* Default */
+  }
+  
+  body.dark-theme .MuiOutlinedInput-root .MuiInputBase-input {
+    color: white;
+  }
+  
+  .MuiOutlinedInput-root .MuiInputBase-input::placeholder {
+    color: #b89474;
+  }
+  
+  /* Redundant rules (sudah ada sebelumnya, tetapi tetap ditulis ulang) */
+  .MuiOutlinedInput-root fieldset {
+    border-color: #b89474 !important;
+  }
+  
+  .MuiOutlinedInput-root:hover fieldset {
+    border-color: #b89474;
+  }
+  
+  .MuiOutlinedInput-root.Mui-focused fieldset {
+    border-color: #b89474;
+  }
+  
+
 .ag-root-wrapper{
     font-size: 13px;
     border: none;

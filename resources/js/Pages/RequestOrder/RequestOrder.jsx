@@ -4,9 +4,11 @@ import { Button, Chip, Grid2 as Grid } from '@mui/material'
 import Table from '../Components/Table'
 import { Link } from '@inertiajs/react'
 import { MdDelete, MdDone, MdEdit } from 'react-icons/md'
-import { encrypt, formatDate } from '../../helper'
+import { encrypt, formatDate, showAlert } from '../../helper'
 import ModalComponent from '../Components/Modal'
 import { FaCirclePlus } from 'react-icons/fa6'
+import Swal from 'sweetalert2'
+import axios from 'axios'
 function statusColor(status){
     let color = ""
     switch(status){
@@ -30,6 +32,65 @@ function statusColor(status){
 
 
 function RequestOrder({access}) {
+    const handleDelete = (row_id,ref) => {
+        Swal.fire({
+          title: "Are you sure?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes"
+        }).then( async (result) => {
+          if (result.isConfirmed) {
+            try{
+              await axios.delete(`/request_order/delete/${row_id}`)
+              showAlert("Berhasil!","Pesanan berhasil dihapus",'success')
+              ref.api.refreshInfiniteCache()
+            }catch(err){
+              showAlert("Error!","Terjadi kesalahan silahkan coba lagi","error")
+            }
+          }
+        });
+        
+    }
+
+    const pesananReady = (row_id,ref) => {
+        Swal.fire({
+            title: "PLU",
+            input: "text",
+            inputPlaceholder: "Masukan PLU barang",
+            showCancelButton: false,
+            confirmButtonColor: "success",
+            confirmButtonText: "Pesanan ready",
+            cancelButtonText: "Batal",
+            preConfirm: (value) => {
+                if (!value) {
+                    Swal.showValidationMessage("PLU tidak boleh kosong!");
+                    
+                }
+                return value;
+            }
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try{
+                    const response = await axios.post(`/request_order/order_ready/${row_id}`,{PLU : result.value})
+                    const responseData =  await response.data
+                    if(responseData.status == 200){
+                        ref.api.refreshInfiniteCache()
+                        tableReady.current?.refreshData()
+                    }
+                    Swal.fire({
+                        title : responseData.status == 200 ? "Tersimpan" : "Not found",
+                        text : responseData.status == 200 ? `PLU: ${result.value}` : "PLU tidak ditemukan",
+                        icon : responseData.status == 200 ? "success" : "warning"
+                    });
+                }catch(err){
+                    console.log(err)
+                    showAlert('Gagal!','terjadi kesalahan silahkan coba lagi','error')
+                }
+            }
+        });
+    };
     const [columnDef,setColumnDef] = useState([
         {field : "row_id", headerName : "", pinned : "left", resizable : false,filter : false, width : 137, minWidth : 137,hide : access == "Read only" ? true : false,
             headerComponent : params => (
@@ -47,10 +108,10 @@ function RequestOrder({access}) {
                                         <MdEdit/>
                                     </Button>
                                 </Link>
-                                <Button sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="error">
+                                <Button onClick={() => handleDelete(params.value,params)} sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="error">
                                     <MdDelete/>
                                 </Button>
-                                <Button sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="success">
+                                <Button onClick={() => pesananReady(params.value,params)} sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="success">
                                     <MdDone/>
                                 </Button>
                             </>

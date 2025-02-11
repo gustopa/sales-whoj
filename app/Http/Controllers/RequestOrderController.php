@@ -8,6 +8,7 @@ use App\Models\RequestOrderModel;
 use App\Models\RequestOrderDpModel;
 use App\Models\RequestOrderDiamondModel;
 use App\Models\GroupingOrderModel;
+use App\Models\InventoryModel;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
@@ -250,6 +251,53 @@ class RequestOrderController extends Controller
         return response()->json([
             "doc_no" => $doc_no
         ]);
+    }
+
+    public function orderReady($id){
+        $access = checkPermission('request_order');
+        if($access == null || $access == "" || $access == "Read only"){
+            return abort(403);
+        }
+        $request = request();
+        $barang = InventoryModel::where('identity_code',$request['PLU'])->first();
+        if(!$barang){
+            return response()->json([
+                "status" => 404,
+                "message" => "PLU tidak ditemukan"
+            ]);
+        }
+        DB::transaction(function() use($id,$request){
+            RequestOrderModel::where('row_id',$id)->update([
+                "status" => "READY",
+                "identity_code" => $request['PLU'],
+                "modified_date" => date("Y-m-d H:i:s"),
+                "modified_by" => session('username'),
+            ]);
+            InventoryModel::where('identity_code',$request['PLU'])->update([
+                "payment_order_id" => $id,
+                "status" => "SOLD",
+                "store_id" => 3, //Customer
+                "modified_date" => date("Y-m-d H:i:s"),
+                "modified_by" => session('username'),
+            ]);
+        });
+        return response()->json([
+            "status" => 200,
+            "message" => "Tersimpan!"
+        ]);
+    }
+    public function delete($id){
+        $access = checkPermission('request_order');
+        if($access == null || $access == "" || $access == "Read only"){
+            return abort(403);
+        }
+        RequestOrderModel::where('row_id',$id)->update([
+            "is_deleted" => 1,
+            "modified_date" => date("Y-m-d H:i:s"),
+            "modified_by" => session('username'),
+        ]);
+        return response()->json("okee");
+
     }
 
     public function getDiamondDetail($id){

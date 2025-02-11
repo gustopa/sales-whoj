@@ -19,7 +19,7 @@ const DataTable = ({
   const defaultColDef = useMemo(() => {
     return {
       filter: filter ? "agTextColumnFilter" : false,
-      floatingFilter: filter,
+      floatingFilter: false,
       headerClass : "header-table",
       flex : 1,
       minWidth : 200,

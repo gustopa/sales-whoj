@@ -7,6 +7,9 @@ import { TextField } from '@mui/material'
 function Input(props) {
 const snap = useSnapshot(state)
 const sxInputField = {
+  // backgroundColor: "white",
+  boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.2)", // Shadow halus
+  borderRadius: "5px",
   "& .MuiFormLable-root" : {
     color : "#b89474 !important"
   },
