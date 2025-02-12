@@ -35,7 +35,7 @@ function Voucher() {
     }
     const [columnDefs] = useState([
         {field : "row_id",headerName : "", filter : false,minWidth : 120, width : 120, pinned : "left", resizable : false,
-            headerComponent : params => <FormVoucher mode="tambah" label="TAMBAH VOUCHER" tableRef={tableRef} sxButton={{background : "#b89474"}} iconButton={<FaCirclePlus color='white'/>} />,
+            headerComponent : params => <FormVoucher mode="tambah" label="TAMBAH VOUCHER" tableRef={tableRef} sxButton={{background : "#2e7d32"}} iconButton={<FaCirclePlus color='white'/>} />,
             cellRenderer : params => 
                 (
                     <div key={params.value}>

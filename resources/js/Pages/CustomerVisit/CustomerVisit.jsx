@@ -44,7 +44,7 @@ function CustomerVisit({access}) {
     const [columnDefs, setColumnDefs] = useState([
         {field : "row_id", headerName : "" , pinned : "left", filter : false,resizable: false, width : 110, minWidth : 110,
             headerComponent : props => (
-                <LayoutModal ref={refModalTambah} closeButton={false} variant="contained" sxButton={{backgroundColor : "#b89474"}} iconButton={<FaCirclePlus/>}>
+                <LayoutModal ref={refModalTambah} closeButton={false} variant="contained" sxButton={{backgroundColor : "#2e7d32"}} iconButton={<FaCirclePlus/>}>
                     <FormCustomerVisit onSuccess={refresh} action="tambah" refModal={refModalTambah}/>
                 </LayoutModal>
               ),
@@ -55,7 +55,7 @@ function CustomerVisit({access}) {
                           <LayoutModal size="small" sxButton={{minWidth : "30px"}} closeButton={false} ref={refModalEdit} variant="contained" iconButton={<MdEdit/>}>
                               <FormCustomerVisit onSuccess={refresh} lineId={params.data?.row_id} action="edit" itemID={params.data?.inventory_id} customerID={params.data?.customer_id} customer={params.data?.customer_id_txt} barang={params.data?.item_id_txt} tanggal_visit={params.data?.trans_date} notes={params.data?.notes} data={params.data} refModal={refModalEdit} />
                           </LayoutModal>
-                          <Button size='small' onClick={() => handleDelete(params.value)} style={{marginLeft: "10px", minWidth : "30px"}} variant="contained" color="error">
+                          <Button size='small' onClick={() => handleDelete(params.value)} sx={{ml:1, minWidth : "30px"}} variant="contained" color="error">
                               <MdDelete/>
                           </Button>
                       </div>

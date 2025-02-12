@@ -363,6 +363,7 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
     Route::name('laporan')->group(function(){
         Route::prefix('/report_sellout')->group(function(){
             Route::get('/',[LaporanController::class,'penjualan'])->name('penjualan');
+            Route::post('/export',[LaporanController::class,'exportPenjualan']);
         });
         Route::prefix('/report_stock')->group(function(){
             Route::get('/',[LaporanController::class,'stockOpName'])->name('stock');

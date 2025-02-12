@@ -46,11 +46,11 @@ function Customer({permission}) {
   }
 
   const [column, setColumn] = useState([
-    { field : 'row_id', headerName : "", filter: false,resizable: false, sortable: false, minWidth : 110, width : 110, pinned : "left",
+    { field : 'row_id', headerName : "", filter: false,resizable: false, sortable: false, minWidth : 100, width : 100, pinned : "left",
       hide : menu_access != "Full control",
       headerComponent : props => (
         <Link href='/customer/create'>
-          <Button style={{background : '#b89474'}}>
+          <Button style={{background : '#2e7d32'}}>
             <FaUserPlus style={{color:'white'}}/>
           </Button>
         </Link>
@@ -75,7 +75,7 @@ function Customer({permission}) {
         }
         
     },
-    { field: "customer_no", headerName: "Pelanggan No", minWidth : 125, width : 125, flex : false,
+    { field: "customer_no", headerName: "Pelanggan No", minWidth : 150, width : 150, flex : false,
         cellRenderer : params => {
             return <ModalViewCustomer params={params} id_customer={params.data?.row_id}/>
         }

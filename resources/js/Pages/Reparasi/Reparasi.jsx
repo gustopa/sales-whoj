@@ -58,7 +58,7 @@ function Reparasi({access}) {
     const [columnDef,setColumnDef] = useState([
         {field : "row_id", headerName : "", pinned : "left", resizable : false,filter : false, width : 105, minWidth : 105, hide : access == "Read only" ? true : false,
             headerComponent : params => (
-                <Link className='flex justify-center' href='/reparation/create' method="post" style={{background: "#b89474",padding : "10px",borderRadius : "10px",width : "80%",textAlign : "center"}}>
+                <Link className='flex justify-center' href='/reparation/create' method="post" style={{background: "#2e7d32",padding : "10px",borderRadius : "10px",width : "80%",textAlign : "center"}}>
                     <FaCirclePlus className='text-white'/>
                 </Link>
             ),

@@ -324,12 +324,13 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
             <Grid size={{xs:12,md : 4}}>
                 <Card className='p-4 dark:bg-navy-800'>
                     <div className=''>
-                        <TextField InputLabelProps={{ shrink: true, }} value={data.tanggal} onChange={handleInput} name='tanggal' type='date' sx={sxInputField} fullWidth variant="outlined" label="Tanggal"/>
+                        <TextField size='small' InputLabelProps={{ shrink: true, }} value={data.tanggal} onChange={handleInput} name='tanggal' type='date' sx={sxInputField} fullWidth variant="outlined" label="Tanggal"/>
                     </div>
                     <div className='mt-4'>
                         <FormControl fullWidth sx={sxInputField}>
                             <InputLabel shrink id="store" style={{color:"#b89474"}}>Store</InputLabel>
                             <Select
+                                size='small'
                                 displayEmpty
                                 name='store'
                                 labelId="store"
@@ -349,6 +350,7 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
                         <FormControl fullWidth sx={sxInputField}>
                             <InputLabel shrink id="sales" style={{color:"#b89474"}}>Sales</InputLabel>
                             <Select
+                                size='small'
                                 displayEmpty
                                 name='sales'
                                 labelId="sales"
@@ -365,7 +367,7 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
                         </FormControl>
                     </div>
                     <div className='mt-4'>
-                      <TextField variant="outlined" value={customer} sx={sxInputField} label="Pelanggan" fullWidth
+                      <TextField size='small' variant="outlined" value={customer} sx={sxInputField} label="Pelanggan" fullWidth
                             InputProps={{
                             endAdornment: (
                                 <InputAdornment position="end">
@@ -385,7 +387,7 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
                 <Card className='p-4 dark:bg-navy-800'>
                     <Grid container spacing={2}>
                         <Grid size={{xs :12, md:6}}>
-                            <TextField variant="outlined" value={item} sx={sxInputField} label="Barang" fullWidth
+                            <TextField size='small' variant="outlined" value={item} sx={sxInputField} label="Barang" fullWidth
                                 InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
@@ -401,6 +403,7 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
                         </Grid>
                         <Grid size={{xs :12, md:6}}>
                             <TextField 
+                                size='small'
                                 InputLabelProps={{ shrink: true, }}
                                 slotProps={{
                                     input: {
@@ -428,6 +431,7 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
 
                         <Grid size={{xs : 12, md : 6}}>
                           <TextField 
+                              size='small'
                               InputLabelProps={{ shrink: true, }}
                               onChange={ e => handleSellPrice(e.target.value)}
                               sx={sxInputField} value={displaySellPrice} type='text' fullWidth variant="outlined" label="Harga Jual"/>
@@ -435,6 +439,7 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
 
                         <Grid size={{xs :12, md:6}}>
                           <TextField 
+                                size='small'
                                 InputLabelProps={{ shrink: true, }}
                                 InputProps={{
                                   readOnly : true
@@ -443,7 +448,7 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
                         </Grid>
                         
                         <Grid size={{xs : 12, md:6}}>
-                          <TextField variant="outlined" sx={sxInputField} label="Pesanan (DP)" fullWidth
+                          <TextField size='small' variant="outlined" sx={sxInputField} label="Pesanan (DP)" fullWidth
                               InputProps={{
                               endAdornment: (
                                   <InputAdornment position="end">
@@ -460,7 +465,7 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
                         </Grid>
                         
                         <Grid size={{xs:12,md :6}}>
-                          <TextField variant="outlined" sx={sxInputField} label="Sisa pembayaran" fullWidth
+                          <TextField size='small' variant="outlined" sx={sxInputField} label="Sisa pembayaran" fullWidth
                               InputProps={{
                                   readOnly : true
                               }}
@@ -471,11 +476,12 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
                           />
                         </Grid>
                         <Grid size={{xs:12,md:6}}>
-                          <TextField InputLabelProps={{ shrink: true, }} value={data.notes} onChange={handleInput} name='notes' type='text' sx={sxInputField} fullWidth variant="outlined" label="Notes"/>
+                          <TextField size='small' InputLabelProps={{ shrink: true, }} value={data.notes} onChange={handleInput} name='notes' type='text' sx={sxInputField} fullWidth variant="outlined" label="Notes"/>
                         </Grid>
 
                         <Grid size={{xs:12,md:6}}>
                           <TextField 
+                          size='small'
                           InputLabelProps={{ shrink: true, }}
                           slotProps={{
                               input: {
@@ -524,6 +530,7 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
                               <FormControl fullWidth sx={sxInputField}>
                                   <InputLabel shrink id="payment_type" style={{color:"#b89474"}}><span>Tipe Pembayaran :</span></InputLabel>
                                   <Select
+                                      size='small'
                                       displayEmpty
                                       name='payment_type'
                                       labelId="payment_type"
@@ -535,7 +542,7 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
                                         resetPayment(index)
                                       }}
                                   >
-                                          <MenuItem key={0} value={0}> </MenuItem>
+                                          <MenuItem key={0} value={0}><span className='p-3'></span></MenuItem>
                                       {payment_types.map(a => 
                                           <MenuItem key={a.row_id} value={a.row_id}>{a.name}</MenuItem>
                                       )}
@@ -548,6 +555,7 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
                                   <FormControl fullWidth sx={sxInputField}>
                                       <InputLabel shrink id="edc" style={{color:"#b89474"}}><span>EDC :</span></InputLabel>
                                       <Select
+                                          size='small'
                                           displayEmpty
                                           name='edc'
                                           labelId="edc"
@@ -558,7 +566,7 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
                                             handlePaymentChange(index, "edc", e.target.value)
                                           }
                                       >
-                                            <MenuItem key={0} value={0}> </MenuItem>
+                                            <MenuItem key={0} value={0}><span className='p-3'></span></MenuItem>
                                           {edc.map(a => 
                                               <MenuItem key={a.row_id} value={a.row_id}>{a.name}</MenuItem>
                                           )}
@@ -570,6 +578,7 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
                               {payment.payment_type == 16 &&
                                 <Grid size={{xs:12, md: 6}}>
                                   <TextField 
+                                  size='small'
                                   InputLabelProps={{ shrink: true, }} 
                                   InputProps={{
                                     endAdornment: (
@@ -592,11 +601,11 @@ function Form({stores,payment,sales,payment_types,edc,paymentDetails}) {
                             )}
 
                             <Grid size={{xs:12, md: 6}}>
-                              <TextField InputLabelProps={{ shrink: true, }} value={payment.tanggal} onChange={e => handlePaymentChange(index, "tanggal", e.target.value)} type='date' sx={sxInputField} fullWidth variant="outlined" label="Tanggal :"/>
+                              <TextField size='small' InputLabelProps={{ shrink: true, }} value={payment.tanggal} onChange={e => handlePaymentChange(index, "tanggal", e.target.value)} type='date' sx={sxInputField} fullWidth variant="outlined" label="Tanggal :"/>
                             </Grid>
 
                             <Grid size={{xs:12, md: 6}}>
-                              <TextField InputLabelProps={{ shrink: true, }} value={payment.displayAmount} 
+                              <TextField size='small' InputLabelProps={{ shrink: true, }} value={payment.displayAmount} 
                                 onChange={e => {
                                   const value = sanitizedNumber(e.target.value)
                                   const rawValue = unformatNumber(value)

@@ -42,8 +42,8 @@ function Shipping({access}) {
     }
     
     const [columnDefs,setColumnDefs] = useState([
-        {field : "row_id",headerName : "", filter: false,resizable: false, pinned : "left", sortable: false, hide : access == "Read only" ? true : false,
-            headerComponent : params => <FormShipping tableRef={tableRef} action="tambah" bgColor="#b89474" iconButton={<FaCirclePlus className='text-white'/>}/>,
+        {field : "row_id",headerName : "", filter: false,resizable: false, pinned : "left", sortable: false, hide : access == "Read only" ? true : false, minWidth : 110, width : 110,
+            headerComponent : params => <FormShipping tableRef={tableRef} action="tambah" sxButton={{backgroundColor : "#2e7d32"}} iconButton={<FaCirclePlus className='text-white'/>}/>,
             cellRenderer : params => 
             {
                 return (
@@ -59,10 +59,10 @@ function Shipping({access}) {
                             invoice={params.data?.payment_id_txt == null ? "" : params.data?.payment_id_txt} 
                             tanggal={params.data?.shipping_date == null ? "" : params.data?.shipping_date} 
                             customerID={params.data?.customer_id} 
-                            bgColor="#1976d2" 
+                            sxButton={{backgroundColor : "#1976d2", minWidth : "30px",padding : 4}}
                             iconButton={<MdEdit className='text-white' />}
                         />
-                        <Button onClick={() => handleDelete(params.value)} style={{marginLeft : "10px"}} variant="contained" color="error"><MdDelete/></Button>
+                        <Button size='small' onClick={() => handleDelete(params.value)} sx={{ml : 1, minWidth : "30px"}} variant="contained" color="error"><MdDelete/></Button>
                     </div>
                 )
             }

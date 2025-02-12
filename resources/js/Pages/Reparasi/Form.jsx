@@ -136,6 +136,7 @@ function Form({data,sales,stores,items,statusList}) {
                     <FormControl fullWidth sx={sxInputField}>
                         <InputLabel shrink id="sales" style={{color:"#b89474"}}>Store</InputLabel>
                         <Select
+                            size='small'
                             displayEmpty
                             name='store'
                             labelId="store"
@@ -155,6 +156,7 @@ function Form({data,sales,stores,items,statusList}) {
                     <FormControl fullWidth sx={sxInputField}>
                         <InputLabel shrink id="sales" style={{color:"#b89474"}}>Sales</InputLabel>
                         <Select
+                            size='small'
                             displayEmpty
                             name='sales'
                             labelId="sales"
@@ -171,7 +173,7 @@ function Form({data,sales,stores,items,statusList}) {
                     </FormControl>
                 </Grid>
                 <Grid size={{lg:3,md:4,xs:12}}>
-                    <TextField variant="outlined" value={customer} sx={sxInputField} label="Pelanggan" fullWidth
+                    <TextField size='small' variant="outlined" value={customer} sx={sxInputField} label="Pelanggan" fullWidth
                         InputProps={{
                         endAdornment: (
                             <InputAdornment position="end">
@@ -196,6 +198,7 @@ function Form({data,sales,stores,items,statusList}) {
                     <FormControl fullWidth sx={sxInputField}>
                         <InputLabel shrink id="item" style={{color:"#b89474"}}>Tipe Item</InputLabel>
                         <Select
+                            size='small'
                             displayEmpty
                             name='item'
                             labelId="item"
@@ -216,6 +219,7 @@ function Form({data,sales,stores,items,statusList}) {
                     <FormControl fullWidth sx={sxInputField}>
                         <InputLabel shrink id="item" style={{color:"#b89474"}}>Tipe Order</InputLabel>
                         <Select
+                            size='small'
                             disabled
                             displayEmpty
                             name='tipe'
@@ -232,6 +236,7 @@ function Form({data,sales,stores,items,statusList}) {
                     <FormControl fullWidth sx={sxInputField}>
                         <InputLabel shrink id="origin" style={{color:"#b89474"}}>Outsource/Intern :</InputLabel>
                         <Select
+                            size='small'
                             displayEmpty
                             name='origin'
                             labelId="origin"
@@ -271,6 +276,7 @@ function Form({data,sales,stores,items,statusList}) {
                     <FormControl fullWidth sx={sxInputField}>
                         <InputLabel shrink id="status" style={{color:"#b89474"}}>Status</InputLabel>
                         <Select
+                            size='small'
                             displayEmpty
                             name='status'
                             labelId="status"

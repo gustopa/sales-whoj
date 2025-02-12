@@ -1,9 +1,12 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Exports\PenjualanExport;
+use Maatwebsite\Excel\Facades\Excel;
+use PDF;
+ini_set('memory_limit', '512M');
 class LaporanController extends Controller
 {
     public function penjualan(){
@@ -28,6 +31,76 @@ class LaporanController extends Controller
             "items" => $items
         ]);
     }
+    public function exportPenjualan(Request $request)
+    {
+        // dd($request->all());
+        $from_date = $request->input('from_date');
+        $to_date = $request->input('to_date');
+        $sales_id = $request->input('sales_id');
+        $item_id = $request->input('item_id');
+
+        // Query untuk payment
+        $paymentQuery = DB::table('vw_paymentlist')
+            ->where('is_submitted', 1)
+            ->where('is_deleted', 0)
+            ->whereNotIn('status', ['DRAFT', 'CANCELLED'])
+            ->whereBetween(DB::raw("CAST(trans_date AS DATE)"), [$from_date, $to_date]);
+
+        if (!empty($sales_id)) {
+            $paymentQuery->where('sales_id', $sales_id);
+        }
+        if (!empty($item_id)) {
+            $paymentQuery->where('inventory_id_txt', $item_id);
+        }
+
+        $payment = $paymentQuery->orderBy('row_id', 'desc')->get();
+
+        // Query untuk request order
+        $requestOrderQuery = DB::table('vw_request_order_dplist')
+            ->whereNotIn('status', ['DRAFT', 'CANCELLED'])
+            ->where('is_deleted', 0)
+            ->whereBetween(DB::raw("CAST(dp_date AS DATE)"), [$from_date, $to_date]);
+
+        if (!empty($sales_id)) {
+            $requestOrderQuery->where('sales_id', $sales_id);
+        }
+
+        $request_order = $requestOrderQuery->orderBy('row_id', 'desc')->get();
+
+        // Query untuk reparation
+        $reparation = DB::table('vw_request_order_reparationlist')
+            ->where('is_deleted', 0)
+            ->whereBetween(DB::raw("CAST(created_date AS DATE)"), [$from_date, $to_date])
+            ->orderBy('row_id', 'desc')
+            ->get();
+
+        // Query untuk refund
+        $refund = DB::table('vw_refundlist')
+            ->where('is_submitted', 1)
+            ->where('is_deleted', 0)
+            ->whereNotIn('status', ['DRAFT', 'CANCELLED'])
+            ->whereBetween(DB::raw("CAST(trans_date AS DATE)"), [$from_date, $to_date])
+            ->orderBy("row_id", "desc")
+            ->get();
+
+        if($request['tipe'] == "PDF"){
+            $pdf = PDF::loadView('pdf.sell_out', [
+                'request_order' => $request_order,
+                'reparation' => $reparation,
+                'refund' => $refund,
+                'payment' => $payment,
+                'from_date' => $from_date,
+                'to_date' => $to_date
+            ]);
+            return response($pdf->output(), 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'attachment; filename="laporan-penjualan.pdf"');
+        }else{
+            return Excel::download(new PenjualanExport($from_date, $to_date, $sales_id, $item_id), 'laporan-penjualan.xlsx');
+        }
+    }
+
+
     public function stockOpName(){
         $access = checkPermission('report_stock');
         if($access == null || $access == ""){

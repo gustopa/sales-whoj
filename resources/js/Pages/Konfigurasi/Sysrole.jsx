@@ -8,9 +8,9 @@ import { Button, Grid2 as Grid } from '@mui/material'
 import ModalHistoryData from '../Components/ModalHistoryData'
 function Sysrole({access}) {
     const [columnDefs] = useState([
-        {field : "row_id",headerName : "", minWidth : 150, width : 150,pinned : 'left', resizable : false, filter : false,hide : access == 'Read only' ? true : false,
+        {field : "row_id",headerName : "", minWidth : 110, width : 110,pinned : 'left', resizable : false, filter : false,hide : access == 'Read only' ? true : false,
             headerComponent : params => (
-                <Link className='flex justify-center' method="post" style={{background: "#b89474",padding : "10px",borderRadius : "10px",width : "80%",textAlign : "center"}}>
+                <Link className='flex justify-center' method="post" style={{background: "#2e7d32",padding : "10px",borderRadius : "10px",width : "80%",textAlign : "center"}}>
                     <FaCirclePlus className='text-white'/>
                 </Link>
             ),
@@ -24,9 +24,6 @@ function Sysrole({access}) {
                         </Link>
                         <Button sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="error">
                             <MdDelete/>
-                        </Button>
-                        <Button size="small" style={{cursor : "default"}}>
-                            <MdDone style={{color : params.data?.is_submitted == 0 ? '#bbb' : '#059c1b',fontWeight : "bold"}}/>
                         </Button>
                     </div>
                 ),

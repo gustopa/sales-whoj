@@ -33,9 +33,9 @@ function City({access}) {
         
     }
     const [columnDefs] = useState([
-        {field : "row_id",headerName : "", minWidth : 150, width : 150,pinned : 'left', resizable : false, filter : false, hide : access == 'Read only' ? true : false,
+        {field : "row_id",headerName : "", minWidth : 110, width : 110,pinned : 'left', resizable : false, filter : false, hide : access == 'Read only' ? true : false,
             headerComponent : params => (
-                <FormCity table={tableRef} endpoint="/city/tambah" title="TAMBAH" sxButton={{background:"#b89474",py:4}} iconButton={<FaCirclePlus className='text-white'/>} />
+                <FormCity table={tableRef} endpoint="/city/tambah" title="TAMBAH" sxButton={{background:"#2e7d32",py:4}} iconButton={<FaCirclePlus className='text-white'/>} />
             ),
             cellRenderer : params => 
                 (

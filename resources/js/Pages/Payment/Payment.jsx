@@ -45,11 +45,11 @@ function Payment({access}) {
         
     }
     const [columnDefs] = useState([
-        {field : "row_id",headerName : "", minWidth : 180, width : 180,resizable: false, filter : false,
+        {field : "row_id",headerName : "", minWidth : 170, width : 170,resizable: false, filter : false,
             hide : access == "Read only" ? true : false,
             pinned : "left",
             headerComponent : params => (
-                <Link key={params.value} className='flex justify-center' href='/payment/create' method="post" style={{background: "#b89474",padding : "10px",borderRadius : "10px",width : "80%",textAlign : "center"}}>
+                <Link key={params.value} className='flex justify-center' href='/payment/create' method="post" style={{background: "#2e7d32",padding : "10px",borderRadius : "10px",width : "80%",textAlign : "center"}}>
                     <FaCirclePlus className='text-white'/>
                 </Link>
             ),
@@ -58,7 +58,7 @@ function Payment({access}) {
                     {params.data && 
                         <>
                             {params.data?.status != "CANCELLED" && params.data?.is_print == 0   && 
-                                <Link style={{ width: "30px", display: 'inline-block', marginLeft : "5px" }} href={`/payment/form/${encrypt(params?.value)}`}>
+                                <Link style={{ width: "30px", display: 'inline-block' }} href={`/payment/form/${encrypt(params?.value)}`}>
                                     <Button sx={{ width: "30px", minWidth: "30px" }} size="small" variant='contained' color="primary">
                                         <MdEdit />
                                     </Button>

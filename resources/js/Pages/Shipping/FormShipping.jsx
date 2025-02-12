@@ -7,7 +7,7 @@ import state from '../../store/store'
 import ModalPayment from '../Components/ModalPayment';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-function FormShipping({iconButton,bgColor,customer="",customerID="",invoice="",tanggal="",resi="",invoiceID="",id,action,tableRef,size}) {
+function FormShipping({iconButton,bgColor,customer="",customerID="",invoice="",tanggal="",resi="",invoiceID="",id,action,tableRef,size,sxButton}) {
     
     const snap = useSnapshot(state)
     const [dataCustomer,setDataCustomer] = useState(customer)
@@ -97,7 +97,7 @@ function FormShipping({iconButton,bgColor,customer="",customerID="",invoice="",t
         
       }
   return (
-    <LayoutModal size={size} closeButton={false} ref={refModal} sxButton={{backgroundColor : bgColor}} iconButton={iconButton}>
+    <LayoutModal size={size} closeButton={false} ref={refModal} sxButton={sxButton} iconButton={iconButton}>
         <h2 className='font-bold text-2xl mb-[10px]'>FORM PENGIRIMAN</h2>
         <Grid container spacing={2}>
             <Grid size={{xs:12,md:12}}>

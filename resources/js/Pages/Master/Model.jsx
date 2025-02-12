@@ -35,12 +35,12 @@ function Model({access}) {
     const [columnDefs] = useState([
         {field : "row_id",headerName : "", minWidth : 110, width : 110,pinned : 'left', resizable : false, filter : false,hide : access == 'Read only' ? true : false,
             headerComponent : params => (
-                <FormModel table={tableRef} endpoint="/model/tambah" title="TAMBAH" sxButton={{background:"#b89474",py:4}} iconButton={<FaCirclePlus className='text-white'/>} />
+                <FormModel table={tableRef} endpoint="/model/tambah" title="TAMBAH" sxButton={{background:"#2e7d32",py:4}} iconButton={<FaCirclePlus className='text-white'/>} />
             ),
             cellRenderer : params => 
                 (
                     <div key={params.value}>
-                        <FormModel table={tableRef} nama={params.data?.name} endpoint={`/model/edit/${params.value}`} title="EDIT" sxButton={{minWidth : "30px", background : "#1976d2",padding : 3}} iconButton={<MdEdit/>} />
+                        <FormModel table={tableRef} nama={params.data?.name} endpoint={`/model/edit/${params.value}`} title="EDIT" sxButton={{minWidth : "30px", background : "#1976d2",padding : 3}} iconButton={<MdEdit color='white'/>} />
                         <Button onClick={() => handleDelete(params.value)} sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="error">
                             <MdDelete/>
                         </Button>

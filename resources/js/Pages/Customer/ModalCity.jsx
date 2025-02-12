@@ -7,6 +7,7 @@ import state from '../../store/store';
 import { AgGridReact } from 'ag-grid-react';
 import DataTable from '../Layouts/components/Datatable';
 import { useIsMobile } from '../../hooks/IsMobile';
+import { FaFolderOpen } from 'react-icons/fa6';
 function ModalCity({city,setCity,setData}) {
     const snap = useSnapshot(state)
     const [open,setOpen] = useState(false)
@@ -36,9 +37,9 @@ function ModalCity({city,setCity,setData}) {
     ])
   return (
     <>
-        <IconButton onClick={handleModal} type="button" sx={{ border : "1px solid #b89474",borderRadius : "0 5px 5px 0px",padding : "16px 12px", }} aria-label="search">
-            <SearchIcon style={{color : "#b89474"}} />
-        </IconButton>
+        <Button onClick={handleModal} type="button" sx={{ border : "1px solid #b89474",borderRadius : "0 5px 5px 0px",background : "#b89474"}} aria-label="search">
+            <FaFolderOpen color='white' />
+        </Button>
         <Modal open={open}>
             <div>
                 <Button onClick={handleClose} variant="contained" sx={{position:'absolute',right:'12%',background:'#b89474',top:'13%',zIndex:'999'}}>

@@ -74,7 +74,7 @@ function FormDocument({customer}) {
         <h2 className='font-bold text-[#b89474]'>DOKUMEN</h2>
         <Grid container spacing={2}>
             <Grid size={12}>
-                <DataTable columns={columnDefs} data={rowsData}/>
+                <DataTable height="auto" pagination={false} columns={columnDefs} data={rowsData}/>
             </Grid>
         </Grid>
     </Box>

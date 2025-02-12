@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Layout from '../Layouts/Layout';
-import { Grid2 as Grid, TextField , Box, FormControl,InputLabel,Select, MenuItem ,InputBase, Paper, Button} from '@mui/material';
+import { Grid2 as Grid, TextField , Box, FormControl,InputLabel,Select, MenuItem ,InputBase, Paper, Button, InputAdornment} from '@mui/material';
 
 import { Link, useForm } from '@inertiajs/react';
 import ModalCity from './ModalCity';
@@ -187,7 +187,7 @@ function Form({customer,city}) {
       <Box className="dark:bg-[#111c44] bg-white p-5" style={{borderRadius:"10px"}}>
         <Grid container spacing={2}>
           <Grid size={{xs:12,md:4}}>
-            <TextField slotProps={{
+            <TextField size='small' slotProps={{
               input: {
                 readOnly: true,
               },
@@ -196,6 +196,7 @@ function Form({customer,city}) {
 
           <Grid size={{xs:12,md:4}}>
             <TextField 
+            size='small'
             InputLabelProps={{
               shrink: true,
             }} 
@@ -204,6 +205,7 @@ function Form({customer,city}) {
 
           <Grid size={{xs:12,md:4}}>
             <TextField 
+            size='small'
             InputLabelProps={{
               shrink: true,
             }} 
@@ -212,6 +214,7 @@ function Form({customer,city}) {
 
           <Grid size={{xs:12,md:4}}>
             <TextField 
+            size='small'
             InputLabelProps={{
               shrink: true,
             }} 
@@ -222,6 +225,7 @@ function Form({customer,city}) {
             <FormControl fullWidth>
               <InputLabel shrink id="agama" style={{color:"#b89474"}}>Agama</InputLabel>
               <Select
+                size='small'
                 displayEmpty
                 sx={sxInputField}
                 name='agama'
@@ -242,6 +246,7 @@ function Form({customer,city}) {
             <FormControl fullWidth sx={sxInputField}>
               <InputLabel shrink id="jenis_kelamin" style={{color:"#b89474"}}>Gender<span style={{color:'red',fontSize:'24px'}}>*</span></InputLabel>
               <Select
+                size='small'
                 displayEmpty
                 sx={sxInputField}
                 name='jenis_kelamin'
@@ -260,6 +265,7 @@ function Form({customer,city}) {
 
           <Grid size={{xs:12,md:4}}>
             <TextField 
+            size='small'
             InputLabelProps={{
               shrink: true,
             }} 
@@ -268,6 +274,7 @@ function Form({customer,city}) {
 
           <Grid size={{xs:12,md:4}}>
             <TextField 
+            size='small'
             InputLabelProps={{
               shrink: true,
             }} 
@@ -276,6 +283,7 @@ function Form({customer,city}) {
 
           <Grid size={{xs:12,md:4}}>
             <TextField 
+            size='small'
             InputLabelProps={{
               shrink: true,
             }} 
@@ -284,42 +292,33 @@ function Form({customer,city}) {
 
           <Grid size={{xs:12,md:4}}>
             <TextField 
+            size='small'
             InputLabelProps={{
               shrink: true,
             }} 
-            minRows={2} multiline maxRows={4} onChange={handleInput} fullWidth name='alamat' color='#b89474' defaultValue={data.alamat} label="Alamat" variant="outlined" sx={sxInputField} />
+            rows={4} onChange={handleInput} fullWidth name='alamat' color='#b89474' defaultValue={data.alamat} label="Alamat" variant="outlined" sx={sxInputField} />
           </Grid>
 
           <Grid size={{xs:12,md:4}}>
-            <Paper
-              component="form"
-              sx={{ display: 'flex', alignItems: 'center', boxShadow : "none",background : "transparent" }}
-            >
-              <InputBase
-                sx={{ flex: 1, border : "1px solid #b89474", boxShadow : "none",padding : "12px 12px",borderRadius : "5px 0 0 5px",color:snap.theme == 'dark' ? 'white' : 'dark',borderRight : 'none' }}
-                value={cityName}
-                placeholder='Kota*'
-                
-                inputProps={{ 'label': 'city', 'readOnly' : true }}
-              />
-              <ModalCity setCity={setCityName} setData={setData} city={city}/>
-            </Paper>
+            <TextField variant="outlined" value={cityName} sx={sxInputField} size='small' label="City" fullWidth
+                        InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <ModalCity setCity={setCityName} setData={setData} city={city}/>
+                            </InputAdornment>
+                        ),
+                            readOnly : true
+                        }}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
           </Grid>
 
-          <Grid size={{xs:12,md:4}}>
-            <Grid container justifyContent="center" spacing={1}>
-              <Grid size={{xs:4,md:4}} justifyContent="center">
-                <Link href="/customer">
-                  <Button variant="contained" style={{background: "#b89474"}}>Kembali</Button>
-                </Link>
-              </Grid>
-              <Grid size={{xs:4,md:4}}>
-                <Button onClick={handleSimpan} variant="contained" style={{background: "#b89474"}}>Simpan</Button>
-              </Grid>
-              <Grid size={{xs:4,md:4}}>
-                <Button onClick={handleSubmit} variant="contained" style={{background: "#b89474"}}>Submit</Button>
-              </Grid>
-            </Grid>
+          <Grid size={12}>
+                {/* <Button variant="contained" style={{background: "#b89474"}}>Kembali</Button> */}
+                <Button onClick={handleSimpan} variant="contained">Simpan</Button>
+                <Button onClick={handleSubmit} variant="contained" sx={{background: "#b89474", ml:1}}>Submit</Button>
           </Grid>
         </Grid>
       </Box>

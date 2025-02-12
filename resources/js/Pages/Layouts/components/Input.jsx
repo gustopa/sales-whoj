@@ -55,7 +55,7 @@ const sxInputField = {
   },
 }
   return (
-    <TextField InputLabelProps={{ shrink: true, }} sx={sxInputField} {...props} />
+    <TextField size='small' InputLabelProps={{ shrink: true, }} sx={sxInputField} {...props} />
   )
 }
 

@@ -249,6 +249,7 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                                         <span>Grouping Order :</span>
                                     </InputLabel>
                                     <Select
+                                        size='small'
                                         displayEmpty
                                         name="grouping_order"
                                         labelId="grouping_order"
@@ -270,9 +271,10 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                                     color="primary" 
                                     size="small" 
                                     className='text-start'
+                                    sx={{py:1}}
                                     onClick={setDataDiamond}
                                     >
-                                    SET <br />DATA
+                                    SET
                                     </Button>
                                 </Box>
                             </FormControl>
@@ -281,6 +283,7 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                             <FormControl fullWidth sx={sxInputField}>
                                 <InputLabel shrink id="store" style={{color:"#b89474"}}><span>Store :</span></InputLabel>
                                 <Select
+                                    size='small'
                                     displayEmpty
                                     name='store'
                                     labelId="store"
@@ -300,6 +303,7 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                             <FormControl fullWidth sx={sxInputField}>
                                 <InputLabel shrink id="sales" style={{color:"#b89474"}}>Sales</InputLabel>
                                 <Select
+                                    size='small'
                                     displayEmpty
                                     name='sales'
                                     labelId="sales"
@@ -316,7 +320,7 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                             </FormControl>
                         </Grid>
                         <Grid size={{xs:12,md : 6}}>
-                            <TextField variant="outlined" value={customer} sx={sxInputField} label="Pelanggan" fullWidth
+                            <TextField size='small' variant="outlined" value={customer} sx={sxInputField} label="Pelanggan" fullWidth
                                 InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
@@ -337,6 +341,7 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                             <FormControl fullWidth sx={sxInputField}>
                                 <InputLabel shrink id="onof" style={{color:"#b89474"}}>Online/Offline :</InputLabel>
                                 <Select
+                                    size='small'
                                     displayEmpty
                                     name='onof'
                                     labelId="onof"
@@ -355,6 +360,7 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                             <FormControl fullWidth sx={sxInputField}>
                                 <InputLabel shrink id="status" style={{color:"#b89474"}}>Status :</InputLabel>
                                 <Select
+                                    size='small'
                                     displayEmpty
                                     name='status'
                                     labelId="status"
@@ -418,6 +424,7 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                             <FormControl fullWidth sx={sxInputField}>
                                 <InputLabel shrink id="item" style={{color:"#b89474"}}>Tipe Item :</InputLabel>
                                 <Select
+                                    size='small'
                                     displayEmpty
                                     name='item'
                                     labelId="item"
@@ -437,6 +444,7 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                             <FormControl fullWidth sx={sxInputField}>
                                 <InputLabel shrink id="tipe" style={{color:"#b89474"}}>Tipe Order :</InputLabel>
                                 <Select
+                                    size='small'
                                     displayEmpty
                                     name='tipe'
                                     labelId="tipe"
@@ -455,6 +463,7 @@ function Form({data,grouping_order,stores,sales,onlineOffline,items,status,tipeO
                             <FormControl fullWidth sx={sxInputField}>
                                 <InputLabel shrink id="origin" style={{color:"#b89474"}}>Outsource/Intern :</InputLabel>
                                 <Select
+                                    size='small'
                                     displayEmpty
                                     name='origin'
                                     labelId="origin"

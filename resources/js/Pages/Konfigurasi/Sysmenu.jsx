@@ -11,7 +11,7 @@ function Sysmenu() {
     const [columnDefs] = useState([
         {field : "row_id", headerName : "", pinned : "left", minWidth : 110, width : 110,filter : false, resizable : false,
             headerComponent : params => (
-                <Link className='flex justify-center' method="post" style={{background: "#b89474",padding : "10px",borderRadius : "10px",width : "80%",textAlign : "center"}}>
+                <Link className='flex justify-center' method="post" style={{background: "#2e7d32",padding : "10px",borderRadius : "10px",width : "80%",textAlign : "center"}}>
                     <FaCirclePlus className='text-white'/>
                 </Link>
             ),

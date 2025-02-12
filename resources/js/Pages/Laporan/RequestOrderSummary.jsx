@@ -28,7 +28,7 @@ function RequestOrderSummary() {
       <Card className='dark:bg-navy-800 p-3'>
         <Table columnDefs={columnDefs} endpoint="/request_order/getAllCustomOrder/ORDER"/>
       </Card>
-      <Card className='dark:bg-navy-800 p-3'>
+      <Card className='dark:bg-navy-800 p-3 mt-3'>
         <Table columnDefs={columnDefs} endpoint="/request_order/getAllCustomOrder/READY"/>
       </Card>
     </Layout>

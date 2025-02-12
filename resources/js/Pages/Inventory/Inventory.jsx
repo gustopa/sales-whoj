@@ -16,7 +16,7 @@ function Inventory({totalInventoryList,access}) {
             headerComponent : params => (
                 <>
                     {access == "Full control" &&
-                        <Link key={params.value} className='flex justify-center' href='/inventory/create' method="post" style={{background: "#b89474",padding : "10px",borderRadius : "10px",width : "80%",textAlign : "center"}}>
+                        <Link key={params.value} className='flex justify-center' href='/inventory/create' method="post" style={{background: "#2e7d32",padding : "10px",borderRadius : "10px",width : "80%",textAlign : "center"}}>
                             <FaCirclePlus className='text-white'/>
                         </Link>
                     }

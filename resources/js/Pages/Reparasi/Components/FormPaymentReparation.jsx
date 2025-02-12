@@ -98,6 +98,7 @@ function FormPaymentReparation({sxButton,iconButton,title,data,setDocNo,row_id,e
             <FormControl fullWidth sx={sxInputField}>
                 <InputLabel shrink id="jenis" style={{color:"#b89474"}}>Jenis Pembayaran :</InputLabel>
                 <Select
+                  size='small'
                     displayEmpty
                     name='jenis'
                     labelId="jenis"

@@ -74,7 +74,7 @@ function FormUkuran({customer}) {
         <h2 className='font-bold text-[#b89474]'>UKURAN</h2>
         <Grid container spacing={2}>
             <Grid size={12}>
-                <DataTable ref={table} columns={columnDefs} data={rowsData}/>
+                <DataTable height="auto" pagination={false} ref={table} columns={columnDefs} data={rowsData}/>
             </Grid>
         </Grid>
     </Box>
