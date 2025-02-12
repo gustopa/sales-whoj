@@ -1,18 +1,16 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import Layout from '../Layouts/Layout'
 import Table from '../Components/Table'
-import { Link } from '@inertiajs/react'
-import { Button } from '@mui/material'
 import { MdEdit } from 'react-icons/md'
+import FormExrate from './Components/FormExrate'
 function Exrate({access}) {
+    const table = useRef(null)
     const [columnDefs, setColumnDefs] = useState([
-        {field : "row_id",headerName : "", filter : false,resizable : false, width : 80, minWidth : 80, pinned : "left", hide : access == "Read only" ? true : false,
+        {field : "row_id",headerName : "", filter : false,resizable : false, width : 90, minWidth : 90, pinned : "left", hide : access == "Read only" ? true : false,
             cellRenderer : params => (
-                <Link>
-                    <Button sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="primary">
-                        <MdEdit/>
-                    </Button>
-                </Link>
+                params.data && (
+                    <FormExrate table={table} title="EDIT" iconButton={<MdEdit color='white'/>} endpoint={`/exrate/edit/${params.value}`} sxButton={{background : "#1976d2", minWidth : "30px"}} data={params.data}/>
+                )
             )
         },
         {field : "rate_beli",headerName : "Rate beli (IDR)",flex : 1, minWidth : 180, cellRenderer : params => Intl.NumberFormat("id-ID").format(params.value)},
@@ -22,7 +20,7 @@ function Exrate({access}) {
     ])
   return (
     <Layout title="Setup Rate" page="Setup Rate">
-        <Table columnDefs={columnDefs} endpoint="/exrate/getAll"/>
+        <Table ref={table} columnDefs={columnDefs} endpoint="/exrate/getAll"/>
     </Layout>
   )
 }

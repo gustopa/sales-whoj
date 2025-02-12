@@ -59,7 +59,7 @@ function TandaTerima({access}) {
         {field : "doc_no", headerName: "Doc No", flex : false, minWidth : 120, width : 120,
             cellRenderer : params => <ModalTandaTerima params={params}/>
         },
-        {field : "trans_date", headerName: "Tanggal", flex : false, minWidth : 120, width : 120, filter : 'agDateColumnFilter', cellRenderer : params => params.value == "0000-00-00" ? "-" : formatDate(params.value)},
+        {field : "trans_date", headerName: "Tanggal", flex : false, minWidth : 120, width : 120, filter : 'agDateColumnFilter', cellRenderer : params => params.value == "0000-00-00" || params.value == null ? "-" : formatDate(params.value)},
         {field : "customer_id_txt", headerName: "Pelanggan", flex : 1, minWidth : 150, maxWidth : 200},
     ])
   return (

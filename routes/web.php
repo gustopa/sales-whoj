@@ -132,6 +132,7 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
     Route::prefix('/exrate')->group(function(){
         Route::get('/',[ExrateController::class,'index']);
         Route::get('/getAll',[ExrateController::class,'getAll']);
+        Route::post('/edit/{id}',[ExrateController::class,'edit']);
     });
     // End setup rate
 

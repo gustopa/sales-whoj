@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 class ExrateController extends Controller
 {
     public function index(){
@@ -31,5 +31,14 @@ class ExrateController extends Controller
             ]);
         });
         return $data;
+    }
+    public function edit($id){
+        $access = checkPermission('exrate');
+        if($access == null || $access == "" || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        $request = request();
+        DB::table('exrate')->where('row_id',$id)->update($request['data']);
+        return response()->json('okké');
     }
 }
