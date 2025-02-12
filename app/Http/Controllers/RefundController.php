@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\RefundModel;
 use App\Models\StoreModel;
 use App\Models\PaymentModel;
+use App\Models\InventoryMovementModel;
 use Illuminate\Support\Facades\DB;
 use PDF;
 class RefundController extends Controller
@@ -89,12 +90,28 @@ class RefundController extends Controller
         if($access == null || $access == "" || $access->menu_access == "Read only"){
             return abort(403);
         }
-        RefundModel::where('row_id',$request['row_id'])->update($request['data']);
-        PaymentModel::where('row_id',$request['payment_id'])->update([
-            "status" => $request['status'],
-            "modified_date" => date("Y-m-d H:i:s"),
-            "modified_by"   => session('username'),
-        ]);
+        DB::transaction(function() use($request){
+            RefundModel::where('row_id',$request['row_id'])->update($request['data']);
+            PaymentModel::where('row_id',$request['payment_id'])->update([
+                "status" => $request['status'],
+                "modified_date" => date("Y-m-d H:i:s"),
+                "modified_by"   => session('username'),
+            ]);
+            $id_inventory = PaymentModel::where('row_id',$request['row_id'])->first()->inventory_id;
+            InventoryMovementModel::insert([
+                "company_id" => session('company_id'),
+                "inventory_id" => $id_inventory,
+                "store_id" => $request['data']['store_id'],
+                "notes" => "Refund no ".$request['data']['doc_no'],
+                "trans_date" => date("Y-m-d H:i:s"),
+                "is_submitted" => 1,
+                "is_deleted" => 0,
+                "created_date"  => date("Y-m-d H:i:s"),
+                "created_by"    => session('username'),
+                "modified_date" => date("Y-m-d H:i:s"),
+                "modified_by"   => session('username'),
+            ]);
+        });
         return response()->json($request['row_id']);
     }
 
@@ -118,6 +135,22 @@ class RefundController extends Controller
             ]);
             PaymentModel::where('row_id',$refund->payment_id)->update([
                 "status" => "PAID",
+                "modified_date" => date("Y-m-d H:i:s"),
+                "modified_by"   => session('username'),
+            ]);
+            $data_refund = RefundModel::where('row_id',$id)->first();
+            // dd($data_refund);
+            $data_payment = PaymentModel::where('row_id',$data_refund->payment_id)->first();
+            InventoryMovementModel::insert([
+                "company_id" => session('company_id'),
+                "inventory_id" => $data_payment->inventory_id,
+                "store_id" => $data_refund->store_id,
+                "notes" => "Cancel Refund no ".$data_refund->doc_no,
+                "trans_date" => date("Y-m-d H:i:s"),
+                "is_submitted" => 1,
+                "is_deleted" => 0,
+                "created_date"  => date("Y-m-d H:i:s"),
+                "created_by"    => session('username'),
                 "modified_date" => date("Y-m-d H:i:s"),
                 "modified_by"   => session('username'),
             ]);
