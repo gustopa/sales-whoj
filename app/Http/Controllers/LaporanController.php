@@ -117,6 +117,21 @@ class LaporanController extends Controller
             "stores" => $stores
         ]);
     }
+    public function printStock(Request $request){
+        $query = DB::table('vw_inventorylist')
+        ->where('status','READY');
+        if(!empty($request['store'])){
+            $query->where('store_id',$request['store']);
+        }
+        $inventory = $query->orderBy('row_id','desc')->get();
+        $pdf = PDF::loadView('pdf.stock', [
+            'inventory' => $inventory
+        ]);
+        return response($pdf->output(), 200)
+        ->header('Content-Type', 'application/pdf')
+        ->header('Content-Disposition', 'attachment; filename="laporan-stock.pdf"');
+
+    }
     public function inventory(){
         $access = checkPermission('report_inventory');
         if($access == null || $access == ""){

@@ -171,7 +171,7 @@ function Penjualan({sales,items}) {
             </FormControl>
           </Grid>
           <Grid size={{xs:12,md:4}}>
-            <Button onClick={handleSubmit} disabled={loading} variant='contained' style={{background : "#b89474"}}>
+            <Button onClick={handleSubmit} disabled={loading} variant='contained' style={{background : "#b89474",color:'white'}}>
               {loading ? <CircularProgress style={{width:'25px',height:'25px',color:'white'}}/> : "Export"}
               
             </Button>

@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import Layout from '../Layouts/Layout'
-import { FormControl, InputLabel, MenuItem, Select, Grid2 as Grid, Card, Button } from '@mui/material'
+import { FormControl, InputLabel, MenuItem, Select, Grid2 as Grid, Card, Button, CircularProgress } from '@mui/material'
 import { useSnapshot } from 'valtio'
 import state from '../../store/store'
+import { showAlert } from '../../helper'
 function StockOpName({stores}) {
   const [store,setStore] = useState(0)
   const snap = useSnapshot(state)
+  const [loading,setLoading] = useState(false)
   const sxInputField = {
     "& .MuiFormLable-root" : {
       color : "#b89474 !important"
@@ -51,6 +53,29 @@ function StockOpName({stores}) {
       
     },
   }
+  const handleSubmit = async () => {
+    setLoading(true)
+    try {
+        const response = await axios.post("/report_stock/export", {
+            store: store,
+        }, {
+            responseType: 'blob'
+        });
+        // Buat URL untuk Blob data
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'laporan-stock.pdf');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    } catch (err) {
+        console.log(err);
+        showAlert('Error!', "Terjadi kesalahan, silakan coba lagi", "error");
+    }finally{
+      setLoading(false)
+    }
+};
   return (
     <Layout title="Stock" page="Stock">
       <Card className='p-4 dark:bg-navy-800' style={{width : "40%"}}>
@@ -59,14 +84,16 @@ function StockOpName({stores}) {
               <FormControl fullWidth sx={sxInputField}>
                 <InputLabel shrink id="store" style={{color:"#b89474"}}>Store</InputLabel>
                 <Select
+                    size='small'
                     displayEmpty
                     name='store'
                     labelId="store"
                     id="store-select"
                     label="Store"
                     value={store}
+                    onChange={e => setStore(e.target.value)}
                 >
-                        <MenuItem key={0} value={0}></MenuItem>
+                        <MenuItem value=""><span className='p-3'></span></MenuItem>
                     {stores.map((a) => 
                         <MenuItem key={a.row_id} value={a.row_id}>{a.name}</MenuItem>
                     )}
@@ -74,7 +101,9 @@ function StockOpName({stores}) {
               </FormControl>
             </Grid>
             <Grid size={12}>
-              <Button disabled style={{background:"#b89474"}}>Generate</Button>
+              <Button onClick={handleSubmit} variant="contained" disabled={loading} style={{background:"#b89474"}}>
+                {loading ? <CircularProgress style={{width:'25px',height:'25px',color:'white'}}/> : "Generate"}
+              </Button>
             </Grid>
         </Grid>
       </Card>
