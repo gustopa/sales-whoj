@@ -376,9 +376,11 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         });
         Route::prefix('/report_request_order')->group(function(){
             Route::get('/',[LaporanController::class,'requestOrder'])->name('pesanan');
+            Route::post('/print',[LaporanController::class,'printOrder']);
         });
         Route::prefix('/report_nota_penjualan')->group(function(){
             Route::get('/',[LaporanController::class,'notaPenjualan'])->name('nota_penjualan');
+            Route::post('/print',[LaporanController::class,'printNota']);
         });
         Route::prefix('/request_order_summary')->group(function(){
             Route::get('/',[LaporanController::class,'requestOrderSummary'])->name('outstanding_pesanan');

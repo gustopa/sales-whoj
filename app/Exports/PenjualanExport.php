@@ -20,7 +20,7 @@ class PenjualanExport implements WithMultipleSheets
     {
         return [
             "Payment" => new PaymentSheet($this->from_date, $this->to_date, $this->sales_id, $this->item_id),
-            "Pesanan" => new RequestOrderSheet($this->from_date, $this->to_date, $this->sales_id),
+            "Pesanan" => new RequestOrderSheet($this->from_date, $this->to_date, $this->sales_id,['DRAFT', 'CANCELLED']),
             // "Reparasi" => new ReparationSheet($this->from_date, $this->to_date),
             // "Refund" => new RefundSheet($this->from_date, $this->to_date),
         ];

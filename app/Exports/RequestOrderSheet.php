@@ -9,13 +9,14 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 
 class RequestOrderSheet implements FromCollection, WithHeadings,WithTitle
 {
-    protected $from_date, $to_date, $sales_id;
+    protected $from_date, $to_date, $sales_id,$status;
 
-    public function __construct($from_date, $to_date, $sales_id = null)
+    public function __construct($from_date, $to_date, $sales_id = null,$status=[])
     {
         $this->from_date = $from_date;
         $this->to_date = $to_date;
         $this->sales_id = $sales_id;
+        $this->status = $status;
     }
 
     public function collection()
@@ -33,7 +34,7 @@ class RequestOrderSheet implements FromCollection, WithHeadings,WithTitle
                 'outsource_intern',
                 'status'
             )
-            ->whereNotIn('status', ['DRAFT', 'CANCELLED'])
+            ->whereNotIn('status', $this->status)
             ->where('is_deleted', 0)
             ->whereBetween(DB::raw("CAST(trans_date AS DATE)"), [$this->from_date, $this->to_date]);
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Exports\PenjualanExport;
+use App\Exports\PesananExport;
 use Maatwebsite\Excel\Facades\Excel;
 use PDF;
 ini_set('memory_limit', '512M');
@@ -187,6 +188,30 @@ class LaporanController extends Controller
             "access" => $access->menu_access
         ]);
     }
+
+    public function printOrder(Request $request){
+        $access = checkPermission('report_request_order');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $request_order = DB::table('vw_request_orderlist')
+        ->where('is_deleted',0)
+        ->whereBetween('trans_date',[$request['from_date'],$request['to_date']])
+        ->get();
+        if($request['tipe'] == 'PDF'){
+            $pdf = PDF::loadView('pdf.pesanan', [
+                'request_order' => $request_order,
+                'from_date' => $request['from_date'],
+                'to_date' => $request['to_date'],
+            ])->setPaper('a4','landscape');
+            return response($pdf->output(), 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'attachment; filename="laporan-pesanan.pdf"');
+        }else{
+            return Excel::download(new PesananExport($request['from_date'], $request['to_date']), 'laporan-pesanan.xlsx');
+        }   
+    }
+
     public function notaPenjualan(){
         $access = checkPermission('report_nota_penjualan');
         if($access == null || $access == ""){
@@ -205,6 +230,103 @@ class LaporanController extends Controller
             "sales" => $sales
         ]);
     }
+
+    public function printNota(Request $request){
+        $from_date = $request['from_date'];
+        $to_date = $request['to_date'];
+        $sales = $request['sales'];
+
+
+
+        $query_payment = DB::table('vw_paymentlist')
+        ->where('is_submitted',1)
+        ->where('is_deleted',0)
+        ->where('company_id',session('company_id'))
+        ->whereNotIn('status',['DRAFT','CANCELLED'])
+        ->whereBetween('trans_date',[$from_date,$to_date]);
+        if(!empty($sales)){
+            $query_payment->where('sales_id',$sales);
+        }
+        $payment = $query_payment->orderBy('row_id','desc')->get();
+
+        $q_request_order = DB::table('vw_request_orderlist')
+        ->where('is_submitted',1)
+        ->where('is_deleted',0)
+        ->where('company_id',session('company_id'))
+        ->whereNotIn('status',['DRAFT','PAID','CANCELLED'])
+        ->whereBetween('trans_date',[$from_date,$to_date]);
+        if(!empty($sales)){
+            $q_request_order->where('sales_id',$sales);
+        }
+        $request_order = $q_request_order->orderBy('row_id','desc')->get();
+
+        $q_refund = DB::table('vw_refundlist')
+        ->where('is_submitted',1)
+        ->where('is_deleted',0)
+        ->where('company_id',session('company_id'))
+        ->whereNotIn('status',['DRAFT','','CANCELLED'])
+        ->whereBetween('trans_date',[$from_date,$to_date]); 
+        $refund = $q_refund->orderBy('row_id','desc')->get();
+
+        $data = [];
+
+        if(!empty($payment)) {
+			foreach($payment as $row) {
+				$input = array(
+					'tanggal' => $row->trans_date,
+					'nama_customer' => $row->customer_id_txt,
+					'item' => $row->inventory_id_txt,
+					'plu' => $row->identity_code,
+					'dp' => $row->down_payment,
+					'harga_plu' => $row->inventory_price,
+					'jumlah_diskon' => $row->selling_price * ($row->percent_disc / 100),
+					'persen_diskon' => $row->percent_disc,
+					'exchange' => "0",
+					'tipe_pembayaran' => $row->payment_type_id_txt,
+					'harga_jual' => $row->amount,
+					'sales' => $row->sales_id_txt,
+					'dokumen_invoice' => "Yes",
+					'dokumen_sertifikat' => "",
+				);
+
+				$data[] = (object)$input;
+			}
+		}
+
+		if(!empty($request_order)) {
+			foreach($request_order as $row) {
+				$input = array(
+					'tanggal' => $row->trans_date,
+					'nama_customer' => $row->customer_id_txt,
+					'item' => $row->item_id_txt,
+					'plu' => "",
+					'dp' => "0",
+					'harga_plu' => $row->estimated_price,
+					'jumlah_diskon' => "0",
+					'persen_diskon' => "0",
+					'exchange' => "0",
+					'tipe_pembayaran' => "",
+					'harga_jual' => $row->down_payment,
+					'sales' => $row->sales_id_txt,
+					'dokumen_invoice' => "",
+					'dokumen_sertifikat' => "",
+				);
+
+				$data[] = (object)$input;
+			}
+		}
+
+        $pdf = PDF::loadView('pdf.nota', [
+            "data" => $data,
+			"from_date" => $from_date,
+			"to_date" => $to_date,
+        ])->setPaper('a4','landscape');
+
+        return response($pdf->output(), 200)
+        ->header('Content-Type', 'application/pdf')
+        ->header('Content-Disposition', 'attachment; filename="nota-penjualan.pdf"');
+    }
+
     public function requestOrderSummary(){
         $access = checkPermission('request_order_summary');
         if($access == null || $access == ""){
