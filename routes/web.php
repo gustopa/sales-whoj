@@ -371,6 +371,8 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         });
         Route::prefix('/report_inventory')->group(function(){
             Route::get('/',[LaporanController::class,'inventory'])->name('inventory');
+            Route::get('/getSessionList',[LaporanController::class,'getSession']);
+            Route::post('/print',[LaporanController::class,'printInventory']);
         });
         Route::prefix('/report_request_order')->group(function(){
             Route::get('/',[LaporanController::class,'requestOrder'])->name('pesanan');

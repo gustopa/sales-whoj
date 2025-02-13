@@ -150,6 +150,31 @@ class LaporanController extends Controller
             "list" => $list
         ]);
     }
+    public function getSession(){
+        $access = checkPermission('report_inventory');
+        if($access == null || $access == ""){
+            return abort(403);
+        }
+        $list = DB::table('vw_inventoryprintlist')
+        ->selectRaw('DISTINCT ses_id, modified_by, CAST(modified_date AS DATE) AS modified_date')
+        ->orderByDesc('modified_date')
+        ->limit(100)
+        ->get();
+        return response()->json($list);
+    }
+
+    public function printInventory(Request $request){
+        $data = DB::table('vw_inventoryprintlist')
+        ->where('ses_id',$request['session'])->get();
+        $pdf = PDF::loadView('pdf.inventory', [
+            'list' => $data,
+            "ses_id" => $request['session']
+        ])->setPaper('a4','landscape');
+        return response($pdf->output(), 200)
+        ->header('Content-Type', 'application/pdf')
+        ->header('Content-Disposition', 'attachment; filename="laporan-inventory.pdf"');
+    }
+
     public function requestOrder(){
         $access = checkPermission('report_request_order');
         if($access == null || $access == ""){
