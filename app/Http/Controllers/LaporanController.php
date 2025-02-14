@@ -366,6 +366,28 @@ class LaporanController extends Controller
         ]);
     }
 
+    public function printCraftsman(Request $request){
+        $from_date = $request['from_date'];
+        $to_date = $request['to_date'];
+        $craftsman = $request['craftsman'];
+
+        $query = DB::table('vw_report_craftsman_deliveryreceivedlist')
+        ->whereBetween('received_date',[$from_date,$to_date]);
+        if(!empty($request['craftsman'])){
+            $query->where('craftsman_id',$request['craftsman']);
+        }
+        $data = $query->orderBy('received_date','desc')->get();
+
+        $pdf = PDF::loadView('pdf.craftsman', [
+            'report' => $data,
+            'from_date' => $from_date,
+            "to_date" => $to_date
+        ])->setPaper('a4','landscape');
+        return response($pdf->output(), 200)
+        ->header('Content-Type', 'application/pdf')
+        ->header('Content-Disposition', 'attachment; filename="laporan-pengrajin.pdf"');
+    }
+
     public function getDataPaymentSummary($tanggal,$idType){
         $access = checkPermission('payment_summary');
         if($access == null || $access == ""){

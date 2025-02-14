@@ -96,6 +96,64 @@ if(!function_exists('encrypt_id')){
 	}
 }
 
+if(!function_exists('get_crafts_workminute')){
+    function get_crafts_workminute($from, $to) {
+        $start = '08:00:00';
+        $finish = '18:00:00';
+        $minutes = "";
+		$from_date = new DateTime(date("Y-m-d", xstrtotime($from)));
+		$to_date = new DateTime(date("Y-m-d", xstrtotime($to)));
+		$interval_date = $from_date->diff($to_date);
+        $days = $interval_date->format('%d');
+        $days = (int)$days;
+
+        if($days == 0) {
+            $from_datetime = new DateTime($from);
+            $to_datetime = new DateTime($to);
+            $diff = date_diff($from_datetime, $to_datetime);
+            $minutes = (($diff->y * 365.25 + $diff->m * 30 + $diff->d) * 24 + $diff->h) * 60 + $diff->i + $diff->s/60;
+        }
+        else if($days == 1) {
+            $from_datetime1 = new DateTime($from);
+            $from_datetime2 = new DateTime(date("Y-m-d", xstrtotime($from))." 18:00:00");
+            $diff = date_diff($from_datetime1, $from_datetime2);
+            $minutes_datetime1 = (($diff->y * 365.25 + $diff->m * 30 + $diff->d) * 24 + $diff->h) * 60 + $diff->i + $diff->s/60;
+
+            $to_datetime1 = new DateTime(date("Y-m-d", xstrtotime($to))." 08:00:00");
+            $to_datetime2 = new DateTime($to);
+            $diff = date_diff($to_datetime1, $to_datetime2);
+            $minutes_datetime2 = (($diff->y * 365.25 + $diff->m * 30 + $diff->d) * 24 + $diff->h) * 60 + $diff->i + $diff->s/60;
+
+            $minutes = $minutes_datetime1 + $minutes_datetime2;
+        } else {
+            $minute_add = ($days-1) * 600; // perhari itu jam kerja 10 jam (08:00 - 18:00)
+
+            $from_datetime1 = new DateTime($from);
+            $from_datetime2 = new DateTime(date("Y-m-d", xstrtotime($from))." 18:00:00");
+            $diff = date_diff($from_datetime1, $from_datetime2);
+            $minutes_datetime1 = (($diff->y * 365.25 + $diff->m * 30 + $diff->d) * 24 + $diff->h) * 60 + $diff->i + $diff->s/60;
+
+            $to_datetime1 = new DateTime(date("Y-m-d", xstrtotime($to))." 08:00:00");
+            $to_datetime2 = new DateTime($to);
+            $diff = date_diff($to_datetime1, $to_datetime2);
+            $minutes_datetime2 = (($diff->y * 365.25 + $diff->m * 30 + $diff->d) * 24 + $diff->h) * 60 + $diff->i + $diff->s/60;
+
+            $minutes = $minute_add + $minutes_datetime1 + $minutes_datetime2;
+        }		
+
+        $hours = floor($minutes / 60);
+        $minutes = ($minutes % 60);
+        $ret = array(
+            "hours" => $hours,
+            "minutes" => $minutes,
+            "minutes_perhour" => ($minutes / 60),
+            "text" => sprintf('%02d Jam %02d Menit', $hours, $minutes),
+        );
+        
+        return $ret;
+    }
+}
+
 
 
 

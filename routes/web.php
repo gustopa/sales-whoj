@@ -391,6 +391,7 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         });
         Route::prefix('/report_craftsman')->group(function(){
             Route::get('/',[LaporanController::class,'craftsman'])->name('craftsman');
+            Route::post('/print',[LaporanController::class,'printCraftsman']);
         });
     });
     // End Laporan
