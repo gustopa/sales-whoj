@@ -1,0 +1,32 @@
+{
+  "resources/assets/calendar.svg": {
+    "file": "assets/calendar-C6Ti4_Dq.svg",
+    "src": "resources/assets/calendar.svg"
+  },
+  "resources/assets/favicon.ico": {
+    "file": "assets/favicon-CpL-fo6K.ico",
+    "src": "resources/assets/favicon.ico"
+  },
+  "resources/assets/logo.jpg": {
+    "file": "assets/logo-DGQb7YJ8.jpg",
+    "src": "resources/assets/logo.jpg"
+  },
+  "resources/assets/logo2.jpg": {
+    "file": "assets/logo2-LrjcAfi9.jpg",
+    "src": "resources/assets/logo2.jpg"
+  },
+  "resources/js/app.jsx": {
+    "file": "assets/app-D_3Nrcwm.js",
+    "name": "app",
+    "src": "resources/js/app.jsx",
+    "isEntry": true,
+    "css": [
+      "assets/app-D1QMgo0D.css"
+    ],
+    "assets": [
+      "assets/logo-DGQb7YJ8.jpg",
+      "assets/favicon-CpL-fo6K.ico",
+      "assets/calendar-C6Ti4_Dq.svg"
+    ]
+  }
+}
