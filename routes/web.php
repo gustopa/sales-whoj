@@ -33,6 +33,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\VoucherController;
+use App\Http\Controllers\DashboardSalesController;
 
 use App\Http\Middleware\IsAuthenticated;
 use App\Http\Middleware\NotLogin;
@@ -43,7 +44,10 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
 
     Route::get('/profile',[HomeController::class,'profile']);
 
-    Route::get('/dashboard_sales',[TransaksiController::class,'dashboard']);
+    Route::prefix('/dashboard_sales')->group(function(){
+        Route::get('/',[TransaksiController::class,'dashboard']);
+        Route::get('/getPieChartItem',[DashboardSalesController::class,'getPieChartItem']);
+    });
 
     // Start Request order
     Route::prefix('/request_order')->group(function(){
