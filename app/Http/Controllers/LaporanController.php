@@ -92,7 +92,7 @@ class LaporanController extends Controller
                 'payment' => $payment,
                 'from_date' => $from_date,
                 'to_date' => $to_date
-            ]);
+            ])->setPaper('a4','landscape');
             return response($pdf->output(), 200)
             ->header('Content-Type', 'application/pdf')
             ->header('Content-Disposition', 'attachment; filename="laporan-penjualan.pdf"');
