@@ -127,7 +127,7 @@ function RequestOrder({access}) {
         {field : "item_id_txt", headerName : "Tipe item", width : 125, minWidth : 125, flex : false},
         {field : "type_order", headerName : "Tipe order", minWidth : 120, width : 120, flex : false},
         {field : "outsource_intern", headerName : "Outsource", width : 120, minWidth : 120, flex : false},
-        {field : "status", headerName : "Status",cellRenderer : params => <Chip size='small' color={statusColor(params.value)} label={params.value == "" ? "DRAFT" : params.value} />, width : 110, minWidth : 110, flex : false},
+        {field : "status", headerName : "Status",cellRenderer : params => <Chip size='small' color={statusColor(params.value)} label={params.value == "" ? "DRAFT" : params.value} />, width : 130, minWidth : 130, flex : false},
         {field : "last_process", headerName : "Proses"},
     ])
     const [columnPaid] = useState([

@@ -53,10 +53,45 @@ class InventoryController extends Controller
             return abort(403);
         }
         $menu = listMenu();
+        $baseQuery = DB::table('vw_inventorylist')
+            ->where('is_deleted', 0)
+            ->where('is_submitted', 1)
+            ->whereNotNull('store_id_txt');
+
+        $summary_storelist = (clone $baseQuery)
+            ->select(
+                'store_id_txt as name',
+                DB::raw('count(*) as total')
+            )
+            ->where('status', 'READY')
+            ->groupBy('store_id_txt')
+            ->get();
+
+        $summary_statuslist = (clone $baseQuery)
+            ->select(
+                'status as name',
+                DB::raw('count(*) as total')
+            )
+            ->whereIn('status', ['READY','SOLD','BUYBACK','EXCHANGE'])
+            ->groupBy('status')
+            ->get();
+
+        $summary_itemlist = (clone $baseQuery)
+            ->select(
+                'item_id_txt as name',
+                DB::raw('count(*) as total')
+            )
+            ->where('status', 'READY')
+            ->groupBy('item_id_txt')
+            ->get();
+
         return inertia("Inventory/Summary",[
             "session" => session()->all(),
             "menu" => $menu,
-            "access" => $access->menu_access
+            "access" => $access->menu_access,
+            'store_list' => $summary_storelist,
+            'status_list' => $summary_statuslist,
+            'item_list' => $summary_itemlist
         ]);
 
     }
