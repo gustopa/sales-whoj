@@ -27,7 +27,8 @@ function Form({inventory,stores,locations,positions,items,types,models,sources,s
     const [beratEmas,setBeratEmas] = useState(inventory.gold_weight || 0)
     const [labourPrice,setLabourPrice] = useState(inventory.labour_price_id || 0)
     const [totalDiamond,setTotalDiamond] = useState(0)
-    
+    const [hargaJual,setHargaJual] = useState(inventory.harga_jual || 0)
+    const [basicPriceUsd,setBasicPriceUsd] = useState(inventory.basic_price_usd || 0)
     const handleFileChange = e => {
         const formData = {
             item_type_id : type,
@@ -41,6 +42,8 @@ function Form({inventory,stores,locations,positions,items,types,models,sources,s
             gold_price : hargaEmas,
             photo_inventory_id : photo,
             labour_price_id : labourPrice,
+            basic_price_usd : basicPriceUsd,
+            sell_price : hargaJual
         }
     }
   return (
@@ -281,13 +284,13 @@ function Form({inventory,stores,locations,positions,items,types,models,sources,s
                             <Input fullWidth inputProps={{readOnly : true}} value={inventory.basic_price_usd} label="HPP By System (USD)" />
                         </Grid>
                         <Grid size={{xs:12,md:3}}>
-                            <Input fullWidth label="HPP (USD)" />
+                            <Input fullWidth value={basicPriceUsd} onChange={e => setBasicPriceUsd(e.target.value)} label="HPP (USD)" />
                         </Grid>
                         <Grid size={{xs:12,md:3}}>
                             <Input inputProps={{readOnly : true}} fullWidth label="Harga Kalkulasi" />
                         </Grid>
                         <Grid size={{xs:12,md:3}}>
-                            <Input fullWidth label="Harga Jual(IDR)" />
+                            <Input fullWidth value={hargaJual} onChange={e => setHargaJual(e.target.value)} label="Harga Jual(IDR)" />
                         </Grid>
 
                         <Grid size={12}>
