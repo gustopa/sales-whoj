@@ -7,7 +7,7 @@ import { FaPrint,FaBuilding } from "react-icons/fa";
 import { Link } from '@inertiajs/react';
 import { FaCirclePlus } from 'react-icons/fa6';
 import ModalInventory from './components/ModalInventory';
-import { formatDate } from '../../helper';
+import { encrypt, formatDate } from '../../helper';
 
 function Inventory({totalInventoryList,access}) {
     
@@ -23,31 +23,36 @@ function Inventory({totalInventoryList,access}) {
                 </>
             ),
             cellRenderer : params => (
-                <div key={params.value}>
-                    {access == "Full control" &&
-                        <Button sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' color="primary" variant="contained">
-                            <MdEdit/>
+                params.value && (
+
+                    <div key={params.value}>
+                        {access == "Full control" &&
+                            <Link href={`/inventory/form/${encrypt(params.value)}`}>
+                                <Button sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' color="primary" variant="contained">
+                                    <MdEdit/>
+                                </Button>
+                            </Link>
+                        }
+                        {access == "Full control" &&
+                            <Button sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' variant='contained' color='error'>
+                                <MdDelete/>
+                            </Button>
+                        }
+                        <Button sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' variant='contained' color="inherit">
+                            <FaPrint style={{color: "black"}}/>
                         </Button>
-                    }
-                    {access == "Full control" &&
-                        <Button sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' variant='contained' color='error'>
-                            <MdDelete/>
-                        </Button>
-                    }
-                    <Button sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' variant='contained' color="inherit">
-                        <FaPrint style={{color: "black"}}/>
-                    </Button>
-                    {access == "Full control" &&
-                        <Button sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' variant='contained' color='secondary'>
-                            <MdFileUpload/>
-                        </Button>
-                    }
-                    {access == "Full control" &&
-                        <Button sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' variant='contained' color='success'>
-                            <FaBuilding/>
-                        </Button>
-                    }
-                </div>
+                        {access == "Full control" &&
+                            <Button sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' variant='contained' color='secondary'>
+                                <MdFileUpload/>
+                            </Button>
+                        }
+                        {access == "Full control" &&
+                            <Button sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' variant='contained' color='success'>
+                                <FaBuilding/>
+                            </Button>
+                        }
+                    </div>
+                )
             )
         },
         {field : "identity_code",headerName : "PLU", minWidth : 120, width : 120, flex : false,

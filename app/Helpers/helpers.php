@@ -154,6 +154,22 @@ if(!function_exists('get_crafts_workminute')){
     }
 }
 
+if(!function_exists('incrementPLU')){
+    function incrementPLU($plu) {
+        // Konversi ke integer agar bisa di-increment
+        $number = intval($plu);
+        
+        // Tambah nilai 1
+        $number++;
+    
+        // Hitung panjang string awal
+        $length = strlen($plu);
+    
+        // Format ulang agar tetap memiliki panjang yang sama
+        return str_pad($number, $length, '0', STR_PAD_LEFT);
+    }
+}
+
 
 
 
