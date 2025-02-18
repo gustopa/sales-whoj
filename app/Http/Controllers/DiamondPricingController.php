@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Models\DiamondPricingModel;
 class DiamondPricingController extends Controller
 {
     public function diamondPricing(){
@@ -28,5 +28,36 @@ class DiamondPricingController extends Controller
             $query->orderBy('row_id','desc');
         });
         return $data;
+    }
+
+    public function tambah(Request $request){
+        $access = checkPermission("diamond_pricing");
+        if($access == null || $access == "" || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        DiamondPricingModel::insert($request['data']);
+        return response()->json(["message" => "berhasil"]);
+    }
+
+    public function edit($id){
+        $access = checkPermission("diamond_pricing");
+        if($access == null || $access == "" || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        $request = request();
+        DiamondPricingModel::where('row_id',$id)->update($request['data']);
+        return response()->json(["messaage" => "berhasil"]);
+    }
+    public function delete($id){
+        $access = checkPermission("diamond_pricing");
+        if($access == null || $access == "" || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        DiamondPricingModel::where('row_id',$id)->update([
+            "is_deleted" => 1,
+            "modified_date" => date("Y-m-d H:i:s"),
+            "modified_by" => session('username')
+        ]);
+        return response()->json(["messaage" => "berhasil"]);
     }
 }

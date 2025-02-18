@@ -231,6 +231,9 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
     Route::prefix('/diamond_pricing')->group(function(){
         Route::get('/',[DiamondPricingController::class,'diamondPricing']);
         Route::get('/getAll',[DiamondPricingController::class,'getAll']);
+        Route::post('/tambah',[DiamondPricingController::class,'tambah']);
+        Route::post('/edit/{id}',[DiamondPricingController::class,'edit']);
+        Route::delete('/delete/{id}',[DiamondPricingController::class,'delete']);
     });
     // End diamond pricing
 
