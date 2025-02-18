@@ -170,6 +170,27 @@ if(!function_exists('incrementPLU')){
     }
 }
 
+if(!function_exists('xnumber_format')){
+    function xnumber_format($str, $koma = null) {
+        $ret = 0;
+        if(!is_numeric($str)) {
+            $str = 0;
+        }
+        if($koma) {
+            $ret = ($str) ? number_format($str, $koma) : "0";
+        } else {
+            $ret = ($str) ? number_format($str) : "0";
+        }
+
+        return $ret;
+    }
+}
+
+if(!function_exists('left')){
+    function left($str, $length) {
+        return substr($str, 0, $length);
+    }
+}
 
 
 

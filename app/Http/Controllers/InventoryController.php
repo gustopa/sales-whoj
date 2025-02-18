@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+
 use App\Models\InventoryModel;
 use App\Models\StoreModel;
 use App\Models\LocationModel;
@@ -13,6 +15,8 @@ use App\Models\ItemModel;
 use App\Models\ModelModel;
 use App\Models\LabourPriceModel;
 use App\Models\InventoryMovementModel;
+use App\Models\InventoryDiamondModel;
+use Carbon\Carbon;
 
 class InventoryController extends Controller
 {
@@ -32,11 +36,15 @@ class InventoryController extends Controller
         ->whereNotNull('store_id_txt')
         ->groupBy('store_id_txt')
         ->get();
+        $stores = StoreModel::where('company_id',session('company_id'))->where('is_deleted',0)->get();
+        $locations = LocationModel::where('company_id',session('company_id'))->where('is_deleted',0)->get();
         return inertia("Inventory/Inventory",[
             "session" => session()->all(),
             "access" => $access->menu_access,
             "menu"=> $menu,
-            "totalInventoryList" => $totalInventoryList
+            "totalInventoryList" => $totalInventoryList,
+            "stores" => $stores,
+            "locations" => $locations
         ]);
     }
 
@@ -115,6 +123,16 @@ class InventoryController extends Controller
         });
         return $data;
     }
+
+    public function barcode($id){
+        $inventory = InventoryModel::where('row_id',decrypt_id($id))->first();
+        $inventoryDiamond = InventoryDiamondModel::where('row_id',decrypt_id($id))->orderBy('line_id','desc')->get();
+        return view('pdf.barcode',[
+            'inventory' => $inventory,
+            'inventory_diamond' => $inventoryDiamond
+        ]);
+    }
+
     public function form($id){
         $access = checkPermission('inventory');
         if($access == null || $access == "" || $access == "Read only"){
@@ -148,6 +166,73 @@ class InventoryController extends Controller
         ]);
     }
 
+    public function save(Request $request){
+        DB::transaction(function() use($request){
+
+            $other_expense = 0;
+            $amount_labour_price = LabourPriceModel::where('row_id',$request['data']['labour_price_id'])->first();
+            if(!empty($amount_labour_price)){
+                $other_expense = $amount_labour_price->amount;
+            }
+
+            if($request['data']['item_source'] == "MAHAKARYA"){
+                $basic_price_usd = $this->get_hpp_bysystem($request['row_id'],$request['data']['labour_price_id'],$request['data']['gold_weight'],$request['data']['gold_price']);
+            }else{
+                $basic_price_usd = $request['data']['production_cost'] + $other_expense;
+            }
+
+            $exrate = $request['data']['sold_rate'];
+            $cal1 = $request['data']['production_cost'] * $exrate;
+            $cal2 = $cal1 * ($request['data']['markup'] / 100);
+            $calc_price = $cal1 + $cal2;
+
+            $sertifikat = InventoryModel::where('row_id',$request['row_id'])->first()->file_certificate;
+            if ($request->hasFile('file_sertifikat')) {
+                $file = $request->file('file_sertifikat');
+                $extension = $file->getClientOriginalExtension();
+                $newFileName = 'file_certificate_' . Carbon::now()->format('YmdHis') . '.' . $extension;
+                $file->storeAs('uploaded', $newFileName, 'public');
+                $sertifikat = $newFileName;
+            }
+
+            $data = $request->input('data', []); 
+            $data['file_certificate'] = $sertifikat; 
+            if($request['data']['kode_supplier'] == null){
+                $data['kode_supplier'] = "";
+            }
+            $data['basic_price_usd'] = $basic_price_usd;
+            $data['calc_price'] = $calc_price;
+            $request->merge(['data' => $data]);
+            InventoryModel::where('row_id',$request['row_id'])->update($request['data']);
+        });
+        return response()->json(["message" => "berhasil"]);
+    }
+
+    public function delete($id){
+        $access = checkPermission('inventory');
+        if($access == null || $access == "" || $access->menu_access == "Read only"){
+            return abort(403);
+        }
+        InventoryModel::where('row_id',$id)->update([
+            "is_deleted" => 1,
+            "modified_date" => date("Y-m-d H:i:s"),
+            "modified_by" => session('username')
+        ]);
+        return response()->json(["message" => "berhasil"]);
+    }
+
+    public function get_hpp_bysystem($row_id,$labour_price_id,$gold_weight,$gold_price){
+        $other_expense = 0;
+        $amount_labour_price = LabourPriceModel::where('row_id',$labour_price_id)->first();
+        if(!empty($amount_labour_price)){
+            $other_expense = $amount_labour_price->amount;
+        }
+        $cal0 = $gold_weight * $gold_price;
+        $basic_price_usd = DB::table('vw_inventory_diamondlist')->select(DB::raw("SUM(amount) as total"))->where('is_deleted',0)->where('row_id',$row_id)->first()->total;
+        $basic_price_usd += $other_expense;
+        $basic_price_usd += $cal0;
+        return $basic_price_usd;
+    }
 
     public function getByStore($store_id){
         if($store_id == 0){
@@ -164,6 +249,29 @@ class InventoryController extends Controller
             $query->orderby("row_id","desc");
         });
         return $products;
+    }
+
+    public function updateStore($id){
+        $request = request();
+        InventoryModel::where('row_id',$id)->update($request['data']);
+        return response()->json();
+    }
+
+    public function uploadSertifikat($id){
+        $request = request();
+        $sertifikat = "";
+        $file = $request->file('file');
+        $extension = $file->getClientOriginalExtension();
+        $newFileName = 'file_certificate_' . Carbon::now()->format('YmdHis') . '.' . $extension;
+        $file->storeAs('uploaded', $newFileName, 'public');
+        $sertifikat = $newFileName;
+
+        InventoryModel::where('row_id',$id)->update([
+            "file_certificate" => $sertifikat,
+            "modified_date" => date("Y-m-d H:i:s"),
+            "modified_by" => session('username')
+        ]);
+        return response()->json(['status' => "oke"]);
     }
 
     public function summary(){
@@ -248,6 +356,17 @@ class InventoryController extends Controller
         ->where('company_id',session('company_id'))
         ->orderBy('line_id','desc')->get();
         return $data;
+    }
+
+    public function tambahDiamond(Request $request){
+        InventoryDiamondModel::insert($request['data']);
+        return response()->json(['message' => "berhasil"]);
+    }
+
+    public function editDiamond($id){
+        $request = request();
+        InventoryDiamondModel::where('line_id',$id)->update($request['data']);
+        return response()->json(['message' => "berhasil"]);
     }
 
     public function inventoryList(){

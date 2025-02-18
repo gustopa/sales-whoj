@@ -1,10 +1,14 @@
 import React, { useState } from 'react'
 import Layout from '../Layouts/Layout'
-import { Button, Card, CardActionArea, CardContent, FormControl, Grid2 as Grid, InputAdornment, InputLabel, MenuItem, Select, TextField } from '@mui/material'
+import { Button, Card, CardActionArea, CardContent, CircularProgress, FormControl, Grid2 as Grid, InputAdornment, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import Input from '../Layouts/components/Input'
 import ModalPhoto from './components/ModalPhoto'
 import ModalPesanan from './components/ModalPesanan'
 import TableDiamond from './components/TableDiamond'
+import { encrypt, formatNumber, sanitizedNumber, showAlert, unformatNumber } from '../../helper'
+import axios from 'axios'
+import { router } from '@inertiajs/react'
+import Swal from 'sweetalert2'
 function Form({inventory,stores,locations,positions,items,types,models,sources,status_list,labour_price}) {
     const [location,setLocation] = useState(inventory.location_id || 0)
     const [position,setPosition] = useState(inventory.position_id || 0)
@@ -16,35 +20,105 @@ function Form({inventory,stores,locations,positions,items,types,models,sources,s
     const [photoName,setPhotoName] = useState(inventory.photo_inventory_id_txt || "")
     const [pesanan,setPesanan] = useState(inventory.payment_order_id)
     const [pesananName,setPesananName] = useState(inventory.payment_order_id_txt || "" )
-    const [supplierCode,setSupplierCode] = useState(inventory.kode_supplier || "")
+    const [supplierCode,setSupplierCode] = useState(inventory.kode_supplier || " ")
     const [status,setStatus] = useState(inventory.status || "")
     const [sertifikat,setSertifikat] = useState(inventory.file_certificate)
     const [rateBeli ,setRateBeli] = useState(inventory.buy_rate || 0)
+    const [displayRateBeli,setDisplayRateBeli] = useState(formatNumber(Number(inventory.buy_rate)) || 0)
     const [rateJual,setRateJual] = useState(inventory.sold_rate || 0)
-    const [markup,setMarkup] = useState(inventory.markup || 0)
-    const [kadarEmas,setKadarEmas] = useState(inventory.gold_grade || 0)
-    const [hargaEmas,setHargaEmas] = useState(inventory.gold_price || 0)
-    const [beratEmas,setBeratEmas] = useState(inventory.gold_weight || 0)
+    const [displayRateJual,setDisplayRateJual] = useState(formatNumber(Number(inventory.sold_rate)) || 0)
+    const [markup,setMarkup] = useState(parseFloat(inventory.markup) || 0)
+    const [kadarEmas,setKadarEmas] = useState(parseFloat(inventory.gold_grade) || 0)
+    const [hargaEmas,setHargaEmas] = useState(parseFloat(inventory.gold_price) || 0)
+    const [beratEmas,setBeratEmas] = useState(parseFloat(inventory.gold_weight) || 0)
     const [labourPrice,setLabourPrice] = useState(inventory.labour_price_id || 0)
     const [totalDiamond,setTotalDiamond] = useState(0)
-    const [hargaJual,setHargaJual] = useState(inventory.harga_jual || 0)
-    const [basicPriceUsd,setBasicPriceUsd] = useState(inventory.basic_price_usd || 0)
+    const [productionCost,setProductionCost] = useState(parseFloat(inventory.production_cost) || 0)
+    const [hargaKalkulasi,setHargaKalkulasi] = useState(Intl.NumberFormat('en-US').format(inventory.calc_price) || 0)
+    const [hargaJual,setHargaJual] = useState(inventory.sell_price || 0)
+    const [displayHargaJual,setDisplayHargaJual] = useState(formatNumber(Number(inventory.sell_price)) || 0)
     const handleFileChange = e => {
+        const file = e.target.files[0]
+        setSertifikat(file)
+    }
+    const [loadingSubmit,setLoadingSubmit] = useState(false)
+    const [loadingCalculate,setLoadingCalculate] = useState(false)
+    const handleSubmit = async redirect => {
         const formData = {
-            item_type_id : type,
-            item_id : item,
-            model_id : model,
-            payment_order_id : pesanan,
-            item_source : source,
-            kode_supplier : supplierCode,
-            gold_weight : beratEmas,
-            gold_grade : kadarEmas,
-            gold_price : hargaEmas,
-            photo_inventory_id : photo,
-            labour_price_id : labourPrice,
-            basic_price_usd : basicPriceUsd,
-            sell_price : hargaJual
+            row_id : inventory.row_id,
+            file_sertifikat : sertifikat,
+            data : {
+                location_id : location,
+                position_id : position,
+                item_type_id : type,
+                item_id : item,
+                model_id : model,
+                photo_inventory_id : photo,
+                item_source : source,
+                payment_order_id : pesanan,
+                kode_supplier : supplierCode,
+                status : status,
+                buy_rate : rateBeli,
+                sold_rate : rateJual,
+                markup : markup,
+                gold_weight : beratEmas,
+                gold_grade : kadarEmas,
+                gold_price : hargaEmas,
+                photo_inventory_id : photo,
+                labour_price_id : labourPrice,
+                production_cost : productionCost,
+                sell_price : hargaJual,
+            }
         }
+        
+        
+        if(redirect){
+            setLoadingSubmit(true)
+            const confirm = await Swal.fire({
+                title: "Anda yakin?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes"
+            })
+            if(confirm.isConfirmed){
+                try{
+                    const response = await axios.post('/inventory/save',formData,{
+                        headers : {
+                            "Content-Type" : "multipart/form-data"
+                        }
+                    })
+                    const responseData = await response.data
+                    showAlert("Berhasil!","Data berhasil disubmit",'success')
+                    router.visit('/inventory')
+                    setLoadingSubmit(false)
+                }catch(err){
+                    console.log(err)
+                    showAlert('Gagal!','Terjadi kesalahan silahkan coba lagi',"error")
+                }
+            }else{
+                setLoadingSubmit(false)
+            }
+        }else{
+            setLoadingCalculate(true)
+            try{
+                const response = await axios.post('/inventory/save',formData,{
+                    headers : {
+                        "Content-Type" : "multipart/form-data"
+                    }
+                })
+                const responseData = await response.data
+                router.reload()
+            }catch(err){
+                console.log(err)
+                showAlert('Gagal!','Terjadi kesalahan silahkan coba lagi',"error")
+            }finally{
+                setLoadingCalculate(false)
+            }
+        }
+        
+        
     }
   return (
     <Layout title="Inventory | Form" page="Form Barang">
@@ -243,10 +317,20 @@ function Form({inventory,stores,locations,positions,items,types,models,sources,s
                 <Card className='p-3 dark:bg-navy-800'>
                     <Grid container spacing={2}>
                         <Grid size={{sx:12,md:3}}>
-                            <Input fullWidth label="Rate Beli(IDR) :" onChange={e => setRateBeli(e.target.value)} value={rateBeli}/>
+                            <Input fullWidth label="Rate Beli(IDR) :" onChange={e => {
+                                const value = sanitizedNumber(e.target.value)
+                                const rawValue = unformatNumber(value)
+                                setDisplayRateBeli(formatNumber(Number(rawValue)))
+                                setRateBeli(rawValue)
+                            }} value={displayRateBeli}/>
                         </Grid>
                         <Grid size={{sx:12,md:3}}>
-                            <Input fullWidth label="Rate Jual(IDR) :" onChange={e => setRateJual(e.target.value)} value={rateJual}/>
+                            <Input fullWidth label="Rate Jual(IDR) :" onChange={e => {
+                                const value = sanitizedNumber(e.target.value)
+                                const rawValue = unformatNumber(value)
+                                setRateJual(rawValue)
+                                setDisplayRateJual(formatNumber(Number(rawValue)))
+                            }} value={displayRateJual}/>
                         </Grid>
                         <Grid size={{sx:12,md:3}}>
                             <Input fullWidth label="Markup(%) :" onChange={e => setMarkup(e.target.value)} value={markup}/>
@@ -281,21 +365,36 @@ function Form({inventory,stores,locations,positions,items,types,models,sources,s
                               </FormControl>
                         </Grid>
                         <Grid size={{xs:12,md:3}}>
-                            <Input fullWidth inputProps={{readOnly : true}} value={inventory.basic_price_usd} label="HPP By System (USD)" />
+                            <Input fullWidth inputProps={{readOnly : true}} value={parseFloat(inventory.basic_price_usd)} label="HPP By System (USD)" />
                         </Grid>
                         <Grid size={{xs:12,md:3}}>
-                            <Input fullWidth value={basicPriceUsd} onChange={e => setBasicPriceUsd(e.target.value)} label="HPP (USD)" />
+                            <Input fullWidth value={productionCost} onChange={e => setProductionCost(e.target.value)} label="HPP (USD)" />
                         </Grid>
                         <Grid size={{xs:12,md:3}}>
-                            <Input inputProps={{readOnly : true}} fullWidth label="Harga Kalkulasi" />
+                            <Input inputProps={{readOnly : true}} value={hargaKalkulasi} onChange={e => setHargaKalkulasi(e.target.value)} fullWidth label="Harga Kalkulasi" />
                         </Grid>
                         <Grid size={{xs:12,md:3}}>
-                            <Input fullWidth value={hargaJual} onChange={e => setHargaJual(e.target.value)} label="Harga Jual(IDR)" />
+                            <Input fullWidth value={displayHargaJual} onChange={e => {
+                                const value = sanitizedNumber(e.target.value)
+                                const rawValue = unformatNumber(value)
+                                setDisplayHargaJual(formatNumber(Number(rawValue)))
+                                setHargaJual(rawValue)
+                            }} label="Harga Jual(IDR)" />
                         </Grid>
 
                         <Grid size={12}>
-                            <h2 className='text-1xl font-bold'>Diamond</h2>
-                            <TableDiamond setTotalDiamond={setTotalDiamond} row_id={inventory.row_id}/>
+                            <Button disabled={loadingSubmit} onClick={() => handleSubmit(true)} variant='contained'>
+                            {loadingSubmit ? <CircularProgress style={{width:'25px',height:'25px',color:'white'}}/> : "Submit"}
+                            </Button>
+                            <a target='__blank' href={`/inventory/barcode/${encrypt(inventory.row_id)}`}>
+                                <Button variant='contained' sx={{ml:1}}>Print Barcode</Button>
+                            </a>
+                            {/* <Button variant='contained' sx={{ml:1}}>Print Certificate</Button> */}
+                        </Grid>
+
+                        <Grid size={12}>
+                            <h2 className='text-1xl font-bold dark:text-white'>Diamond</h2>
+                            <TableDiamond onSuccess={handleSubmit} setTotalDiamond={setTotalDiamond} row_id={inventory.row_id}/>
                             <Grid container spacing={2} sx={{mt:2}}>
 
                                 <Grid size={{xs:12,md:3}}>
@@ -315,7 +414,7 @@ function Form({inventory,stores,locations,positions,items,types,models,sources,s
                                             <CardContent className='text-center text-white'>
                                                 <h1 className='font-bold text-1xl'>Biaya Lainnya </h1>
                                                 <hr className='my-2' />
-                                                <span>{inventory?.other_expense}</span>
+                                                <span>{parseFloat(inventory?.other_expense)}</span>
                                             </CardContent>
                                         </CardActionArea>
                                     </Card>
@@ -339,7 +438,7 @@ function Form({inventory,stores,locations,positions,items,types,models,sources,s
                                             <CardContent className='text-center text-white'>
                                                 <h1 className='font-bold text-1xl'>HPP (USD) </h1>
                                                 <hr className='my-2' />
-                                                <span>{Intl.NumberFormat('en-US').format(inventory?.basic_price_usd)}</span>
+                                                <span>{inventory?.production_cost}</span>
                                             </CardContent>
                                         </CardActionArea>
                                     </Card>
@@ -352,7 +451,7 @@ function Form({inventory,stores,locations,positions,items,types,models,sources,s
                                                 <hr className='my-2' />
                                                 <span>
                                                 Rate jual (IDR) : {Intl.NumberFormat('id-ID').format(inventory?.sold_rate)} <br />
-                                                HPP : {Intl.NumberFormat('id-ID').format(inventory?.basic_price_usd * inventory?.sold_rate)}
+                                                HPP : {Intl.NumberFormat('en-US').format(inventory?.production_cost * inventory?.sold_rate)}
                                                 </span>
                                             </CardContent>
                                         </CardActionArea>
@@ -366,7 +465,7 @@ function Form({inventory,stores,locations,positions,items,types,models,sources,s
                                                 <hr className='my-2' />
                                                 <span>
                                                     Margin (%) : {inventory?.profit_margin} <br />
-                                                    Margin : {Intl.NumberFormat('id-ID').format((inventory?.basic_price_usd * inventory?.sold_rate) * (inventory?.profit_margin / 100))}
+                                                    Margin : {Intl.NumberFormat('en-US').format((inventory?.production_cost * inventory?.sold_rate) * (inventory?.profit_margin / 100))}
                                                 </span>
                                             </CardContent>
                                         </CardActionArea>
@@ -397,16 +496,14 @@ function Form({inventory,stores,locations,positions,items,types,models,sources,s
                             </Grid>
                         </Grid>
                         <Grid size={12}>
-                            <Button variant='contained'>Calculate Price</Button>
+                            <Button disabled={loadingCalculate} onClick={() => handleSubmit(false)} variant='contained'>
+                                {loadingCalculate ? <CircularProgress style={{width:'25px',height:'25px',color:'white'}}/> : "Calculate price"}
+                            </Button>
                         </Grid>
                     </Grid>
                 </Card>
             </Grid>
-            <Grid size={12}>
-                <Button variant='contained'>Submit</Button>
-                <Button variant='contained' sx={{ml:1}}>Print Barcode</Button>
-                <Button variant='contained' sx={{ml:1}}>Print Certificate</Button>
-            </Grid>
+            
         </Grid>
     </Layout>
   )

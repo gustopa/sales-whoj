@@ -7,10 +7,34 @@ import { FaPrint,FaBuilding } from "react-icons/fa";
 import { Link } from '@inertiajs/react';
 import { FaCirclePlus } from 'react-icons/fa6';
 import ModalInventory from './components/ModalInventory';
-import { encrypt, formatDate } from '../../helper';
+import { encrypt, formatDate, showAlert } from '../../helper';
+import FormUpdateStore from './components/FormUpdateStore';
+import FormUploadSertifikat from './components/FormUploadSertifikat';
+import Swal from 'sweetalert2';
 
 function Inventory({totalInventoryList,access}) {
-    
+    const [tableKey,setTableKey] = useState(0)
+    const handleDelete = (row_id) => {
+        Swal.fire({
+          title: "Are you sure?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes"
+        }).then( async (result) => {
+          if (result.isConfirmed) {
+            try{
+              await axios.delete(`/inventory/delete/${row_id}`)
+              showAlert("Berhasil!","Barang berhasil dihapus",'success')
+              setTableKey(prev => prev + 1)
+            }catch(err){
+              showAlert("Error!","Terjadi kesalahan silahkan coba lagi","error")
+            }
+          }
+        });
+        
+    }
     const [columnDef] = useState([
         {field : "row_id",headerName : "", width : access == "Full control" ? 211 : 80,pinned : "left", filter : false, resizable : false, minWidth : access == "Read only" ? 80 : undefined,
             headerComponent : params => (
@@ -34,22 +58,20 @@ function Inventory({totalInventoryList,access}) {
                             </Link>
                         }
                         {access == "Full control" &&
-                            <Button sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' variant='contained' color='error'>
+                            <Button onClick={() => handleDelete(params.value)} sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' variant='contained' color='error'>
                                 <MdDelete/>
                             </Button>
                         }
-                        <Button sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' variant='contained' color="inherit">
-                            <FaPrint style={{color: "black"}}/>
-                        </Button>
-                        {access == "Full control" &&
-                            <Button sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' variant='contained' color='secondary'>
-                                <MdFileUpload/>
+                        <a href={`/inventory/barcode/${params.value}`} target='__blank'>
+                            <Button sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' variant='contained' color="inherit">
+                                <FaPrint style={{color: "black"}}/>
                             </Button>
+                        </a>
+                        {access == "Full control" &&
+                            <FormUploadSertifikat row_id={params.value} iconButton={<MdFileUpload color='white'/>}/>
                         }
                         {access == "Full control" &&
-                            <Button sx={{ width: "30px", marginLeft : "5px", minWidth: "30px",  }} size='small' variant='contained' color='success'>
-                                <FaBuilding/>
-                            </Button>
+                            <FormUpdateStore onSuccess={setTableKey} data={params?.data} iconButton={<FaBuilding color='white'/>} />
                         }
                     </div>
                 )
@@ -84,7 +106,7 @@ function Inventory({totalInventoryList,access}) {
         </Grid>
         <Grid container spacing={2} className="mt-5">
             <Grid size={12}>
-                <Table statusFilter={true} columnDefs={columnDef} endpoint="/inventory/getAll" />
+                <Table key={tableKey} statusFilter={true} columnDefs={columnDef} endpoint="/inventory/getAll" />
             </Grid>
         </Grid>
     </Layout>

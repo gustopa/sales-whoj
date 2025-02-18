@@ -42,12 +42,14 @@
   
   /* Perubahan warna input berdasarkan tema */
   .MuiOutlinedInput-root .MuiInputBase-input {
-    color: black; /* Default */
+    color: black;
+  }
+
+  body.dark .MuiOutlinedInput-root .MuiInputBase-input {
+    color: white !important;
   }
   
-  body.dark-theme .MuiOutlinedInput-root .MuiInputBase-input {
-    color: white;
-  }
+
   
   .MuiOutlinedInput-root .MuiInputBase-input::placeholder {
     color: #b89474;

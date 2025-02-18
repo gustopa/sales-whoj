@@ -8,15 +8,15 @@ import { MdDelete, MdEdit } from 'react-icons/md'
 import { Button } from '@mui/material'
 import { usePage } from '@inertiajs/react'
 
-function TableDiamond({row_id,setTotalDiamond}) {
+function TableDiamond({row_id,setTotalDiamond,onSuccess}) {
     const session = usePage().props.session
-    
+    const [tableKey,setTableKey] = useState(0)
     const [columnDefs] = useState([
         {field : "line_id",headerName : "", flex : false,minWidth : 130, width : 130,
-            headerComponent : params => <FormDiamond title="TAMBAH" sxButton={{background : "rgb(46, 125, 50)"}} iconButton={<FaPlusCircle/>} />,
+            headerComponent : params => <FormDiamond updateTable={setTableKey} onSuccess={onSuccess} row_id={row_id} title="TAMBAH" sxButton={{background : "rgb(46, 125, 50)"}} iconButton={<FaPlusCircle/>} />,
             cellRenderer : params => (
                 <>
-                    <FormDiamond title="EDIT" data={params.data} sxButton={{background : "#1976d2",minWidth : "30px",padding:4}} iconButton={<MdEdit color='white'/>} />
+                    <FormDiamond updateTable={setTableKey} onSuccess={onSuccess} row_id={row_id} title="EDIT" data={params.data} sxButton={{background : "#1976d2",minWidth : "30px",padding:4}} iconButton={<MdEdit color='white'/>} />
                     <Button color="error" size='small' sx={{minWidth : "30px",ml : 1}} variant='contained'><MdDelete color='white'/></Button>
                 </>
             )
@@ -49,12 +49,12 @@ function TableDiamond({row_id,setTotalDiamond}) {
         const response = await axios.get(`/inventory/getDiamond/${encrypt(row_id)}`)
         const responseData = await response.data
         setData(responseData)
-        setTotalDiamond(responseData[0].total_diamond)
+        setTotalDiamond(responseData[0]?.total_diamond || 0)
     }
     
     useEffect(() => {
         getData()
-    },[row_id])
+    },[row_id,tableKey])
   return (
     <DataTable height="auto" domLayout='autoHeight' pagination={false} columns={columnDefs} data={data} />
   )

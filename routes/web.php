@@ -155,6 +155,13 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         Route::get('/form/{id}',[InventoryController::class,'form']);
         Route::get('/getPhoto',[InventoryController::class,'getPhoto']);
         Route::get('/getPesanan',[InventoryController::class,'getPesanan']);
+        Route::post('/save',[InventoryController::class,'save']);
+        Route::post('/tambahDiamond',[InventoryController::class,'tambahDiamond']);
+        Route::post('/editDiamond/{id}',[InventoryController::class,'editDiamond']);
+        Route::get('/barcode/{id}',[InventoryController::class,'barcode']);
+        Route::post('/updateStore/{id}',[InventoryController::class,'updateStore']);
+        Route::post('/uploadSertifikat/{id}',[InventoryController::class,'uploadSertifikat']);
+        Route::delete('/delete/{id}',[InventoryController::class,'delete']);
     });
     // End inventory
 
