@@ -34,7 +34,7 @@ function DiamondPricing({access}) {
     const [columnDefs] = useState([
         {field : "row_id",headerName : "", filter : false, resizable : false,sortable : false,pinned : "left", width : 110, minWidth : 110, hide : access == "Read only" ? true : false,
             headerComponent : params => (
-                <FormDiamondPricing onSuccess={setTableKey} title="TAMBAH" sxButton={{}} iconButton={<FaCirclePlus color='white'/>}/>
+                <FormDiamondPricing onSuccess={setTableKey} title="TAMBAH" sxButton={{background : "#2e7d32"}} iconButton={<FaCirclePlus color='white'/>}/>
             ),
             // #1976D2
             cellRenderer : params => 
