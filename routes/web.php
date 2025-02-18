@@ -34,6 +34,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\DashboardSalesController;
+use App\Http\Controllers\PhotoController;
 
 use App\Http\Middleware\IsAuthenticated;
 use App\Http\Middleware\NotLogin;
@@ -196,6 +197,9 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
     Route::prefix('/photo_inventory')->group(function(){
         Route::get('/',[InventoryController::class,'photo']);
         Route::get('/getAll',[InventoryController::class,'getAllPhoto']);
+        Route::post('/tambah',[PhotoController::class,'tambah']);
+        Route::post('/edit/{id}',[PhotoController::class,'edit']);
+        Route::delete('/delete/{id}',[PhotoController::class,'delete']);
     });
     // End inventory out
 

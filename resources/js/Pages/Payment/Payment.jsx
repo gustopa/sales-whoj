@@ -14,7 +14,6 @@ import Swal from 'sweetalert2'
 function Payment({access}) {
 
     const handleCancel = (id) => {
-        console.log(id);
         Swal.fire({
             title: "Are you sure?",
             icon: "warning",
