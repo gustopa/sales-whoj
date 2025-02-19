@@ -36,6 +36,7 @@ use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\DashboardSalesController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\MiscellaneousController;
+use App\Http\Controllers\InventoryCalculationController;
 
 use App\Http\Middleware\IsAuthenticated;
 use App\Http\Middleware\NotLogin;
@@ -225,6 +226,9 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
         Route::get('/',[InventoryController::class,'priceCalculation']);
         Route::get('/getAll',[InventoryController::class,'getAllPriceCalculation']);
         Route::get('/getDiamond/{id}',[InventoryController::class,'getAllDiamondPriceCalculation']);
+        Route::post('/create',[InventoryCalculationController::class,'tambah']);
+        Route::get('/form/{id}',[InventoryCalculationController::class,'form']);
+        Route::get('/getDiamond/{id}',[InventoryCalculationController::class,'getDiamond']);
     });
     // End inventory price calculation
 

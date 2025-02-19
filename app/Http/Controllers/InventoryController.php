@@ -359,13 +359,35 @@ class InventoryController extends Controller
     }
 
     public function tambahDiamond(Request $request){
-        InventoryDiamondModel::insert($request['data']);
+        DB::transaction(function() use($request) {
+            $diamondPricing = generateDiamondPrice($request['data']['diamond_type'],$request['data']['grade'],$request['data']['grain']);
+            $total_amount = $diamondPricing['total_amount'];
+            $size_crt = $diamondPricing['size_crt'];
+            $price = $diamondPricing['price']; 
+            $data = $request->input('data',[]);
+            $data['karat_perbutir'] = $size_crt;
+            $data['harga_perbutir'] = $price;
+            $data['amount'] = $total_amount;
+            $request->merge(["data"=>$data]);
+            InventoryDiamondModel::insert($request['data']);
+        });
         return response()->json(['message' => "berhasil"]);
     }
 
     public function editDiamond($id){
         $request = request();
-        InventoryDiamondModel::where('line_id',$id)->update($request['data']);
+        DB::transaction(function() use($request,$id) {
+            $diamondPricing = generateDiamondPrice($request['data']['diamond_type'],$request['data']['grade'],$request['data']['grain']);
+            $total_amount = $diamondPricing['total_amount'];
+            $size_crt = $diamondPricing['size_crt'];
+            $price = $diamondPricing['price']; 
+            $data = $request->input('data',[]);
+            $data['karat_perbutir'] = $size_crt;
+            $data['harga_perbutir'] = $price;
+            $data['amount'] = $total_amount;
+            $request->merge(["data"=>$data]);
+            InventoryDiamondModel::where('line_id',$id)->update($request['data']);
+        });
         return response()->json(['message' => "berhasil"]);
     }
 

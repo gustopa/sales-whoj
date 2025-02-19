@@ -140,3 +140,34 @@ if (!function_exists('datatable')) {
     }
 }
 
+
+if(!function_exists('generateDiamondPrice')){
+    function generateDiamondPrice($diamond_type,$size,$qty){
+        $size_crt = $size / $qty;
+        $size_formatted = xnumber_format($size_crt, 3);
+
+        $diamond_pricing = DB::table('diamond_pricing')
+            ->where('diamond_type', $diamond_type)
+            ->whereRaw('? BETWEEN size_from AND size_to', [$size_formatted])
+            ->first();
+        if(!empty($diamond_pricing)){
+            $price = $diamond_pricing->price;
+            $total_amount = $size * $price;
+            $output = [
+                "total_amount" => $total_amount,
+                "price" => $price,
+                "size_crt" => $size_crt,
+
+            ];
+        }else{
+            $output = [
+                "total_amount" => 0,
+                "price" => 0,
+                "size_crt" => 0,
+            ];
+        }
+
+        return $output;
+
+    }
+}

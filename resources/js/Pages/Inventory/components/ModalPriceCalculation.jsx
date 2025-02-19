@@ -10,7 +10,6 @@ import DataTable from '../../Layouts/components/Datatable'
 import { IoMdDocument } from "react-icons/io";
 function ModalPriceCalculation({params}) {
   const item = params.data
-  console.log(item);
   
   const [diamond,setdiamond] = useState([])
   const [loaded, setLoaded] = useState(false)

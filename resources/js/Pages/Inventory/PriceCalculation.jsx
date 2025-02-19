@@ -6,26 +6,30 @@ import { FaCirclePlus } from 'react-icons/fa6'
 import { Button } from '@mui/material'
 import { MdDelete, MdEdit } from 'react-icons/md'
 import ModalPriceCalculation from './components/ModalPriceCalculation'
+import { encrypt } from '../../helper'
 function PriceCalculation({access}) {
     const [columnDefs] = useState([
         {field : "row_id", headerName : "",filter : false,resizable : false,pinned : "left", minWidth : 120, width : 120, hide : access == "Read only" ? true : false, 
             headerComponent : params => (
-                <Link className='flex justify-center' href='/refund/create' method="post" style={{background: "#b89474",padding : "10px",borderRadius : "10px",width : "80%",textAlign : "center"}}>
+                <Link className='flex justify-center' href='/inventory_price_calculation/create' method="post" style={{background: "#2e7d32",padding : "10px",borderRadius : "10px",width : "80%",textAlign : "center"}}>
                     <FaCirclePlus className='text-white'/>
                 </Link>
             ),
             cellRenderer : params => 
                 (
-                    <div key={params.value}>
-                        <Link>
-                            <Button sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="primary">
-                                <MdEdit/>
+                    params.value && (
+                        <div key={params.value}>
+                            <Link href={`/inventory_price_calculation/form/${encrypt(params.value)}`}>
+                                <Button sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="primary">
+                                    <MdEdit/>
+                                </Button>
+                            </Link>
+                            <Button sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="error">
+                                <MdDelete/>
                             </Button>
-                        </Link>
-                        <Button sx={{ width: "30px", minWidth: "30px",marginLeft : "5px" }} size="small" variant='contained' color="error">
-                            <MdDelete/>
-                        </Button>
-                    </div>
+                        </div>
+
+                    )
                 ),
         },
         {field : "name", headerName : "Nama", flex : 1, minWidth : 150,
