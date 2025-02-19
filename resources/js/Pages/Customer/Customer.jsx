@@ -93,11 +93,7 @@ function Customer({permission}) {
         return params.value != null && params.value != "" ? params.value : "-"
       }
     },
-    { field: "address", headerName: "Alamat",width: 350,minWidth : 200, wrapText : false, cellStyle : {lineHeight : "1.3"}, editable : true, cellEditor: "agDateCellEditor",
-      editable : true,
-      cellEditor: "agLargeTextCellEditor",
-      cellEditorPopup: true,
-      
+    { field: "address", headerName: "Alamat",width: 350,minWidth : 200, wrapText : false, cellStyle : {lineHeight : "1.3"}, editable : true, cellEditor: "agDateCellEditor",cellEditorPopup: true,
       cellRenderer : params => {
         return params.value != null && params.value != "" ? params.value : "-"
       }

@@ -64,7 +64,6 @@ function Form({inventory,stores,locations,positions,items,types,models,sources,s
                 gold_weight : beratEmas,
                 gold_grade : kadarEmas,
                 gold_price : hargaEmas,
-                photo_inventory_id : photo,
                 labour_price_id : labourPrice,
                 production_cost : productionCost,
                 sell_price : hargaJual,

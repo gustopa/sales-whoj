@@ -450,9 +450,13 @@ class InventoryController extends Controller
             return abort(403);
         }
         $menu = listMenu();
+        $stores = StoreModel::where('is_deleted',0)->where('company_id',session('company_id'))->get();
+        $locations = LocationModel::where('is_deleted',0)->where('company_id',session('company_id'))->get();
         return inertia('Inventory/Miscellaneous',[
             "session" => session()->all(),
             "menu" => $menu,
+            "stores" => $stores,
+            "locations" => $locations,
             "access" => $access->menu_access
         ]);
     }
@@ -463,7 +467,7 @@ class InventoryController extends Controller
             return abort(403);
         }
         $data = datatable("vw_miscellaneouslist",function($query){
-            $query->orderBy('row_id','desc');
+            $query->orderBy('foto','desc');
         });
         return $data;
     }

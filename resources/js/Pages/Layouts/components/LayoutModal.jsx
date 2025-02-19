@@ -24,7 +24,7 @@ function LayoutModal({iconButton,children,sxButton,closeButton=true,ref, width="
         </Button>
         <Modal open={open} onClose={handleClose}>
             <Box
-                className='transition-all duration-300 ease-in-out'
+                className=''
                 sx={{
                     position: "absolute",
                     overflowX : "hidden",

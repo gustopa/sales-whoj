@@ -22,7 +22,6 @@ function FormPhoto({iconButton,sxButton,data,title,onSuccess}) {
             file : foto,
             data : {
                 company_id : session.company_id,
-                is_deleted : 0,
                 notes : catatan,
                 is_submitted : 1,
                 is_deleted : 0,

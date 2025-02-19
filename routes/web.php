@@ -35,6 +35,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\DashboardSalesController;
 use App\Http\Controllers\PhotoController;
+use App\Http\Controllers\MiscellaneousController;
 
 use App\Http\Middleware\IsAuthenticated;
 use App\Http\Middleware\NotLogin;
@@ -213,6 +214,9 @@ Route::prefix('/')->middleware(IsAuthenticated::class)->group(function(){
     Route::prefix('/miscellaneous')->group(function(){
         Route::get('/',[InventoryController::class,'miscellaneous']);
         Route::get('/getAll',[InventoryController::class,'getAllMiscellaneous']);
+        Route::post('/tambah',[MiscellaneousController::class,'tambah']);
+        Route::post('/edit/{id}',[MiscellaneousController::class,'edit']);
+        Route::delete('/delete/{id}',[MiscellaneousController::class,'delete']);
     });
     // End miscellaneous
 

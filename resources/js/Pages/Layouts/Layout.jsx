@@ -38,7 +38,7 @@ export default function Layout(props) {
           <div className="h-full w-full bg-lightPrimary dark:!bg-navy-900">
             {/* Main Content */}
             <main
-              className={`mx-[12px] transition-all duration-300 ease-in-out h-full flex-none transition-all md:pr-2 ${miniSidebar ? 'xl:ml-[45px]' : 'xl:ml-[313px]'}`}
+              className={`mx-[12px] duration-300 ease-in-out h-full flex-none transition-all md:pr-2 ${miniSidebar ? 'xl:ml-[45px]' : 'xl:ml-[313px]'}`}
             >
               {/* Routes */}
               <div className="h-full px-3">

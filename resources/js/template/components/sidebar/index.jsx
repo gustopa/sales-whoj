@@ -25,7 +25,7 @@ const Dropdown = ({primary, isOpen, onToggle,subMenu,icon,color,miniSidebar}) =>
   return (
     <List className="m-0 dropdownParent" style={{color:'#b89474',padding:'0',cursor:'pointer'}}>
       {/* Menu Utama */}
-      <Tooltip title={`${miniSidebar ? primary : ""}`}>
+      <Tooltip placement="right-start" title={`${miniSidebar ? primary : ""}`}>
         <ListItem onClick={onToggle}>
           <ListItemIcon >
             <i className={`fa ${icon} dropdownIcon`} style={{color:color}}></i>
